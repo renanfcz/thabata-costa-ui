@@ -1,9 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import SaveButton from '../form/SaveButton'
-import SelectInput from '../form/SelectInput'
-import TextInput from '../form/TextInput'
+import SaveButton from '../../form/SaveButton'
+import SelectInput from '../../form/SelectInput'
+import TextInput from '../../form/TextInput'
 
 export default function InfoPage() {
   const [client, setClient] = useState({

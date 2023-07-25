@@ -2,9 +2,9 @@
 
 import { X } from 'lucide-react'
 import { useState } from 'react'
-import SelectInput from '../form/SelectInput'
-import TextInput from '../form/TextInput'
-import { TableHead } from '../table/TableHead'
+import SelectInput from '../../form/SelectInput'
+import TextInput from '../../form/TextInput'
+import { TableHead } from '../../table/TableHead'
 
 type Indication = {
   name: string

@@ -1,8 +1,8 @@
 'use client'
-import FinanceInfoPage from '@/components/detail/FinanceInfoPage'
-import IndicationPage from '@/components/detail/IndicationPage'
-import InfoPage from '@/components/detail/InfoPage'
-import ProtocolsPage from '@/components/detail/ProtocolsPage'
+import FinanceInfoPage from '@/components/client/detail/FinanceInfoPage'
+import IndicationPage from '@/components/client/detail/IndicationPage'
+import InfoPage from '@/components/client/detail/InfoPage'
+import ProtocolsPage from '@/components/client/detail/ProtocolsPage'
 import { useState } from 'react'
 
 export default function ClientDetail() {

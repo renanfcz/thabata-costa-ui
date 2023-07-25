@@ -1,6 +1,12 @@
-export default function SaveButton() {
+interface SaveButtonProps {
+  onClick(): void
+}
+export default function SaveButton({ onClick }: SaveButtonProps) {
   return (
-    <button className="px-8 py-3 font-bold border border-success rounded text-success hover:bg-success hover:text-white transition duration-200">
+    <button
+      onClick={onClick}
+      className="px-10 py-3 font-bold border border-info rounded text-info hover:bg-info hover:text-white transition duration-200"
+    >
       Salvar
     </button>
   )

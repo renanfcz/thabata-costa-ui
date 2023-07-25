@@ -31,7 +31,7 @@ export default function SelectInput({
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         onChange={(e) => setValue(e.target.value)}
-        className="w-full border-4 border-gray-300/30 focus:border-primary/90 focus:outline-none rounded px-3 py-2 transition duration-200"
+        className="w-full border-4 border-gray-300/30 focus:border-primary/90 focus:outline-none rounded px-3 py-2 h-full transition duration-200"
       >
         <option></option>
         {options.map((option, index) => (
