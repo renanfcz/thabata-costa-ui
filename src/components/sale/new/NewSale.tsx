@@ -1,11 +1,10 @@
 'use client'
-import { Trash2, X } from 'lucide-react'
+import TextAreaInput from '@/components/form/TextAreaInput'
 import { useState } from 'react'
-import SaveButton from '../form/SaveButton'
-import SelectInput from '../form/SelectInput'
-import TextInput from '../form/TextInput'
-import { TableData } from '../table/TableData'
-import { TableHead } from '../table/TableHead'
+
+import SaveButton from '../../form/SaveButton'
+import SelectInput from '../../form/SelectInput'
+import TextInput from '../../form/TextInput'
 
 interface Procedure {
   name: string
@@ -69,8 +68,6 @@ export default function NewSale() {
     setProcedure(procedureCopy)
   }
 
-  const handleSaveSale = () => {}
-
   const addProcedure = () => {
     const saleCopy = { ...sale }
     saleCopy.procedures.push(procedure)
@@ -115,13 +112,14 @@ export default function NewSale() {
     <div>
       <div className="flex">
         <div className="flex flex-col w-full px-5 py-3 gap-5">
+          <h2>Dados do protocolo</h2>
           <div className="flex flex-col gap-5">
             <TextInput
               label="Protocolo"
               value={sale.protocolName}
               setValue={setProtocolName}
             />
-            <TextInput
+            <TextAreaInput
               label="Descrição do protocolo"
               value={sale.protocolDesc}
               setValue={setProtocolDesc}
@@ -154,80 +152,13 @@ export default function NewSale() {
               />
             </div>
           </div>
-          <div className="flex w-full justify-between">
-            <SaveButton onClick={handleSaveSale} />
+          <div className="flex w-full justify-end">
             <button
               onClick={addProcedure}
               className="px-10 py-3 font-bold border border-warn rounded text-warn hover:bg-warn hover:text-white transition duration-200"
             >
               Adicionar procedimento
             </button>
-          </div>
-        </div>
-        <div className="w-full px-5 py-3 border-2 border-gray-400 rounded-md">
-          <h2 className="flex justify-center font-bold -mt-6 items-center bg-white text-sm w-12">
-            Resumo
-          </h2>
-          <div className="flex flex-col py-3">
-            <div className="flex justify-between">
-              <div className="flex flex-col gap-2">
-                <div>
-                  <span className="font-bold">Protocolo: </span>
-                  <span>{sale.protocolName}</span>
-                </div>
-                <div>
-                  <span className="font-bold">Descrição: </span>
-                  <span>{sale.protocolDesc}</span>
-                </div>
-                <div>
-                  <span className="font-bold">Procedimentos</span>
-                </div>
-              </div>
-              <div className="min-w-fit gap-2">
-                <div className="flex justify-between gap-2">
-                  <span className="font-bold">Valor total: </span>
-                  <span className="font-bold">R$ {getTotalValue()}</span>
-                </div>
-                <div className="flex justify-between gap-2">
-                  <span className="">Total de desconto: </span>
-                  <span className="font-bold">R$ {getDiscount()}</span>
-                </div>
-              </div>
-            </div>
-            <table>
-              <thead>
-                <tr>
-                  <TableHead> </TableHead>
-                  <TableHead>Nome</TableHead>
-                  <TableHead>Nº de sessões</TableHead>
-                  <TableHead>Valor</TableHead>
-                  <TableHead>Desconto(%)</TableHead>
-                  <TableHead>Sub-total</TableHead>
-                  <TableHead> </TableHead>
-                </tr>
-              </thead>
-              <tbody>
-                {sale.procedures.map((proc, index) => (
-                  <tr key={index}>
-                    <TableData>{index + 1}</TableData>
-                    <TableData>{proc.name}</TableData>
-                    <TableData>{proc.sessions}</TableData>
-                    <TableData>{proc.value}</TableData>
-                    <TableData>{proc.discount}</TableData>
-                    <TableData>
-                      {getSubtotal(proc.value, proc.discount)}
-                    </TableData>
-                    <TableData>
-                      <div className="flex justify-end">
-                        <button onClick={() => removeProcedure(index)}>
-                          <X className="text-danger" />
-                        </button>
-                      </div>
-                    </TableData>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
           </div>
         </div>
       </div>

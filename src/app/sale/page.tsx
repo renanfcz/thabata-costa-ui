@@ -1,6 +1,7 @@
 'use client'
 import HistSale from '@/components/sale/HistSale'
-import NewSale from '@/components/sale/NewSale'
+import NewSale from '@/components/sale/new/NewSale'
+import ResumeBox from '@/components/sale/new/ResumeBox'
 import { useState } from 'react'
 
 export default function Sale() {
@@ -18,32 +19,43 @@ export default function Sale() {
   }
 
   return (
-    <div className="flex flex-col h-full mx-10">
+    <div className="flex flex-col mx-10">
       <h1 className="text-2xl py-3">Vendas</h1>
 
-      <div className="bg-white">
-        <div className="flex gap-10 p-4">
-          <button
-            onClick={showNewSale}
-            className={`border-b-2 hover:border-b-dark-primary p-3 transition duration-200 ${
-              newSale ? 'border-b-dark-primary font-bold' : 'border-b-gray-300'
-            }`}
-          >
-            Nova venda
-          </button>
-          <button
-            onClick={showHistSale}
-            className={`border-b-2 hover:border-b-dark-primary p-3 transition duration-200 ${
-              histSale ? 'border-b-dark-primary font-bold' : 'border-b-gray-300'
-            }`}
-          >
-            Histórico de vendas
-          </button>
+      <div className="flex gap-5">
+        <div className="flex flex-col gap-3 w-full">
+          <div className="bg-white w-full">
+            <div className="flex gap-10 p-4">
+              <button
+                onClick={showNewSale}
+                className={`border-b-2 hover:border-b-dark-primary p-3 transition duration-200 ${
+                  newSale
+                    ? 'border-b-dark-primary font-bold'
+                    : 'border-b-gray-300'
+                }`}
+              >
+                Nova venda
+              </button>
+              <button
+                onClick={showHistSale}
+                className={`border-b-2 hover:border-b-dark-primary p-3 transition duration-200 ${
+                  histSale
+                    ? 'border-b-dark-primary font-bold'
+                    : 'border-b-gray-300'
+                }`}
+              >
+                Histórico de vendas
+              </button>
+            </div>
+          </div>
+          <div className="bg-white rounded">
+            <div className="py-5">
+              {newSale && <NewSale />}
+              {histSale && <HistSale />}
+            </div>
+          </div>
         </div>
-        <div className="py-5">
-          {newSale && <NewSale />}
-          {histSale && <HistSale />}
-        </div>
+        {newSale && <ResumeBox />}
       </div>
     </div>
   )
