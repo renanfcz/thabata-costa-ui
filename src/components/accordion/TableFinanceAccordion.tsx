@@ -31,7 +31,7 @@ export default function TableFinanceAccordion() {
           </tr>
         </thead>
         <tbody>
-          <tr className="hover:bg-primary">
+          <tr className="hover:bg-light-primary">
             <TableData>1</TableData>
             <TableData>Sobrancelha</TableData>
             <TableData>R$ 100,00</TableData>
@@ -43,7 +43,7 @@ export default function TableFinanceAccordion() {
               </span>
             </TableData>
           </tr>
-          <tr className="hover:bg-primary">
+          <tr className="hover:bg-light-primary">
             <TableData>2</TableData>
             <TableData>Sobrancelha</TableData>
             <TableData>R$ 100,00</TableData>
@@ -55,7 +55,7 @@ export default function TableFinanceAccordion() {
               </span>
             </TableData>
           </tr>
-          <tr className="hover:bg-primary">
+          <tr className="hover:bg-light-primary">
             <TableData>3</TableData>
             <TableData>Sobrancelha</TableData>
             <TableData>R$ 100,00</TableData>

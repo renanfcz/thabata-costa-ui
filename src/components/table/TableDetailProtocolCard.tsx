@@ -30,7 +30,7 @@ export default function TableDetailProtocolCard() {
           </tr>
         </thead>
         <tbody>
-          <tr className="hover:bg-primary">
+          <tr className="hover:bg-light-primary">
             <TableData>1</TableData>
             <TableData>Drenagem</TableData>
             <TableData>20/07/2023</TableData>
@@ -44,7 +44,7 @@ export default function TableDetailProtocolCard() {
               </div>
             </TableData>
           </tr>
-          <tr className="hover:bg-primary">
+          <tr className="hover:bg-light-primary">
             <TableData>2</TableData>
             <TableData>Drenagem</TableData>
             <TableData>20/07/2023</TableData>
@@ -58,7 +58,7 @@ export default function TableDetailProtocolCard() {
               </div>
             </TableData>
           </tr>
-          <tr className="hover:bg-primary">
+          <tr className="hover:bg-light-primary">
             <TableData>3</TableData>
             <TableData>Drenagem</TableData>
             <TableData>20/07/2023</TableData>

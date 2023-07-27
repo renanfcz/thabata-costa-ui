@@ -1,21 +1,22 @@
 'use client'
-
-import { useState } from 'react'
+import { forwardRef, ForwardRefRenderFunction, useState } from 'react'
 
 interface TextInputProps {
   label: string
-  value: string
-  setValue(value: string): void
+  isDirdy: boolean
+  hasError: boolean
 }
 
-export default function TextInput({ label, value, setValue }: TextInputProps) {
+const TextInput: ForwardRefRenderFunction<HTMLInputElement, TextInputProps> = (
+  { label, isDirdy, hasError, ...rest },
+  ref,
+) => {
   const [focused, setFocused] = useState(false)
-
   return (
     <div className="relative w-full">
       <label
         className={`absolute transition-all duration-300 left-2 text-gray-600 ${
-          focused || value ? '-top-4 text-xs font-bold' : 'top-3 text-sm'
+          focused || isDirdy ? '-top-4 text-xs font-bold' : 'top-3 text-sm'
         }
         `}
       >
@@ -23,12 +24,18 @@ export default function TextInput({ label, value, setValue }: TextInputProps) {
       </label>
       <input
         type="text"
-        className="w-full border-4 border-gray-300/30 focus:border-primary/90 focus:outline-none rounded px-3 py-2 h-full transition duration-200"
+        className={`w-full border-2 focus:outline-none rounded px-3 py-2 h-full transition duration-200 ${
+          hasError
+            ? 'border-danger'
+            : 'border-gray-300/30 focus:border-secondary/60'
+        }`}
+        ref={ref}
         onFocus={() => setFocused(true)}
+        {...rest}
         onBlur={() => setFocused(false)}
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
       />
     </div>
   )
 }
+
+export default forwardRef(TextInput)

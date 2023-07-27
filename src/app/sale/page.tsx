@@ -1,7 +1,6 @@
 'use client'
 import HistSale from '@/components/sale/HistSale'
 import NewSale from '@/components/sale/new/NewSale'
-import ResumeBox from '@/components/sale/new/ResumeBox'
 import { useState } from 'react'
 
 export default function Sale() {
@@ -28,9 +27,9 @@ export default function Sale() {
             <div className="flex gap-10 p-4">
               <button
                 onClick={showNewSale}
-                className={`border-b-2 hover:border-b-dark-primary p-3 transition duration-200 ${
+                className={`border-b-2 hover:border-b-light-secondary p-3 transition duration-200 ${
                   newSale
-                    ? 'border-b-dark-primary font-bold'
+                    ? 'border-b-light-secondary font-bold'
                     : 'border-b-gray-300'
                 }`}
               >
@@ -38,9 +37,9 @@ export default function Sale() {
               </button>
               <button
                 onClick={showHistSale}
-                className={`border-b-2 hover:border-b-dark-primary p-3 transition duration-200 ${
+                className={`border-b-2 hover:border-b-light-secondary p-3 transition duration-200 ${
                   histSale
-                    ? 'border-b-dark-primary font-bold'
+                    ? 'border-b-light-secondary font-bold'
                     : 'border-b-gray-300'
                 }`}
               >
@@ -48,14 +47,13 @@ export default function Sale() {
               </button>
             </div>
           </div>
-          <div className="bg-white rounded">
-            <div className="py-5">
+          <div className="">
+            <div className="py-3">
               {newSale && <NewSale />}
               {histSale && <HistSale />}
             </div>
           </div>
         </div>
-        {newSale && <ResumeBox />}
       </div>
     </div>
   )

@@ -52,17 +52,17 @@ export default function ClientDetail() {
         <div className="flex gap-10 p-4">
           <button
             onClick={handleInfo}
-            className={`border-b-2 hover:border-b-dark-primary p-3 transition duration-200 ${
-              info ? 'border-b-dark-primary font-bold' : 'border-b-gray-300'
+            className={`border-b-2 hover:border-b-light-secondary p-3 transition duration-200 ${
+              info ? 'border-b-light-secondary font-bold' : 'border-b-gray-300'
             }`}
           >
             Informações
           </button>
           <button
             onClick={handleIndication}
-            className={`border-b-2 hover:border-b-dark-primary p-3 transition duration-200 ${
+            className={`border-b-2 hover:border-b-light-secondary p-3 transition duration-200 ${
               indication
-                ? 'border-b-dark-primary font-bold'
+                ? 'border-b-light-secondary font-bold'
                 : 'border-b-gray-300'
             }`}
           >
@@ -70,9 +70,9 @@ export default function ClientDetail() {
           </button>
           <button
             onClick={handleProtocols}
-            className={`border-b-2 hover:border-b-dark-primary p-3 transition duration-200 ${
+            className={`border-b-2 hover:border-b-light-secondary p-3 transition duration-200 ${
               protocols
-                ? 'border-b-dark-primary font-bold'
+                ? 'border-b-light-secondary font-bold'
                 : 'border-b-gray-300'
             }`}
           >
@@ -80,9 +80,9 @@ export default function ClientDetail() {
           </button>
           <button
             onClick={handleFinanceInfo}
-            className={`border-b-2 hover:border-b-dark-primary p-3 transition duration-200 ${
+            className={`border-b-2 hover:border-b-light-secondary p-3 transition duration-200 ${
               financeInfo
-                ? 'border-b-dark-primary font-bold'
+                ? 'border-b-light-secondary font-bold'
                 : 'border-b-gray-300'
             }`}
           >

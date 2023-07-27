@@ -18,7 +18,7 @@ export default function Client() {
             </tr>
           </thead>
           <tbody>
-            <tr className="hover:bg-primary">
+            <tr className="hover:bg-light-primary">
               <TableData>Renan França da Costa</TableData>
               <TableData>(21) 99558-3631</TableData>
               <TableData>173.543.267-98</TableData>
@@ -27,7 +27,7 @@ export default function Client() {
                 <ActionGroup />
               </TableData>
             </tr>
-            <tr className="hover:bg-primary">
+            <tr className="hover:bg-light-primary">
               <TableData>Renan França da Costa</TableData>
               <TableData>(21) 99558-3631</TableData>
               <TableData>173.543.267-98</TableData>
@@ -36,7 +36,7 @@ export default function Client() {
                 <ActionGroup />
               </TableData>
             </tr>
-            <tr className="hover:bg-primary">
+            <tr className="hover:bg-light-primary">
               <TableData>Renan França da Costa</TableData>
               <TableData>(21) 99558-3631</TableData>
               <TableData>173.543.267-98</TableData>
@@ -45,7 +45,7 @@ export default function Client() {
                 <ActionGroup />
               </TableData>
             </tr>
-            <tr className="hover:bg-primary">
+            <tr className="hover:bg-light-primary">
               <TableData>Renan França da Costa</TableData>
               <TableData>(21) 99558-3631</TableData>
               <TableData>173.543.267-98</TableData>

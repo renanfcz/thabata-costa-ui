@@ -93,7 +93,7 @@ export default function IndicationPage() {
 
       <button
         onClick={addIndication}
-        className="px-8 py-4 text-secondary bg-white border border-secondary text-secondary text-secondary rounded hover:bg-secondary text-secondary text-secondary hover:text-white font-bold transition duration-200"
+        className="px-8 py-4 text-primary bg-white border border-primary rounded hover:bg-primary hover:text-white font-bold transition duration-200"
       >
         Nova indicação
       </button>

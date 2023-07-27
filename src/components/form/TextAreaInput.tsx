@@ -29,7 +29,7 @@ export default function TextAreaInput({
         onBlur={() => setFocused(false)}
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        className="resize-none w-full border-4 border-gray-300/30 focus:border-primary/90 focus:outline-none rounded px-3 py-2 h-full transition duration-200"
+        className="resize-none w-full border-2 border-gray-300/30 focus:border-secondary/60 focus:outline-none rounded px-3 py-2 h-full transition duration-200"
       ></textarea>
     </div>
   )
