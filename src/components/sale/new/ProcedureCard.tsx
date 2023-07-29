@@ -1,43 +1,57 @@
 'use client'
 import SelectInput from '@/components/form/SelectInput'
+import TextFormInput from '@/components/form/TextInputForm'
 import TextInput from '@/components/form/TextInput'
 import { useNewSaleContext } from '@/contexts/NewSaleContext'
-import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Controller, useForm } from 'react-hook-form'
 import * as z from 'zod'
+import CurrencyInput from '@/components/form/CurrencyInput'
+import NumberInput from '@/components/form/NumberInput'
 
-const procedureSchema = z
-  .object({
-    name: z.string().min(3),
-    sessions: z.number().positive().min(0),
-    value: z.coerce.number().positive(),
-    discount: z.coerce.number().positive(),
-  })
-  .refine((fields) => fields.name.length, {
-    path: ['name'],
-    message: 'Escolha um procedimento',
-  })
+const schema = z.object({
+  name: z.string(),
+  sessions: z.coerce.number(),
+  value: z.coerce.number(),
+  discount: z.coerce.number(),
+})
 
-export type ProcedureFormData = z.infer<typeof procedureSchema>
+type ProcedureFormData = z.infer<typeof schema>
 
 export default function ProcedureCard() {
+  const { sale, updateSale } = useNewSaleContext()
+
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
+    control,
     formState: { errors, dirtyFields },
   } = useForm<ProcedureFormData>({
-    resolver: zodResolver(procedureSchema),
-    reValidateMode: 'onChange',
-    mode: 'onSubmit',
+    resolver: zodResolver(schema),
     defaultValues: {
       name: undefined,
       sessions: undefined,
       value: undefined,
       discount: undefined,
     },
+    mode: 'onSubmit',
+    reValidateMode: 'onChange',
   })
 
-  const { sale, updateSale } = useNewSaleContext()
+  const watchName = watch('name')
+  const watchSessions = watch('sessions')
+  const watchValue = watch('value')
+
+  const isDisable = !watchName || !watchSessions || !watchValue
+
+  const cleanInputs = () => {
+    setValue('name', '')
+    setValue('sessions', 0)
+    setValue('value', 0)
+    setValue('discount', 0)
+  }
 
   function addProcedure(data: ProcedureFormData) {
     const saleCopy = { ...sale }
@@ -57,40 +71,60 @@ export default function ProcedureCard() {
           <SelectInput
             label="Procedimento"
             options={procedureList}
-            hasError={!!errors.name}
             isDirty={!!dirtyFields.name}
+            hasError={!!errors.name}
             {...register('name')}
           />
-          <TextInput
-            label="Nº de sessões"
-            isDirdy={!!dirtyFields.sessions}
-            hasError={!!errors.sessions}
-            {...register('sessions', {
-              valueAsNumber: true,
-            })}
+          <Controller
+            name="sessions"
+            control={control}
+            render={({ field: { value, onChange } }) => (
+              <NumberInput
+                label="Nº de sessões"
+                hasError={!!errors.discount}
+                value={value}
+                setValue={onChange}
+              />
+            )}
           />
         </div>
         <div className="flex gap-3">
-          <TextInput
-            label="Valor"
-            isDirdy={!!dirtyFields.value}
-            hasError={!!errors.value}
-            {...register('value', { valueAsNumber: true })}
+          <Controller
+            name="value"
+            control={control}
+            render={({ field: { value, onChange } }) => (
+              <CurrencyInput
+                label="Valor"
+                hasError={!!errors.value}
+                value={value}
+                setValue={onChange}
+              />
+            )}
           />
-          <TextInput
-            label="Desconto (%)"
-            isDirdy={!!dirtyFields.discount}
-            hasError={!!errors.discount}
-            {...register('discount', {
-              valueAsNumber: true,
-            })}
+
+          <Controller
+            name="discount"
+            control={control}
+            render={({ field: { value, onChange } }) => (
+              <NumberInput
+                label="Desconto (%)"
+                hasError={!!errors.discount}
+                value={value}
+                setValue={onChange}
+              />
+            )}
           />
         </div>
       </div>
       <div className="flex w-full justify-end">
         <button
           type="submit"
-          className="px-10 py-3 font-bold border border-primary rounded text-primary hover:bg-primary hover:text-white transition duration-200"
+          className={`px-10 py-3 font-bold border border-primary rounded text-primary  transition duration-200 ${
+            isDisable
+              ? 'cursor-not-allowed bg-gray-200'
+              : 'hover:bg-primary hover:text-white'
+          }`}
+          disabled={isDisable}
         >
           Adicionar procedimento
         </button>

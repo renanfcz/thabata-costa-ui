@@ -2,46 +2,57 @@ import { useNewSaleContext } from '@/contexts/NewSaleContext'
 
 import ProcedureItem from './ProcedureItem'
 
+enum PaymentType {
+  MONEY = 'money',
+  PIX = 'pix',
+  DEBIT = 'debit',
+  CREDIT = 'credit',
+}
+
 export default function ResumeBox() {
   const { sale } = useNewSaleContext()
-  const handleSaveSale = () => {}
+  const handleSaveSale = () => {
+    console.log()
+  }
 
   const getPaymentMethod = () => {
-    if (sale.paymentMethod === 1) {
+    if (sale?.paymentType === PaymentType.MONEY) {
       return 'Dinheiro'
-    } else if (sale.paymentMethod === 2) {
+    } else if (sale?.paymentType === PaymentType.PIX) {
       return 'Pix'
-    } else if (sale.paymentMethod === 3) {
+    } else if (sale?.paymentType === PaymentType.DEBIT) {
       return 'Débito'
-    } else if (sale.paymentMethod === 4) {
+    } else if (sale?.paymentType === PaymentType.CREDIT) {
       return 'Crédito'
     }
   }
 
-  const getSubtotal = (value: string, discount: string) => {
-    const valueNum = parseFloat(value)
-    const discountNum = parseFloat(discount)
-    return valueNum - (valueNum * discountNum) / 100
+  const getSubtotal = (value: number, discount: number) => {
+    // const valueNum = parseFloat(value)
+    // const discountNum = parseFloat(discount)
+    // return valueNum - (valueNum * discountNum) / 100
+    return value - (value * discount) / 100
   }
 
-  const calculateDiscount = (value: string, discount: string) => {
-    const valueNum = parseFloat(value)
-    const discountNum = parseFloat(discount)
-    return (valueNum * discountNum) / 100
+  const calculateDiscount = (value: number, discount: number) => {
+    // const valueNum = parseFloat(value)
+    // const discountNum = parseFloat(discount)
+    // return (valueNum * discountNum) / 100
+    return (value * discount) / 100
   }
 
   const getDiscount = () => {
-    const valueWithDiscount = sale.procedures.map((item) =>
+    const valueWithDiscount = sale?.procedures.map((item) =>
       calculateDiscount(item.value, item.discount),
     )
-    return valueWithDiscount.reduce((acc, cur) => acc + cur, 0)
+    return valueWithDiscount?.reduce((acc, cur) => acc + cur, 0)
   }
 
   const getTotalValue = () => {
-    const valueWithDiscount = sale.procedures.map((item) =>
+    const valueWithDiscount = sale?.procedures.map((item) =>
       getSubtotal(item.value, item.discount),
     )
-    return valueWithDiscount.reduce((acc, cur) => acc + cur, 0)
+    return valueWithDiscount?.reduce((acc, cur) => acc + cur, 0)
   }
 
   return (
@@ -52,13 +63,13 @@ export default function ResumeBox() {
           <div className="flex flex-col">
             <div className="flex items-center">
               <span className="text-gray-400 text-sm">Protocolo:</span>
-              <span>{sale.protocolName}</span>
+              <span>{sale?.protocolName}</span>
             </div>
             <div className="flex  items-center">
               <span className="text-gray-400 text-sm">
                 Descrição do protocolo:
               </span>
-              <span>{sale.protocolDesc}</span>
+              <span>{sale?.protocolDesc}</span>
             </div>
             <div className="flex">
               <span className="text-gray-400 text-sm">Procedimentos:</span>
@@ -70,8 +81,8 @@ export default function ResumeBox() {
           </div>
         </div>
         <div>
-          {sale.procedures &&
-            sale.procedures.map((procedure, index) => (
+          {sale?.procedures &&
+            sale?.procedures.map((procedure, index) => (
               <ProcedureItem key={index} procedure={procedure} />
             ))}
         </div>

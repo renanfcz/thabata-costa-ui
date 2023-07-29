@@ -1,5 +1,11 @@
 import { createContext, useContext, useState } from 'react'
 
+enum PaymentType {
+  MONEY = 'money',
+  PIX = 'pix',
+  DEBIT = 'debit',
+  CREDIT = 'credit',
+}
 interface Procedure {
   name: string
   value: number
@@ -11,7 +17,7 @@ interface NewSale {
   protocolName: string
   protocolDesc: string
   procedures: Procedure[]
-  paymentMethod: number
+  paymentType: PaymentType | undefined
 }
 
 interface NewSaleContextType {
@@ -32,8 +38,9 @@ export const NewSaleProvider = ({
     protocolName: '',
     protocolDesc: '',
     procedures: [],
-    paymentMethod: 0,
+    paymentType: undefined,
   })
+
   const updateSale = (sale: NewSale) => {
     setSale(sale)
   }

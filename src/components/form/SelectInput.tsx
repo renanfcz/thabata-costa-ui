@@ -5,8 +5,8 @@ import { forwardRef, ForwardRefRenderFunction, useState } from 'react'
 interface SelectInputProps {
   label: string
   options: string[]
-  hasError: boolean
-  isDirty: boolean
+  hasError?: boolean
+  isDirty?: boolean
 }
 
 const SelectInput: ForwardRefRenderFunction<
@@ -36,7 +36,6 @@ const SelectInput: ForwardRefRenderFunction<
         ref={ref}
         {...rest}
         onBlur={() => setFocused(false)}
-        defaultValue={undefined}
       >
         <option value={undefined}></option>
         {options.map((option, index) => (

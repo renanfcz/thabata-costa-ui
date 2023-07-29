@@ -1,26 +1,23 @@
 'use client'
-import { useState } from 'react'
+import { forwardRef, ForwardRefRenderFunction, useState } from 'react'
 
-interface TextInputProps {
+interface TextInputFormProps {
   label: string
+  isDirdy?: boolean
   hasError?: boolean
-  value: string
-  setValue(value: string): void
 }
 
-export default function TextInput({
-  label,
-  hasError,
-  value,
-  setValue,
-}: TextInputProps) {
+const TextInputForm: ForwardRefRenderFunction<
+  HTMLInputElement,
+  TextInputFormProps
+> = ({ label, isDirdy, hasError, ...rest }, ref) => {
   const [focused, setFocused] = useState(false)
 
   return (
     <div className="relative w-full">
       <label
         className={`absolute transition-all duration-300 left-2 text-gray-600 ${
-          focused || value ? '-top-4 text-xs font-bold' : 'top-3 text-sm'
+          focused || isDirdy ? '-top-4 text-xs font-bold' : 'top-3 text-sm'
         }
         `}
       >
@@ -33,11 +30,13 @@ export default function TextInput({
             ? 'border-danger'
             : 'border-gray-300/30 focus:border-secondary/60'
         }`}
+        ref={ref}
         onFocus={() => setFocused(true)}
+        {...rest}
         onBlur={() => setFocused(false)}
-        onChange={(e) => setValue(e.target.value)}
-        value={value}
       />
     </div>
   )
 }
+
+export default forwardRef(TextInputForm)
