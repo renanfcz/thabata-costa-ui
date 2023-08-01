@@ -2,55 +2,49 @@
 
 import { X } from 'lucide-react'
 import { useState } from 'react'
-import SelectInput from '../../form/SelectInput'
-import TextInput from '../../form/TextInput'
+import SelectInput from '../../form/hook-form/SelectInput'
 import { TableHead } from '../../table/TableHead'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Controller, useForm } from 'react-hook-form'
+import * as z from 'zod'
+import TextInput from '@/components/form/hook-form/TextInput'
+import CellPhoneInput from '@/components/form/CellPhoneInput'
 
-type Indication = {
-  name: string
-  tel: string
-  midiaId: string
-  socialMedia: string
-}
+const schema = z.object({
+  name: z.string().min(5),
+  cel: z.string().min(11),
+  mediaId: z.string(),
+  socialMedia: z.string(),
+})
+
+type IndicationFormData = z.infer<typeof schema>
 
 export default function IndicationPage() {
-  const [indicationList, setIndicationList] = useState<Indication[]>([])
-
-  const [indication, setIndication] = useState<Indication>({
-    name: '',
-    tel: '',
-    midiaId: '',
-    socialMedia: '',
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors, dirtyFields },
+  } = useForm<IndicationFormData>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      name: undefined,
+      cel: undefined,
+      mediaId: undefined,
+      socialMedia: undefined,
+    },
+    mode: 'onSubmit',
+    reValidateMode: 'onChange',
   })
 
-  const setName = (value: string) => {
-    const indicationCopy = { ...indication }
-    indicationCopy.name = value
-    setIndication(indicationCopy)
-  }
-
-  const setTel = (value: string) => {
-    const indicationCopy = { ...indication }
-    indicationCopy.tel = value
-    setIndication(indicationCopy)
-  }
-
-  const setMidiaId = (value: string) => {
-    const indicationCopy = { ...indication }
-    indicationCopy.midiaId = value
-    setIndication(indicationCopy)
-  }
-
-  const setSocialMedia = (value: string) => {
-    const indicationCopy = { ...indication }
-    indicationCopy.socialMedia = value
-    setIndication(indicationCopy)
-  }
+  const [indicationList, setIndicationList] = useState<IndicationFormData[]>([])
 
   const options = ['Instagram', 'Facebook']
 
-  const addIndication = () => {
-    setIndicationList([...indicationList, indication])
+  function addIndication(data: IndicationFormData) {
+    setIndicationList([...indicationList, data])
+    reset()
   }
 
   const handleRemoveIndication = (index: number) => {
@@ -58,6 +52,8 @@ export default function IndicationPage() {
     indicationsCopy.splice(index, 1)
     setIndicationList(indicationsCopy)
   }
+
+  console.log(errors)
 
   return (
     <div className="px-5 w-1/2">
@@ -76,8 +72,8 @@ export default function IndicationPage() {
             {indicationList.map((indication, index) => (
               <tr key={index}>
                 <td>{indication.name}</td>
-                <td>{indication.tel}</td>
-                <td>{indication.midiaId}</td>
+                <td>{indication.cel}</td>
+                <td>{indication.mediaId}</td>
                 <td>{indication.socialMedia}</td>
                 <td>
                   <X
@@ -91,36 +87,55 @@ export default function IndicationPage() {
         </table>
       </div>
 
-      <button
-        onClick={addIndication}
-        className="px-8 py-4 text-primary bg-white border border-primary rounded hover:bg-primary hover:text-white font-bold transition duration-200"
-      >
-        Nova indicação
-      </button>
+      <div className="bg-gray-100 w-full rounded h-1 my-2"></div>
 
-      <div className="flex flex-col w-full gap-5 py-5">
+      <form
+        onSubmit={handleSubmit(addIndication)}
+        className="flex flex-col w-full gap-5 py-5"
+      >
         <div className="flex gap-2">
-          <TextInput label="Nome" value={indication.name} setValue={setName} />
           <TextInput
-            label="Telefone"
-            value={indication.tel}
-            setValue={setTel}
+            label="Nome"
+            isDirty={!!dirtyFields.name}
+            hasError={!!errors.name}
+            {...register('name')}
+          />
+          <Controller
+            name="cel"
+            control={control}
+            defaultValue=""
+            render={({ field: { value, onChange } }) => (
+              <CellPhoneInput
+                label="Celular"
+                hasError={!!errors.cel}
+                value={value}
+                setValue={onChange}
+              />
+            )}
           />
         </div>
         <div className="flex gap-2">
           <TextInput
             label="@"
-            value={indication.midiaId}
-            setValue={setMidiaId}
+            isDirty={!!dirtyFields.mediaId}
+            hasError={!!errors.mediaId}
+            {...register('mediaId')}
           />
           <SelectInput
             label="Mídia social"
-            value={indication.socialMedia}
-            setValue={setSocialMedia}
             options={options}
+            isDirty={!!dirtyFields.socialMedia}
+            hasError={!!errors.socialMedia}
+            {...register('socialMedia')}
           />
         </div>
-      </div>
+        <button
+          type="submit"
+          className="px-8 py-4 w-1/2 text-primary bg-white border border-primary rounded hover:bg-primary hover:text-white font-bold transition duration-200"
+        >
+          Nova indicação
+        </button>
+      </form>
     </div>
   )
 }

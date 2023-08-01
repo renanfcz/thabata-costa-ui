@@ -1,7 +1,5 @@
 'use client'
-import SelectInput from '@/components/form/SelectInput'
-import TextFormInput from '@/components/form/TextInputForm'
-import TextInput from '@/components/form/TextInput'
+import SelectInput from '@/components/form/hook-form/SelectInput'
 import { useNewSaleContext } from '@/contexts/NewSaleContext'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
@@ -11,9 +9,9 @@ import NumberInput from '@/components/form/NumberInput'
 
 const schema = z.object({
   name: z.string(),
-  sessions: z.coerce.number(),
-  value: z.coerce.number(),
-  discount: z.coerce.number(),
+  sessions: z.coerce.number().max(100).min(1),
+  value: z.coerce.number().min(1),
+  discount: z.coerce.number().default(0),
 })
 
 type ProcedureFormData = z.infer<typeof schema>
@@ -25,7 +23,6 @@ export default function ProcedureCard() {
     register,
     handleSubmit,
     watch,
-    setValue,
     control,
     formState: { errors, dirtyFields },
   } = useForm<ProcedureFormData>({
@@ -46,13 +43,6 @@ export default function ProcedureCard() {
 
   const isDisable = !watchName || !watchSessions || !watchValue
 
-  const cleanInputs = () => {
-    setValue('name', '')
-    setValue('sessions', 0)
-    setValue('value', 0)
-    setValue('discount', 0)
-  }
-
   function addProcedure(data: ProcedureFormData) {
     const saleCopy = { ...sale }
     saleCopy.procedures.push(data)
@@ -60,75 +50,79 @@ export default function ProcedureCard() {
   }
   const procedureList = ['Drenagem', 'Limpeza de pele', 'Sobrancelha']
 
-  return (
-    <form
-      onSubmit={handleSubmit(addProcedure)}
-      className="bg-white rounded p-5 flex flex-col gap-3"
-    >
-      <h2>Procedimento</h2>
-      <div className="flex flex-col gap-5">
-        <div className="flex gap-3">
-          <SelectInput
-            label="Procedimento"
-            options={procedureList}
-            isDirty={!!dirtyFields.name}
-            hasError={!!errors.name}
-            {...register('name')}
-          />
-          <Controller
-            name="sessions"
-            control={control}
-            render={({ field: { value, onChange } }) => (
-              <NumberInput
-                label="Nº de sessões"
-                hasError={!!errors.discount}
-                value={value}
-                setValue={onChange}
-              />
-            )}
-          />
-        </div>
-        <div className="flex gap-3">
-          <Controller
-            name="value"
-            control={control}
-            render={({ field: { value, onChange } }) => (
-              <CurrencyInput
-                label="Valor"
-                hasError={!!errors.value}
-                value={value}
-                setValue={onChange}
-              />
-            )}
-          />
+  console.log(errors)
 
-          <Controller
-            name="discount"
-            control={control}
-            render={({ field: { value, onChange } }) => (
-              <NumberInput
-                label="Desconto (%)"
-                hasError={!!errors.discount}
-                value={value}
-                setValue={onChange}
-              />
-            )}
-          />
+  return (
+    <div>
+      <form
+        onSubmit={handleSubmit(addProcedure)}
+        className="bg-white rounded p-5 flex flex-col gap-3"
+      >
+        <h2>Procedimento</h2>
+        <div className="flex flex-col gap-5">
+          <div className="flex gap-3">
+            <SelectInput
+              label="Procedimento"
+              options={procedureList}
+              isDirty={!!dirtyFields.name}
+              hasError={!!errors.name}
+              {...register('name')}
+            />
+            <Controller
+              name="sessions"
+              control={control}
+              render={({ field: { value, onChange } }) => (
+                <NumberInput
+                  label="Nº de sessões"
+                  hasError={!!errors.sessions}
+                  value={value}
+                  setValue={onChange}
+                />
+              )}
+            />
+          </div>
+          <div className="flex gap-3">
+            <Controller
+              name="value"
+              control={control}
+              render={({ field: { value, onChange } }) => (
+                <CurrencyInput
+                  label="Valor"
+                  hasError={!!errors.value}
+                  value={value}
+                  setValue={onChange}
+                />
+              )}
+            />
+
+            <Controller
+              name="discount"
+              control={control}
+              render={({ field: { value, onChange } }) => (
+                <NumberInput
+                  label="Desconto (%)"
+                  hasError={!!errors.discount}
+                  value={value}
+                  setValue={onChange}
+                />
+              )}
+            />
+          </div>
         </div>
-      </div>
-      <div className="flex w-full justify-end">
-        <button
-          type="submit"
-          className={`px-10 py-3 font-bold border border-primary rounded text-primary  transition duration-200 ${
-            isDisable
-              ? 'cursor-not-allowed bg-gray-200'
-              : 'hover:bg-primary hover:text-white'
-          }`}
-          disabled={isDisable}
-        >
-          Adicionar procedimento
-        </button>
-      </div>
-    </form>
+        <div className="flex w-full justify-end">
+          <button
+            type="submit"
+            className={`px-10 py-3 font-bold border border-primary rounded text-primary  transition duration-200 ${
+              isDisable
+                ? 'cursor-not-allowed bg-gray-200'
+                : 'hover:bg-primary hover:text-white'
+            }`}
+            disabled={isDisable}
+          >
+            Adicionar procedimento
+          </button>
+        </div>
+      </form>
+    </div>
   )
 }

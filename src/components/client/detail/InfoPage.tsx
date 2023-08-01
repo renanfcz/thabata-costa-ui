@@ -1,97 +1,56 @@
 'use client'
 
-import { useState } from 'react'
-import SaveButton from '../../form/SaveButton'
-import SelectInput from '../../form/SelectInput'
-import TextInput from '../../form/TextInput'
+import SelectInput from '../../form/hook-form/SelectInput'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Controller, useForm } from 'react-hook-form'
+import * as z from 'zod'
+import TextInput from '@/components/form/hook-form/TextInput'
+import DocumentInput from '@/components/form/DocumentInput'
+import DateInput from '@/components/form/DateInput'
+import CellPhoneInput from '@/components/form/CellPhoneInput'
+
+const schema = z.object({
+  name: z.string().min(5),
+  cpf: z.string().min(11),
+  birthDate: z.string().min(8),
+  cel: z.string().min(11),
+  state: z.string().min(2),
+  city: z.string().min(3),
+  street: z.string().min(5),
+  number: z.coerce.number().min(1),
+  complement: z.string(),
+  mediaId: z.string(),
+  socialMedia: z.string(),
+  howKnowUs: z.string(),
+})
+
+type ClientFormData = z.infer<typeof schema>
 
 export default function InfoPage() {
-  const [client, setClient] = useState({
-    name: 'Renan',
-    cpf: '17354326798',
-    birthDate: '16/01/1996',
-    tel: '21995583631',
-    state: 'RJ',
-    city: 'Rio de Janeiro',
-    street: 'Rua Leocádio Figueiredo',
-    number: '360',
-    complement: 'bl 13 apt 201',
-    midiaId: 'renanfcz',
-    socialMidia: 'Instagram',
-    howKnowUs: 'Instagram',
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors, dirtyFields },
+  } = useForm<ClientFormData>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      name: undefined,
+      cpf: undefined,
+      birthDate: undefined,
+      cel: undefined,
+      state: undefined,
+      city: undefined,
+      street: undefined,
+      number: undefined,
+      complement: undefined,
+      mediaId: undefined,
+      socialMedia: undefined,
+      howKnowUs: undefined,
+    },
+    mode: 'onSubmit',
+    reValidateMode: 'onChange',
   })
-
-  const setName = (value: string) => {
-    const clientCopy = { ...client }
-    clientCopy.name = value
-    setClient(clientCopy)
-  }
-
-  const setCpf = (value: string) => {
-    const clientCopy = { ...client }
-    clientCopy.cpf = value
-    setClient(clientCopy)
-  }
-
-  const setBirthDate = (value: string) => {
-    const clientCopy = { ...client }
-    clientCopy.birthDate = value
-    setClient(clientCopy)
-  }
-
-  const setTel = (value: string) => {
-    const clientCopy = { ...client }
-    clientCopy.tel = value
-    setClient(clientCopy)
-  }
-
-  const setStreet = (value: string) => {
-    const clientCopy = { ...client }
-    clientCopy.street = value
-    setClient(clientCopy)
-  }
-
-  const setNumber = (value: string) => {
-    const clientCopy = { ...client }
-    clientCopy.number = value
-    setClient(clientCopy)
-  }
-
-  const setComplement = (value: string) => {
-    const clientCopy = { ...client }
-    clientCopy.complement = value
-    setClient(clientCopy)
-  }
-
-  const setMidiaId = (value: string) => {
-    const clientCopy = { ...client }
-    clientCopy.midiaId = value
-    setClient(clientCopy)
-  }
-
-  const setSocialMidia = (value: string) => {
-    const clientCopy = { ...client }
-    clientCopy.socialMidia = value
-    setClient(clientCopy)
-  }
-
-  const setState = (value: string) => {
-    const clientCopy = { ...client }
-    clientCopy.state = value
-    setClient(clientCopy)
-  }
-
-  const setCity = (value: string) => {
-    const clientCopy = { ...client }
-    clientCopy.city = value
-    setClient(clientCopy)
-  }
-
-  const setHowKnowUs = (value: string) => {
-    const clientCopy = { ...client }
-    clientCopy.howKnowUs = value
-    setClient(clientCopy)
-  }
 
   const midiaOptions = ['Instagram', 'Facebook']
 
@@ -99,22 +58,65 @@ export default function InfoPage() {
 
   const cityOptions = ['Rio de Janeiro', 'São Paulo', 'Belo Horizonte']
 
+  function handleSaveClient(data: ClientFormData) {
+    console.log(data)
+  }
+
+  console.log(errors)
+
   return (
     <div className="px-5 w-1/2">
-      <form className="flex flex-col gap-5">
+      <form
+        onSubmit={handleSubmit(handleSaveClient)}
+        className="flex flex-col gap-5"
+      >
         <div className="flex flex-col gap-5">
           <span className="text-sm">Dados pessoais</span>
           <div className="flex gap-2">
-            <TextInput label="Nome" value={client.name} setValue={setName} />
-            <TextInput label="CPF" value={client.cpf} setValue={setCpf} />
+            <TextInput
+              label="Nome"
+              isDirty={!!dirtyFields.name}
+              hasError={!!errors.name}
+              {...register('name')}
+            />
+            <Controller
+              name="cpf"
+              control={control}
+              render={({ field: { value, onChange } }) => (
+                <DocumentInput
+                  label="CPF"
+                  hasError={!!errors.cpf}
+                  value={value}
+                  setValue={onChange}
+                />
+              )}
+            />
           </div>
           <div className="flex gap-2">
-            <TextInput
-              label="Data de nascimento"
-              value={client.birthDate}
-              setValue={setBirthDate}
+            <Controller
+              name="birthDate"
+              control={control}
+              render={({ field: { value, onChange } }) => (
+                <DateInput
+                  label="Data de nascimento"
+                  hasError={!!errors.birthDate}
+                  value={value}
+                  setValue={onChange}
+                />
+              )}
             />
-            <TextInput label="Telefone" value={client.tel} setValue={setTel} />
+            <Controller
+              name="cel"
+              control={control}
+              render={({ field: { value, onChange } }) => (
+                <CellPhoneInput
+                  label="Celular"
+                  hasError={!!errors.cel}
+                  value={value}
+                  setValue={onChange}
+                />
+              )}
+            />
           </div>
         </div>
         <div className="flex flex-col gap-5">
@@ -122,57 +124,74 @@ export default function InfoPage() {
           <div className="flex basis-1/4 gap-2">
             <SelectInput
               label="Estado"
-              value={client.state}
-              setValue={setState}
               options={stateOptions}
+              isDirty={!!dirtyFields.state}
+              hasError={!!errors.state}
+              {...register('state')}
             />
             <SelectInput
               label="Cidade"
-              value={client.city}
-              setValue={setCity}
               options={cityOptions}
+              isDirty={!!dirtyFields.city}
+              hasError={!!errors.city}
+              {...register('city')}
             />
           </div>
           <div className="">
             <TextInput
               label="Logradouro"
-              value={client.street}
-              setValue={setStreet}
+              isDirty={!!dirtyFields.street}
+              hasError={!!errors.street}
+              {...register('street')}
             />
           </div>
           <div className="flex gap-2">
             <TextInput
               label="Numero"
-              value={client.number}
-              setValue={setNumber}
+              isDirty={!!dirtyFields.number}
+              hasError={!!errors.number}
+              {...register('number')}
             />
             <TextInput
               label="Complemento"
-              value={client.complement}
-              setValue={setComplement}
+              isDirty={!!dirtyFields.complement}
+              hasError={!!errors.complement}
+              {...register('complement')}
             />
           </div>
         </div>
         <div className="flex flex-col gap-5">
           <span className="text-sm">Mídia Social</span>
           <div className="flex gap-2">
-            <TextInput label="@" value={client.midiaId} setValue={setMidiaId} />
+            <TextInput
+              label="@"
+              isDirty={!!dirtyFields.mediaId}
+              hasError={!!errors.mediaId}
+              {...register('mediaId')}
+            />
             <SelectInput
               label="Mídia social"
-              value={client.socialMidia}
-              setValue={setSocialMidia}
               options={midiaOptions}
+              isDirty={!!dirtyFields.socialMedia}
+              hasError={!!errors.socialMedia}
+              {...register('socialMedia')}
             />
           </div>
           <SelectInput
             label="Como nos conheceu?"
-            value={client.howKnowUs}
-            setValue={setHowKnowUs}
             options={midiaOptions}
+            isDirty={!!dirtyFields.howKnowUs}
+            hasError={!!errors.howKnowUs}
+            {...register('howKnowUs')}
           />
         </div>
         <div>
-          <SaveButton />
+          <button
+            type="submit"
+            className="px-10 py-3 font-bold border border-info rounded text-info hover:bg-info hover:text-white transition duration-200"
+          >
+            Salvar
+          </button>
         </div>
       </form>
     </div>

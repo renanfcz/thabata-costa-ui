@@ -1,4 +1,5 @@
 import { useNewSaleContext } from '@/contexts/NewSaleContext'
+import { currencyFormatter } from '@/utils/formatter'
 
 import ProcedureItem from './ProcedureItem'
 
@@ -11,8 +12,33 @@ enum PaymentType {
 
 export default function ResumeBox() {
   const { sale } = useNewSaleContext()
+
+  function hasProtocol() {
+    if (!sale.protocolName) {
+      return false
+    }
+
+    if (!sale.protocolDesc) {
+      return false
+    }
+
+    return true
+  }
+
+  function hasAnyProcedure() {
+    return sale.procedures.length > 0
+  }
+
+  function hasPaymentType() {
+    return sale.paymentType
+  }
+
   const handleSaveSale = () => {
-    console.log()
+    if (hasProtocol() && hasAnyProcedure() && hasPaymentType()) {
+      console.log(sale)
+    } else {
+      console.log('Has errors')
+    }
   }
 
   const getPaymentMethod = () => {
@@ -60,24 +86,28 @@ export default function ResumeBox() {
       <h1 className="text-lg font py-3">Resumo da venda</h1>
       <div className="flex flex-col">
         <div className="flex w-full justify-between">
-          <div className="flex flex-col">
-            <div className="flex items-center">
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center h-5 gap-1">
               <span className="text-gray-400 text-sm">Protocolo:</span>
               <span>{sale?.protocolName}</span>
             </div>
-            <div className="flex  items-center">
-              <span className="text-gray-400 text-sm">
+            <div className="flex items-center gap-1">
+              <span className="text-gray-400 text-sm w-fit">
                 Descrição do protocolo:
               </span>
-              <span>{sale?.protocolDesc}</span>
+              <p className="line-clamp-3">{sale?.protocolDesc}</p>
             </div>
-            <div className="flex">
+            <div className="flex h-5">
               <span className="text-gray-400 text-sm">Procedimentos:</span>
             </div>
           </div>
-          <div className="flex items-center gap-1">
-            <span className="text-gray-400 text-sm">Forma de pagamento:</span>
-            <span>{getPaymentMethod()}</span>
+          <div className="flex items-center gap-1 w-fit">
+            <span className="text-gray-400 text-sm w-full">
+              Forma de pagamento:
+            </span>
+            <span className="w-16 flex justify-center">
+              {getPaymentMethod()}
+            </span>
           </div>
         </div>
         <div>
@@ -89,11 +119,15 @@ export default function ResumeBox() {
         <div className="flex flex-col p-5 gap-2">
           <div className="flex justify-between">
             <span className="text-gray-400 text-sm">Desconto</span>
-            <span className="text-gray-400 text-sm">R$ {getDiscount()}</span>
+            <span className="text-gray-400 text-sm">
+              {currencyFormatter.format(getDiscount())}
+            </span>
           </div>
           <div className="flex justify-between">
             <span className="text-lg font-bold">Total</span>
-            <span className="text-lg font-bold">R$ {getTotalValue()}</span>
+            <span className="text-lg font-bold">
+              {currencyFormatter.format(getTotalValue())}
+            </span>
           </div>
         </div>
         <button

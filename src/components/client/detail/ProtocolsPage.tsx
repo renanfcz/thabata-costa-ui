@@ -1,5 +1,6 @@
 'use client'
-import { ChevronsLeft, Pencil } from 'lucide-react'
+import BackButton from '@/components/buttons/BackButton'
+import { Pencil } from 'lucide-react'
 import { useState } from 'react'
 
 import ProtocolCard from '../../card/ProtocolCard'
@@ -34,13 +35,7 @@ export default function ProtocolsPage() {
         ) : (
           <div>
             <div className="flex justify-between w-full">
-              <button
-                onClick={handleCloseDetail}
-                className="flex text-gray-400 hover:text-gray-600"
-              >
-                <ChevronsLeft />
-                Voltar
-              </button>
+              <BackButton onClick={handleCloseDetail} />
             </div>
             <div className="px-2 py-2">
               <h1 className="text-lg font-bold">Protocolo: Facial</h1>

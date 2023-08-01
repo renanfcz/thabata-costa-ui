@@ -1,42 +1,46 @@
 'use client'
-import { forwardRef, ForwardRefRenderFunction, useState } from 'react'
+import { useState } from 'react'
+import { PatternFormat } from 'react-number-format'
 
-interface TextInputFormProps {
+interface DateInputProps {
   label: string
-  isDirdy?: boolean
   hasError?: boolean
+  value: string
+  setValue(): void
 }
 
-const TextInputForm: ForwardRefRenderFunction<
-  HTMLInputElement,
-  TextInputFormProps
-> = ({ label, isDirdy, hasError, ...rest }, ref) => {
+export default function DateInput({
+  label,
+  hasError,
+  value,
+  setValue,
+  ...rest
+}: DateInputProps) {
   const [focused, setFocused] = useState(false)
-
   return (
     <div className="relative w-full">
       <label
         className={`absolute transition-all duration-300 left-2 text-gray-600 ${
-          focused || isDirdy ? '-top-4 text-xs font-bold' : 'top-3 text-sm'
+          focused || value ? '-top-4 text-xs font-bold' : 'top-3 text-sm'
         }
-        `}
+          `}
       >
         {label}
       </label>
-      <input
-        type="text"
+      <PatternFormat
+        {...rest}
+        format="##/##/####"
+        mask="_"
         className={`w-full border-2 focus:outline-none rounded px-3 py-2 h-full transition duration-200 ${
           hasError
             ? 'border-danger'
             : 'border-gray-300/30 focus:border-secondary/60'
         }`}
-        ref={ref}
         onFocus={() => setFocused(true)}
-        {...rest}
         onBlur={() => setFocused(false)}
+        value={value}
+        onChange={setValue}
       />
     </div>
   )
 }
-
-export default forwardRef(TextInputForm)

@@ -1,21 +1,21 @@
 'use client'
 import { useState } from 'react'
-import { NumericFormat } from 'react-number-format'
+import { PatternFormat } from 'react-number-format'
 
-interface CurrencyInputProps {
+interface DocumentInputProps {
   label: string
   hasError?: boolean
-  value: number
+  value: string
   setValue(): void
 }
 
-export default function CurrencyInput({
+export default function DocumentInput({
   label,
   hasError,
   value,
   setValue,
   ...rest
-}: CurrencyInputProps) {
+}: DocumentInputProps) {
   const [focused, setFocused] = useState(false)
   return (
     <div className="relative w-full">
@@ -27,10 +27,10 @@ export default function CurrencyInput({
       >
         {label}
       </label>
-      <NumericFormat
+      <PatternFormat
         {...rest}
-        decimalSeparator="."
-        decimalScale={2}
+        format="###.###.###-##"
+        mask="_"
         className={`w-full border-2 focus:outline-none rounded px-3 py-2 h-full transition duration-200 ${
           hasError
             ? 'border-danger'

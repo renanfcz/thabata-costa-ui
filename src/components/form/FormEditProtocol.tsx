@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import CloseButton from './CloseButton'
 import SaveButton from './SaveButton'
-import SelectInput from './SelectInput'
+import SelectInput from './hook-form/SelectInput'
 import TextAreaInput from './TextAreaInput'
 import TextInput from './TextInput'
 

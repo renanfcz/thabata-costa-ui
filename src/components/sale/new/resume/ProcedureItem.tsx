@@ -1,4 +1,5 @@
 import { useNewSaleContext } from '@/contexts/NewSaleContext'
+import { currencyFormatter } from '@/utils/formatter'
 import { Trash2 } from 'lucide-react'
 
 interface Procedure {
@@ -17,8 +18,6 @@ export default function ProcedureItem({ procedure, key }: ProcedureItemProps) {
   const { sale, updateSale } = useNewSaleContext()
 
   const getValueWithDiscount = () => {
-    // const valueNum = parseFloat(procedure.value)
-    // const discountNum = parseFloat(procedure.discount)
     return procedure.value - (procedure.value * procedure.discount) / 100
   }
 
@@ -43,13 +42,13 @@ export default function ProcedureItem({ procedure, key }: ProcedureItemProps) {
         {(procedure.discount || procedure.discount !== 0) && (
           <div className="flex justify-end">
             <span className="line-through text-gray-400 text-sm">
-              R$ {procedure.value}
+              {currencyFormatter.format(procedure.value)}
             </span>
           </div>
         )}
         <div className="flex gap-1 items-center">
           <span className="text-gray-600 font-bold text-lg">
-            R$ {getValueWithDiscount()}
+            {currencyFormatter.format(getValueWithDiscount())}
           </span>
           {(procedure.discount || procedure.discount !== 0) && (
             <span className="text-gray-100 text-xs bg-dark-primary rounded-lg p-1 font-bold">

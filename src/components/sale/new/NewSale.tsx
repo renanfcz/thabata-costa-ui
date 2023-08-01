@@ -1,6 +1,4 @@
-import { NewSaleFormProvider } from '@/contexts/forms/NewSaleFormContext'
-import { NewSaleProvider, useNewSaleContext } from '@/contexts/NewSaleContext'
-import { FormProvider } from 'react-hook-form'
+import { NewSaleProvider } from '@/contexts/NewSaleContext'
 import PaymentCard from './PaymentCard'
 import ProcedureCard from './ProcedureCard'
 import ProtocolCard from './ProtocolCard'

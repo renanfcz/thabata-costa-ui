@@ -1,12 +1,22 @@
 import { ActionGroup } from '@/components/table/ActionGroup'
 import { TableData } from '@/components/table/TableData'
 import { TableHead } from '@/components/table/TableHead'
+import { Plus } from 'lucide-react'
+import Link from 'next/link'
 
 export default function Client() {
   return (
     <div className="flex flex-col h-full mx-10">
-      <h1 className="text-2xl py-3">Clientes</h1>
-      <div className=" bg-white py-2 rounded my-3">
+      <div className="flex justify-between items-center py-3">
+        <h1 className="text-2xl">Clientes</h1>
+        <Link
+          href="/client/new"
+          className="px-3 py-2 text-primary border border-primary rounded hover:bg-primary hover:text-white font-bold transition duration-200"
+        >
+          <Plus />
+        </Link>
+      </div>
+      <div className=" bg-white py-2 rounded">
         <table className="w-full divide-y divide-base-background">
           <thead>
             <tr>

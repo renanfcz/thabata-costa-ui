@@ -9,6 +9,9 @@
     "lint": "next lint --fix"
   },
   "dependencies": {
+    "@fullcalendar/core": "^6.1.8",
+    "@fullcalendar/daygrid": "^6.1.8",
+    "@fullcalendar/react": "^6.1.8",
     "@hookform/resolvers": "^3.1.1",
     "@types/node": "20.4.2",
     "@types/react": "18.2.15",

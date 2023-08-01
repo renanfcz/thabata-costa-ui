@@ -26,25 +26,25 @@ export default function PaymentCard() {
   }
 
   const handlePaymentMethod = (type: PaymentType) => {
-    if (type === 'money') {
+    if (type === 'money' && moneyButtonClicked === false) {
       setMoneyButtonClicked(!moneyButtonClicked)
       setPixButtonClicked(false)
       setDebitButtonClicked(false)
       setCreditButtonClicked(false)
       setPaymentMethod(type)
-    } else if (type === 'pix') {
+    } else if (type === 'pix' && pixButtonClicked === false) {
       setMoneyButtonClicked(false)
       setPixButtonClicked(!pixButtonClicked)
       setDebitButtonClicked(false)
       setCreditButtonClicked(false)
       setPaymentMethod(type)
-    } else if (type === 'debit') {
+    } else if (type === 'debit' && debitButtonClicked === false) {
       setMoneyButtonClicked(false)
       setPixButtonClicked(false)
       setDebitButtonClicked(!debitButtonClicked)
       setCreditButtonClicked(false)
       setPaymentMethod(type)
-    } else if (type === 'credit') {
+    } else if (type === 'credit' && creditButtonClicked === false) {
       setMoneyButtonClicked(false)
       setPixButtonClicked(false)
       setDebitButtonClicked(false)
