@@ -8,7 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
 import * as z from 'zod'
 import TextInput from '@/components/form/hook-form/TextInput'
-import CellPhoneInput from '@/components/form/CellPhoneInput'
+import CellPhoneInput from '@/components/form/inputs/CellPhoneInput'
 
 const schema = z.object({
   name: z.string().min(5),

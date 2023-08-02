@@ -1,5 +1,5 @@
 'use client'
-import RadioButton from '@/components/form/RadioButton'
+import RadioButton from '@/components/form/inputs/RadioButton'
 import { useNewSaleContext } from '@/contexts/NewSaleContext'
 import { Banknote, CreditCard, Landmark, SmartphoneNfc } from 'lucide-react'
 import { useState } from 'react'

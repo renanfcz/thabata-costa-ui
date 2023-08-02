@@ -1,7 +1,7 @@
 import { Info } from 'lucide-react'
 import { useState } from 'react'
 import FormEditProtocol from '../form/FormEditProtocol'
-import EditModal from '../modal/EditModal'
+import Modal from '../modal/Modal'
 import { TableData } from './TableData'
 import { TableHead } from './TableHead'
 
@@ -74,9 +74,9 @@ export default function TableDetailProtocolCard() {
           </tr>
         </tbody>
       </table>
-      <EditModal isOpen={modalOpen}>
+      <Modal isOpen={modalOpen}>
         <FormEditProtocol onClose={handleCloseModal} />
-      </EditModal>
+      </Modal>
     </div>
   )
 }

@@ -1,5 +1,5 @@
-import TextAreaInput from '@/components/form/TextAreaInput'
-import TextInput from '@/components/form/TextInput'
+import TextAreaInput from '@/components/form/inputs/TextAreaInput'
+import TextInput from '@/components/form/inputs/TextInput'
 import { useNewSaleContext } from '@/contexts/NewSaleContext'
 
 export default function ProtocolCard() {

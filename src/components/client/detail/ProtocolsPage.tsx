@@ -1,5 +1,5 @@
 'use client'
-import BackButton from '@/components/buttons/BackButton'
+import BackButton from '@/components/form/buttons/BackButton'
 import { Pencil } from 'lucide-react'
 import { useState } from 'react'
 

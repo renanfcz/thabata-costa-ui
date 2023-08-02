@@ -57,7 +57,9 @@ export default function RootLayout({
               <ShoppingBag /> <strong>Vendas</strong>
             </Link>
           </aside>
-          <main className="bg-base-background flex-1">{children}</main>
+          <main className="bg-base-background flex-1 h-fit py-2">
+            {children}
+          </main>
         </div>
       </body>
     </html>

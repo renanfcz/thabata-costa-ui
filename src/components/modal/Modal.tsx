@@ -2,7 +2,7 @@ interface ModalProps {
   isOpen: boolean
   children: React.ReactNode
 }
-export default function EditModal({ isOpen, children }: ModalProps) {
+export default function Modal({ isOpen, children }: ModalProps) {
   if (!isOpen) return null
 
   return (

@@ -3,7 +3,7 @@ import { Info } from 'lucide-react'
 import { useState } from 'react'
 
 import FormEditProtocol from '../form/FormEditProtocol'
-import EditModal from '../modal/EditModal'
+import EditModal from '../modal/Modal'
 import { TableData } from '../table/TableData'
 import { TableHead } from '../table/TableHead'
 

@@ -4,8 +4,8 @@ import { useNewSaleContext } from '@/contexts/NewSaleContext'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
 import * as z from 'zod'
-import CurrencyInput from '@/components/form/CurrencyInput'
-import NumberInput from '@/components/form/NumberInput'
+import CurrencyInput from '@/components/form/inputs/CurrencyInput'
+import NumberInput from '@/components/form/inputs/NumberInput'
 
 const schema = z.object({
   name: z.string(),

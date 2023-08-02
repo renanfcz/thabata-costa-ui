@@ -1,5 +1,5 @@
 'use client'
-import TextInput from '@/components/form/TextInput'
+import TextInput from '@/components/form/inputs/TextInput'
 import { TableData } from '@/components/table/TableData'
 import { TableHead } from '@/components/table/TableHead'
 import { Trash2 } from 'lucide-react'
@@ -8,7 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { currencyFormatter } from '@/utils/formatter'
-import CurrencyInput from '@/components/form/CurrencyInput'
+import CurrencyInput from '@/components/form/inputs/CurrencyInput'
 
 interface Procedure {
   name: string
