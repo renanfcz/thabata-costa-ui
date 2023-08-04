@@ -5,10 +5,11 @@ interface TextInputProps {
   label: string
   hasError?: boolean
   isDirty?: boolean
+  disabled?: boolean
 }
 
 const TextInput: ForwardRefRenderFunction<HTMLInputElement, TextInputProps> = (
-  { label, hasError, isDirty, ...rest },
+  { label, hasError, isDirty, disabled, ...rest },
   ref,
 ) => {
   const [focused, setFocused] = useState(false)
@@ -34,6 +35,7 @@ const TextInput: ForwardRefRenderFunction<HTMLInputElement, TextInputProps> = (
         ref={ref}
         {...rest}
         onBlur={() => setFocused(false)}
+        disabled={disabled}
       />
     </div>
   )

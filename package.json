@@ -9,6 +9,11 @@
     "lint": "next lint --fix"
   },
   "dependencies": {
+    "@fullcalendar/core": "^6.1.8",
+    "@fullcalendar/daygrid": "^6.1.8",
+    "@fullcalendar/interaction": "^6.1.8",
+    "@fullcalendar/react": "^6.1.8",
+    "@fullcalendar/timegrid": "^6.1.8",
     "@hookform/resolvers": "^3.1.1",
     "@types/node": "20.4.2",
     "@types/react": "18.2.15",
@@ -32,6 +37,7 @@
   },
   "devDependencies": {
     "@rocketseat/eslint-config": "^2.1.0",
+    "@types/fullcalendar": "^3.8.0",
     "@types/lodash": "^4.14.196",
     "@types/react-flatpickr": "^3.8.8"
   }

@@ -3,16 +3,11 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import brLocale from '@fullcalendar/core/locales/pt-br'
-import { useEffect, useState } from 'preact/hooks'
-import Modal from '@/components/modal/Modal'
-
-interface Event {
-  id: string
-  title: string
-  start: string
-  end: string
-  color: string
-}
+import interactionPlugin from '@fullcalendar/interaction'
+import { EventClickArg } from '@fullcalendar/core'
+import FormEditSession from '@/components/form/FormEditSession'
+import DetailSessionModal from '@/components/modal/DetailSessionModal'
+import { useState } from 'react'
 
 export default function Schedule() {
   const [modalOpen, setModalOpen] = useState(false)
@@ -48,6 +43,10 @@ export default function Schedule() {
     },
   ]
 
+  const handleEventClick = (e: EventClickArg) => {
+    handleOpenModal()
+  }
+
   return (
     <div className="mx-10">
       <h1 className="text-2xl py-3">Agenda</h1>
@@ -55,7 +54,7 @@ export default function Schedule() {
         <div className="w-full h-1/2">
           <FullCalendar
             timeZone="local"
-            plugins={[dayGridPlugin, timeGridPlugin]}
+            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             initialView="timeGridWeek"
             locale={brLocale}
             events={events}
@@ -66,12 +65,16 @@ export default function Schedule() {
               center: 'title',
               right: 'dayGridMonth,timeGridWeek',
             }}
-            editable={true}
+            editable={false}
             selectable={true}
+            eventClick={(e: EventClickArg) => handleEventClick(e)}
+            eventClassNames="cursor-pointer"
           />
         </div>
       </div>
-      <Modal isOpen={modalOpen}></Modal>
+      <DetailSessionModal isOpen={modalOpen}>
+        <FormEditSession onClose={handleCloseModal} />
+      </DetailSessionModal>
     </div>
   )
 }

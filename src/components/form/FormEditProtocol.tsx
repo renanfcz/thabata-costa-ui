@@ -44,10 +44,10 @@ export default function FormEditProtocol({ onClose }: FormEditProtocolProps) {
   }
 
   return (
-    <div className="p-5 h-full">
-      <h1 className="font-bold text-lg">Dados da sessão</h1>
-      <form onSubmit={handleSubmit(saveProtocol)} className="h-full">
-        <div className="flex flex-col gap-5 justify-center h-full">
+    <div className="px-2">
+      <form onSubmit={handleSubmit(saveProtocol)}>
+        <div className="flex flex-col gap-5 justify-center">
+          <h1 className="font-bold text-lg text-gray-600">Dados da sessão</h1>
           <div className="flex gap-2">
             <SelectInput
               label="Procedimento"
@@ -83,8 +83,8 @@ export default function FormEditProtocol({ onClose }: FormEditProtocolProps) {
             />
           </div>
           <div className="flex gap-2 justify-end items-end w-full">
-            <SaveButton />
             <CloseButton onClose={onClose} />
+            <SaveButton />
           </div>
         </div>
       </form>

@@ -3,7 +3,7 @@ import { Info } from 'lucide-react'
 import { useState } from 'react'
 
 import FormEditProtocol from '../form/FormEditProtocol'
-import EditModal from '../modal/Modal'
+import EditModal from '../modal/EditProtocolModal'
 import { TableData } from '../table/TableData'
 import { TableHead } from '../table/TableHead'
 
@@ -18,7 +18,7 @@ export default function TableFinanceAccordion() {
     setModalOpen(false)
   }
   return (
-    <div className="border-2 border-warn">
+    <div className="border-2 border-primary">
       <table className="w-full divide-y divide-base-background">
         <thead>
           <tr>

@@ -1,7 +1,7 @@
 import { Info } from 'lucide-react'
 import { useState } from 'react'
 import FormEditProtocol from '../form/FormEditProtocol'
-import Modal from '../modal/Modal'
+import Modal from '../modal/EditProtocolModal'
 import { TableData } from './TableData'
 import { TableHead } from './TableHead'
 

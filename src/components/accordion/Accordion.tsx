@@ -13,7 +13,7 @@ export default function Accordion({ children }: { children: React.ReactNode }) {
     <div className="px-3 py-4">
       <button
         onClick={toggleAccordion}
-        className={`px-3 py-4 w-full flex justify-between bg-warn rounded ${
+        className={`px-3 py-4 w-full flex justify-between bg-primary rounded ${
           isOpen ? 'rounded-b-none' : ''
         }`}
       >
