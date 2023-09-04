@@ -23,8 +23,8 @@ export default function Schedule() {
     {
       id: '1',
       title: 'Evento1',
-      start: '2023-08-01T16:30:33',
-      end: '2023-08-01T17:00:33',
+      start: '2023-08-31T12:00:00',
+      end: '2023-08-31T12:30:00',
       color: 'green',
     },
     {

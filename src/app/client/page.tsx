@@ -3,8 +3,22 @@ import { TableData } from '@/components/table/TableData'
 import { TableHead } from '@/components/table/TableHead'
 import { Plus } from 'lucide-react'
 import Link from 'next/link'
+import { GET_CLIENTS } from '@/server/queries'
+import { Client } from '@/models/Client'
+import { graphqlClient } from '@/server/graphql-client'
+import { dateFormatter } from '@/utils/formatter'
 
-export default function Client() {
+interface Response {
+  findAllClients: [Client]
+}
+
+export const revalidate = 30
+
+export default async function Client() {
+  const data = await graphqlClient.request<Response>(GET_CLIENTS)
+  const clients = data.findAllClients
+
+  console.log(clients)
   return (
     <div className="flex flex-col h-full mx-10">
       <div className="flex justify-between items-center py-3">
@@ -28,42 +42,19 @@ export default function Client() {
             </tr>
           </thead>
           <tbody>
-            <tr className="hover:bg-light-primary">
-              <TableData>Renan França da Costa</TableData>
-              <TableData>(21) 99558-3631</TableData>
-              <TableData>173.543.267-98</TableData>
-              <TableData>16/01/1996</TableData>
-              <TableData>
-                <ActionGroup />
-              </TableData>
-            </tr>
-            <tr className="hover:bg-light-primary">
-              <TableData>Renan França da Costa</TableData>
-              <TableData>(21) 99558-3631</TableData>
-              <TableData>173.543.267-98</TableData>
-              <TableData>16/01/1996</TableData>
-              <TableData>
-                <ActionGroup />
-              </TableData>
-            </tr>
-            <tr className="hover:bg-light-primary">
-              <TableData>Renan França da Costa</TableData>
-              <TableData>(21) 99558-3631</TableData>
-              <TableData>173.543.267-98</TableData>
-              <TableData>16/01/1996</TableData>
-              <TableData>
-                <ActionGroup />
-              </TableData>
-            </tr>
-            <tr className="hover:bg-light-primary">
-              <TableData>Renan França da Costa</TableData>
-              <TableData>(21) 99558-3631</TableData>
-              <TableData>173.543.267-98</TableData>
-              <TableData>16/01/1996</TableData>
-              <TableData>
-                <ActionGroup />
-              </TableData>
-            </tr>
+            {clients.map((client, index) => (
+              <tr className="hover:bg-light-primary" key={index}>
+                <TableData>{client.name}</TableData>
+                <TableData>{client.celphone}</TableData>
+                <TableData>{client.cpf}</TableData>
+                <TableData>
+                  {dateFormatter.format(new Date(client.dateBirth))}
+                </TableData>
+                <TableData>
+                  <ActionGroup client={client} />
+                </TableData>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

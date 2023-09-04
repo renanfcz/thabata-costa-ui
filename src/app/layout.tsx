@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import './globals.css'
+import 'react-toastify/dist/ReactToastify.css'
 import { Roboto } from 'next/font/google'
 import {
   CalendarCheck,
@@ -8,6 +9,7 @@ import {
   ShoppingBag,
   Users,
 } from 'lucide-react'
+import { ToastContainer } from 'react-toastify'
 
 const roboto = Roboto({
   weight: '400',
@@ -61,6 +63,7 @@ export default function RootLayout({
             {children}
           </main>
         </div>
+        <ToastContainer />
       </body>
     </html>
   )

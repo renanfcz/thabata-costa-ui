@@ -1,11 +1,17 @@
 'use client'
-import FinanceInfoPage from '@/components/client/detail/FinanceInfoPage'
-import IndicationPage from '@/components/client/detail/IndicationPage'
-import InfoPage from '@/components/client/detail/InfoPage'
-import ProtocolsPage from '@/components/client/detail/ProtocolsPage'
+import DetailsSections from '@/components/client/detail/DetailsSections'
+import { ClientProvider } from '@/contexts/client/ClientContext'
+import { ChevronsLeft } from 'lucide-react'
+import Link from 'next/link'
 import { useState } from 'react'
 
-export default function ClientDetail() {
+interface ClientDetailProps {
+  params: {
+    name: string
+  }
+}
+
+export default function ClientDetail({ params }: ClientDetailProps) {
   const [info, setInfo] = useState(true)
   const [indication, setIndication] = useState(false)
   const [protocols, setProtocols] = useState(false)
@@ -39,16 +45,28 @@ export default function ClientDetail() {
     setFinanceInfo(true)
   }
 
+  function decodeStringParams(param: string) {
+    return decodeURIComponent(param)
+  }
+
   return (
     <div className="flex flex-col h-full mx-10">
-      <h1 className="text-2xl py-3">Renan França da Costa</h1>
-
-      <div className="flex bg-white rounded p-4 gap-2 items-center">
-        <span>Status: </span>
-        <span className="rounded-full bg-success w-4 h-4"></span>
-      </div>
+      <h1 className="text-2xl py-3">{decodeStringParams(params.name)}</h1>
 
       <div className="bg-white">
+        <div className="flex">
+          <Link
+            href="/client"
+            className="flex text-gray-400 hover:text-gray-600 px-4 py-2"
+          >
+            <ChevronsLeft />
+            Voltar
+          </Link>
+        </div>
+        <div className="flex p-4 gap-2 items-center">
+          <span>Status: </span>
+          <span className="rounded-full bg-success w-4 h-4"></span>
+        </div>
         <div className="flex gap-10 p-4">
           <button
             onClick={handleInfo}
@@ -90,10 +108,15 @@ export default function ClientDetail() {
           </button>
         </div>
         <div className="py-5">
-          {info && <InfoPage />}
-          {indication && <IndicationPage />}
-          {protocols && <ProtocolsPage />}
-          {financeInfo && <FinanceInfoPage />}
+          <ClientProvider>
+            <DetailsSections
+              clientName={decodeStringParams(params.name)}
+              info={info}
+              indication={indication}
+              protocols={protocols}
+              financeInfo={financeInfo}
+            />
+          </ClientProvider>
         </div>
       </div>
     </div>

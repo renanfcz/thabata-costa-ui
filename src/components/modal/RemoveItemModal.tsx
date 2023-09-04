@@ -1,11 +1,8 @@
-interface EditProtocolModalProps {
+interface RemoveItemModal {
   isOpen: boolean
   children: React.ReactNode
 }
-export default function EditProtocolModal({
-  isOpen,
-  children,
-}: EditProtocolModalProps) {
+export default function RemoveItemModal({ isOpen, children }: RemoveItemModal) {
   if (!isOpen) return null
 
   return (

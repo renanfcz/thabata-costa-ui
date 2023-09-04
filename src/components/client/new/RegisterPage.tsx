@@ -8,13 +8,10 @@ import TextInput from '@/components/form/hook-form/TextInput'
 import DocumentInput from '@/components/form/inputs/DocumentInput'
 import DateInput from '@/components/form/inputs/DateInput'
 import CellPhoneInput from '@/components/form/inputs/CellPhoneInput'
-import { useClientContext } from '@/contexts/client/ClientContext'
 import { graphqlClient } from '@/server/graphql-client'
-import { CREATE_CLIENT, UPDATE_CLIENT } from '@/server/mutations'
-import { dateFormatter, formatDateString } from '@/utils/formatter'
+import { CREATE_CLIENT } from '@/server/mutations'
+import { formatDateString } from '@/utils/formatter'
 import { toast } from 'react-toastify'
-import { Client } from '@/models/Client'
-import { useEffect } from 'react'
 
 const schema = z.object({
   name: z.string().min(5),
@@ -33,17 +30,11 @@ const schema = z.object({
 
 type ClientFormData = z.infer<typeof schema>
 
-interface UpdateClientResponse {
-  updateClient: Client
-}
-
-export default function InfoPage() {
-  const { client, updateClient } = useClientContext()
+export default function RegisterPage() {
   const {
     register,
     handleSubmit,
     control,
-    reset,
     formState: { errors, dirtyFields },
   } = useForm<ClientFormData>({
     resolver: zodResolver(schema),
@@ -73,52 +64,15 @@ export default function InfoPage() {
 
   async function handleSaveClient(clientInput: ClientFormData) {
     clientInput.dateBirth = formatDateString(clientInput.dateBirth)
-    if (client) {
-      try {
-        const data = await graphqlClient.request<UpdateClientResponse>(
-          UPDATE_CLIENT,
-          {
-            clientId: client.id,
-            updateClientInput: clientInput,
-          },
-        )
-        updateClient(data.updateClient)
-        toast.success('Cliente atualizado com sucesso!')
-      } catch (e) {
-        toast.error('Ocorreu um erro ao tentar atualizar dados do cliente!')
-      }
-    } else {
-      try {
-        await graphqlClient.request(CREATE_CLIENT, {
-          createClientInput: clientInput,
-        })
-        toast.success('Cliente criado com sucesso!')
-      } catch (e) {
-        toast.error('Ocorreu um erro ao tentar atualizar dados do cliente!')
-      }
+    try {
+      await graphqlClient.request(CREATE_CLIENT, {
+        createClientInput: clientInput,
+      })
+      toast.success('Cliente criado com sucesso!')
+    } catch (e) {
+      toast.error('Ocorreu um erro ao tentar atualizar dados do cliente!')
     }
   }
-
-  useEffect(() => {
-    reset({
-      name: client?.name,
-      cpf: client?.cpf,
-      dateBirth: client?.dateBirth
-        ? dateFormatter.format(new Date(client?.dateBirth))
-        : undefined,
-      celphone: client?.celphone,
-      state: client?.state,
-      city: client?.city,
-      street: client?.street,
-      number: client?.number,
-      complement: client?.complement,
-      socialMediaId: client?.socialMediaId,
-      socialMedia: client?.socialMedia,
-      knowUs: client?.knowUs,
-    })
-  }, [reset, client])
-
-  console.log(client)
 
   return (
     <div className="px-5 w-1/2">
@@ -131,7 +85,7 @@ export default function InfoPage() {
           <div className="flex gap-2">
             <TextInput
               label="Nome"
-              isDirty={!!dirtyFields.name || !!client?.name}
+              isDirty={!!dirtyFields.name}
               hasError={!!errors.name}
               {...register('name')}
             />
@@ -181,14 +135,14 @@ export default function InfoPage() {
             <SelectInput
               label="Estado"
               options={stateOptions}
-              isDirty={!!dirtyFields.state || !!client?.state}
+              isDirty={!!dirtyFields.state}
               hasError={!!errors.state}
               {...register('state')}
             />
             <SelectInput
               label="Cidade"
               options={cityOptions}
-              isDirty={!!dirtyFields.city || !!client?.city}
+              isDirty={!!dirtyFields.city}
               hasError={!!errors.city}
               {...register('city')}
             />
@@ -196,7 +150,7 @@ export default function InfoPage() {
           <div className="">
             <TextInput
               label="Logradouro"
-              isDirty={!!dirtyFields.street || !!client?.street}
+              isDirty={!!dirtyFields.street}
               hasError={!!errors.street}
               {...register('street')}
             />
@@ -204,13 +158,13 @@ export default function InfoPage() {
           <div className="flex gap-2">
             <TextInput
               label="Numero"
-              isDirty={!!dirtyFields.number || !!client?.number}
+              isDirty={!!dirtyFields.number}
               hasError={!!errors.number}
               {...register('number')}
             />
             <TextInput
               label="Complemento"
-              isDirty={!!dirtyFields.complement || !!client?.complement}
+              isDirty={!!dirtyFields.complement}
               hasError={!!errors.complement}
               {...register('complement')}
             />
@@ -221,14 +175,14 @@ export default function InfoPage() {
           <div className="flex gap-2">
             <TextInput
               label="@"
-              isDirty={!!dirtyFields.socialMediaId || !!client?.socialMediaId}
+              isDirty={!!dirtyFields.socialMediaId}
               hasError={!!errors.socialMediaId}
               {...register('socialMediaId')}
             />
             <SelectInput
               label="Mídia social"
               options={midiaOptions}
-              isDirty={!!dirtyFields.socialMedia || !!client?.socialMedia}
+              isDirty={!!dirtyFields.socialMedia}
               hasError={!!errors.socialMedia}
               {...register('socialMedia')}
             />
@@ -236,7 +190,7 @@ export default function InfoPage() {
           <SelectInput
             label="Como nos conheceu?"
             options={midiaOptions}
-            isDirty={!!dirtyFields.knowUs || !!client?.knowUs}
+            isDirty={!!dirtyFields.knowUs}
             hasError={!!errors.knowUs}
             {...register('knowUs')}
           />
