@@ -2,11 +2,12 @@ import CloseButton from './buttons/CloseButton'
 import SaveButton from './hook-form/SaveButton'
 import SelectInput from './hook-form/SelectInput'
 import TextInput from './hook-form/TextInput'
-import DateTimeInput from './inputs/DateTimeInput'
+import DateTimeInput from './inputs/picker/DateInput'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
 import * as z from 'zod'
 import TextAreaInput from './inputs/TextAreaInput'
+import Title from '../modal/Title'
 
 interface FormEditSessionProps {
   onClose(): void
@@ -49,7 +50,7 @@ export default function FormEditSession({ onClose }: FormEditSessionProps) {
         onSubmit={handleSubmit(saveSession)}
         className="flex flex-col gap-10 justify-items-center"
       >
-        <h1 className="font-bold text-lg text-gray-600">Dados da sessão</h1>
+        <Title>Dados da sessão</Title>
         <div className="flex flex-col gap-5 justify-center h-full">
           <div className="flex gap-2">
             <TextInput label="Nome do cliente" disabled={true} />

@@ -2,12 +2,13 @@
 import { useState } from 'react'
 import Flatpickr from 'react-flatpickr'
 import 'flatpickr/dist/themes/airbnb.css'
+import { dateFormatter } from '@/utils/formatter'
 
 interface DateTimeInputProps {
   label: string
   hasError?: boolean
   value: string
-  setValue(): void
+  setValue(date: string): void
 }
 
 export default function DateTimeInput({
@@ -18,6 +19,17 @@ export default function DateTimeInput({
   ...rest
 }: DateTimeInputProps) {
   const [focused, setFocused] = useState(false)
+
+  const handleUpdateDate = (dateArray: Date[]) => {
+    const newDate = new Date(value)
+
+    newDate.setFullYear(dateArray[0].getUTCFullYear())
+    newDate.setMonth(dateArray[0].getUTCMonth())
+    newDate.setDate(dateArray[0].getUTCDate())
+
+    setValue(dateFormatter.format(newDate))
+  }
+
   return (
     <div className="relative w-full">
       <label
@@ -29,12 +41,11 @@ export default function DateTimeInput({
         {label}
       </label>
       <Flatpickr
-        value={value}
-        onChange={setValue}
+        key={value}
+        onClose={handleUpdateDate}
         options={{
-          enableTime: true,
-          time_24hr: true,
-          dateFormat: 'd/m/Y H:i',
+          dateFormat: 'd/m/Y',
+          defaultDate: value,
         }}
         className={`w-full border-2 focus:outline-none rounded px-3 py-2 h-full transition duration-200 ${
           hasError

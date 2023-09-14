@@ -53,3 +53,89 @@ export const UPDATE_CLIENT = gql`
     }
   }
 `
+
+export const CREATE_INDICATION = gql`
+  mutation CreateIndication($createIndicationInput: CreateIndicationInput!) {
+    createIndication(createIndicationInput: $createIndicationInput) {
+      name
+      celphone
+      socialMedia
+      socialMediaId
+      clientId
+      id
+    }
+  }
+`
+
+export const REMOVE_INDICATION = gql`
+  mutation RemoveIndication($id: String!) {
+    removeIndication(id: $id) {
+      celphone
+      clientId
+      name
+      socialMedia
+      socialMediaId
+    }
+  }
+`
+
+export const UPDATE_PROTOCOL = gql`
+  mutation UpdateSale($id: String!, $sale: UpdateSaleInput!) {
+    updateSale(id: $id, sale: $sale) {
+      createdAt
+      id
+      protocolDesc
+      protocolName
+      saleItems {
+        discount
+        id
+        value
+        sessions {
+          id
+          initDate
+          obs
+          finalDate
+          saleItem {
+            discount
+            id
+            sessionsNum
+            value
+            procedure {
+              id
+              name
+              price
+            }
+          }
+        }
+        procedure {
+          id
+          name
+          price
+        }
+        sessionsNum
+      }
+    }
+  }
+`
+
+export const UPDATE_SESSION = gql`
+  mutation UpdateSession($updateSessionInput: UpdateSessionInput!) {
+    updateSession(updateSessionInput: $updateSessionInput) {
+      saleItem {
+        id
+        value
+        discount
+        sessionsNum
+        procedure {
+          name
+          price
+          id
+        }
+      }
+      id
+      initDate
+      finalDate
+      obs
+    }
+  }
+`

@@ -7,12 +7,13 @@ interface SelectInputProps {
   options: string[]
   hasError?: boolean
   isDirty?: boolean
+  value?: string
 }
 
 const SelectInput: ForwardRefRenderFunction<
   HTMLSelectElement,
   SelectInputProps
-> = ({ label, options, hasError, isDirty, ...rest }, ref) => {
+> = ({ label, options, hasError, isDirty, value, ...rest }, ref) => {
   const [focused, setFocused] = useState(false)
 
   return (
@@ -33,6 +34,7 @@ const SelectInput: ForwardRefRenderFunction<
             ? 'border-danger'
             : 'border-gray-300/30 focus:border-secondary/60'
         }`}
+        value={value}
         ref={ref}
         {...rest}
         onBlur={() => setFocused(false)}

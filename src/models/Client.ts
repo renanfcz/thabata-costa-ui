@@ -1,3 +1,6 @@
+import { Indication } from './Indication'
+import { Sale } from './Sale'
+
 export type Client = {
   id: string
   name: string
@@ -9,9 +12,11 @@ export type Client = {
   street: string
   number: number
   complement: string
+  indications: Indication[]
+  createdAt: Date
   knowUs: string
   socialMediaId: string
   socialMedia: string
+  sales: Sale[]
   clientStatus: string
-  createdAt: Date
 }

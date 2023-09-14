@@ -1,7 +1,7 @@
 'use client'
 
 import { X } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import SelectInput from '../../form/hook-form/SelectInput'
 import { TableHead } from '../../table/TableHead'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -9,17 +9,27 @@ import { Controller, useForm } from 'react-hook-form'
 import * as z from 'zod'
 import TextInput from '@/components/form/hook-form/TextInput'
 import CellPhoneInput from '@/components/form/inputs/CellPhoneInput'
+import { toast } from 'react-toastify'
+import { graphqlClient } from '@/server/graphql-client'
+import { useClientContext } from '@/contexts/client/ClientContext'
+import { CREATE_INDICATION, REMOVE_INDICATION } from '@/server/mutations'
+import { Indication } from '@/models/Indication'
 
 const schema = z.object({
   name: z.string().min(5),
-  cel: z.string().min(11),
-  mediaId: z.string(),
+  celphone: z.string().min(11),
+  socialMediaId: z.string(),
   socialMedia: z.string(),
 })
 
 type IndicationFormData = z.infer<typeof schema>
 
+interface ResponseCreateIndication {
+  createIndication: Indication
+}
+
 export default function IndicationPage() {
+  const { client } = useClientContext()
   const {
     register,
     handleSubmit,
@@ -30,28 +40,70 @@ export default function IndicationPage() {
     resolver: zodResolver(schema),
     defaultValues: {
       name: undefined,
-      cel: undefined,
-      mediaId: undefined,
+      celphone: undefined,
+      socialMediaId: undefined,
       socialMedia: undefined,
     },
     mode: 'onSubmit',
     reValidateMode: 'onChange',
   })
 
-  const [indicationList, setIndicationList] = useState<IndicationFormData[]>([])
+  const [indicationList, setIndicationList] = useState<Indication[]>(
+    client?.indications || [],
+  )
 
   const options = ['Instagram', 'Facebook']
 
-  function addIndication(data: IndicationFormData) {
-    setIndicationList([...indicationList, data])
-    reset()
+  async function addIndication(input: IndicationFormData) {
+    const loading = toast.loading('Salvando...')
+    try {
+      const data = await graphqlClient.request<ResponseCreateIndication>(
+        CREATE_INDICATION,
+        {
+          createIndicationInput: {
+            name: input.name,
+            celphone: input.celphone,
+            socialMediaId: input.socialMediaId,
+            socialMedia: input.socialMedia,
+            clientId: client?.id,
+          },
+        },
+      )
+      toast.update(loading, {
+        render: 'Indicação salva com sucesso!',
+        type: 'success',
+        isLoading: false,
+        autoClose: 5000,
+      })
+      setIndicationList([...indicationList, data.createIndication])
+      reset()
+    } catch (error: any) {
+      toast.update(loading, {
+        render: error.response.errors[0].message,
+        type: 'error',
+        isLoading: false,
+        autoClose: 5000,
+      })
+    }
   }
 
-  const handleRemoveIndication = (index: number) => {
-    const indicationsCopy = [...indicationList]
-    indicationsCopy.splice(index, 1)
-    setIndicationList(indicationsCopy)
+  const handleRemoveIndication = async (id: string) => {
+    try {
+      await graphqlClient.request(REMOVE_INDICATION, {
+        id,
+      })
+      const listWithoutIndication = indicationList.filter(
+        (indication) => indication.id !== id,
+      )
+      setIndicationList(listWithoutIndication)
+    } catch (error: any) {
+      toast.error(error.response.errors[0].message)
+    }
   }
+
+  useEffect(() => {
+    setIndicationList(client?.indications || [])
+  }, [client])
 
   console.log(errors)
 
@@ -69,16 +121,16 @@ export default function IndicationPage() {
             </tr>
           </thead>
           <tbody>
-            {indicationList.map((indication, index) => (
-              <tr key={index}>
+            {indicationList.map((indication) => (
+              <tr key={indication.id}>
                 <td>{indication.name}</td>
-                <td>{indication.cel}</td>
-                <td>{indication.mediaId}</td>
+                <td>{indication.celphone}</td>
+                <td>{indication.socialMediaId}</td>
                 <td>{indication.socialMedia}</td>
                 <td>
                   <X
                     className="text-danger cursor-pointer"
-                    onClick={() => handleRemoveIndication(index)}
+                    onClick={() => handleRemoveIndication(indication.id)}
                   />
                 </td>
               </tr>
@@ -101,13 +153,13 @@ export default function IndicationPage() {
             {...register('name')}
           />
           <Controller
-            name="cel"
+            name="celphone"
             control={control}
             defaultValue=""
             render={({ field: { value, onChange } }) => (
               <CellPhoneInput
                 label="Celular"
-                hasError={!!errors.cel}
+                hasError={!!errors.celphone}
                 value={value}
                 setValue={onChange}
               />
@@ -117,9 +169,9 @@ export default function IndicationPage() {
         <div className="flex gap-2">
           <TextInput
             label="@"
-            isDirty={!!dirtyFields.mediaId}
-            hasError={!!errors.mediaId}
-            {...register('mediaId')}
+            isDirty={!!dirtyFields.socialMediaId}
+            hasError={!!errors.socialMediaId}
+            {...register('socialMediaId')}
           />
           <SelectInput
             label="Mídia social"

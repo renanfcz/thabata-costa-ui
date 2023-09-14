@@ -25,6 +25,40 @@ export const GET_CLIENTS = gql`
       clientStatus
       createdAt
       name
+      sales {
+        createdAt
+        id
+        protocolDesc
+        protocolName
+        saleItems {
+          discount
+          id
+          value
+          sessions {
+            id
+            initDate
+            obs
+            finalDate
+            saleItem {
+              discount
+              id
+              sessionsNum
+              value
+              procedure {
+                id
+                name
+                price
+              }
+            }
+          }
+          procedure {
+            id
+            name
+            price
+          }
+          sessionsNum
+        }
+      }
     }
   }
 `
@@ -33,7 +67,6 @@ export const GET_CLIENT_BY_NAME = gql`
   query FindClientByName($name: String!) {
     findClientByName(name: $name) {
       id
-      name
       cpf
       dateBirth
       celphone
@@ -43,16 +76,18 @@ export const GET_CLIENT_BY_NAME = gql`
       number
       complement
       indications {
-        celphone
-        clientId
         name
+        celphone
         socialMedia
         socialMediaId
+        clientId
       }
-      createdAt
       knowUs
       socialMediaId
       socialMedia
+      clientStatus
+      createdAt
+      name
       sales {
         createdAt
         id
@@ -61,14 +96,32 @@ export const GET_CLIENT_BY_NAME = gql`
         saleItems {
           discount
           id
+          value
+          sessions {
+            id
+            initDate
+            obs
+            finalDate
+            saleItem {
+              discount
+              id
+              sessionsNum
+              value
+              procedure {
+                id
+                name
+                price
+              }
+            }
+          }
           procedure {
+            id
             name
             price
           }
-          value
+          sessionsNum
         }
       }
-      clientStatus
     }
   }
 `
@@ -77,7 +130,6 @@ export const GET_CLIENT_BY_ID = gql`
   query FindOneClient($findOneClientId: String!) {
     findOneClient(id: $findOneClientId) {
       id
-      name
       cpf
       dateBirth
       celphone
@@ -87,16 +139,18 @@ export const GET_CLIENT_BY_ID = gql`
       number
       complement
       indications {
-        celphone
-        clientId
         name
+        celphone
         socialMedia
         socialMediaId
+        clientId
       }
-      createdAt
       knowUs
       socialMediaId
       socialMedia
+      clientStatus
+      createdAt
+      name
       sales {
         createdAt
         id
@@ -105,14 +159,42 @@ export const GET_CLIENT_BY_ID = gql`
         saleItems {
           discount
           id
+          value
+          sessions {
+            id
+            initDate
+            obs
+            finalDate
+            saleItem {
+              discount
+              id
+              sessionsNum
+              value
+              procedure {
+                id
+                name
+                price
+              }
+            }
+          }
           procedure {
+            id
             name
             price
           }
-          value
+          sessionsNum
         }
       }
-      clientStatus
+    }
+  }
+`
+
+export const GET_PROCEDURES = gql`
+  query FindAllProcedures {
+    findAllProcedures {
+      id
+      name
+      price
     }
   }
 `
