@@ -173,12 +173,19 @@ export default function IndicationPage() {
             hasError={!!errors.socialMediaId}
             {...register('socialMediaId')}
           />
-          <SelectInput
-            label="Mídia social"
-            options={options}
-            isDirty={!!dirtyFields.socialMedia}
-            hasError={!!errors.socialMedia}
-            {...register('socialMedia')}
+          <Controller
+            name="socialMedia"
+            control={control}
+            render={({ field: { onChange } }) => (
+              <SelectInput
+                label="Mídia social"
+                options={options}
+                isDirty={!!dirtyFields.socialMedia}
+                hasError={!!errors.socialMedia}
+                onChangeValue={onChange}
+                setValue={() => null}
+              />
+            )}
           />
         </div>
         <button

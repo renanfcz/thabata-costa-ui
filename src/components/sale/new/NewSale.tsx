@@ -1,4 +1,5 @@
 import { NewSaleProvider } from '@/contexts/NewSaleContext'
+import ClientCard from './ClientCard'
 import PaymentCard from './PaymentCard'
 import ProcedureCard from './ProcedureCard'
 import ProtocolCard from './ProtocolCard'
@@ -10,6 +11,7 @@ export default function NewSale() {
       <NewSaleProvider>
         <div className="flex gap-3">
           <div className="flex flex-col w-full gap-5">
+            <ClientCard />
             <ProtocolCard />
             <ProcedureCard />
             <PaymentCard />

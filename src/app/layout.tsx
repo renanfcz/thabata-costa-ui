@@ -10,6 +10,7 @@ import {
   Users,
 } from 'lucide-react'
 import { ToastContainer } from 'react-toastify'
+import { ProceduresProvider } from '@/contexts/ProcedureContext'
 
 const roboto = Roboto({
   weight: '400',
@@ -24,7 +25,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={roboto.className}>
-      <body>
+      <body suppressHydrationWarning={true}>
         <header></header>
         <div className="flex flex-1 h-screen">
           <aside className="bg-white flex flex-col w-52 py-5 gap-5">
@@ -60,7 +61,7 @@ export default function RootLayout({
             </Link>
           </aside>
           <main className="bg-base-background flex-1 h-full py-2">
-            {children}
+            <ProceduresProvider>{children}</ProceduresProvider>
           </main>
         </div>
         <ToastContainer />

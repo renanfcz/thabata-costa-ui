@@ -8,19 +8,40 @@ interface SelectInputProps {
   hasError?: boolean
   isDirty?: boolean
   value?: string
+  setValue(value: string): void
+  onChangeValue(selectedValue: string): void
 }
 
 const SelectInput: ForwardRefRenderFunction<
   HTMLSelectElement,
   SelectInputProps
-> = ({ label, options, hasError, isDirty, value, ...rest }, ref) => {
+> = (
+  {
+    label,
+    options,
+    hasError,
+    isDirty,
+    value,
+    setValue,
+    onChangeValue,
+    ...rest
+  },
+  ref,
+) => {
   const [focused, setFocused] = useState(false)
+
+  function handleChangeValue(value: string) {
+    onChangeValue(value)
+    setValue(value)
+  }
 
   return (
     <div className="relative w-full">
       <label
         className={`absolute transition-all duration-300 left-2 text-gray-600 ${
-          focused || isDirty ? '-top-4 text-xs font-bold' : 'top-3 text-sm'
+          focused || isDirty || value
+            ? '-top-4 text-xs font-bold'
+            : 'top-3 text-sm'
         }
         ${hasError ? 'text-danger' : ''}
         `}
@@ -34,9 +55,12 @@ const SelectInput: ForwardRefRenderFunction<
             ? 'border-danger'
             : 'border-gray-300/30 focus:border-secondary/60'
         }`}
-        value={value}
         ref={ref}
         {...rest}
+        value={value}
+        onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+          handleChangeValue(e.target.value)
+        }
         onBlur={() => setFocused(false)}
       >
         <option value={undefined}></option>

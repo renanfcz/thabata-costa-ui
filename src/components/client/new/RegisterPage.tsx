@@ -70,7 +70,7 @@ export default function RegisterPage() {
       })
       toast.success('Cliente criado com sucesso!')
     } catch (e) {
-      toast.error('Ocorreu um erro ao tentar atualizar dados do cliente!')
+      toast.error('Ocorreu um erro ao tentar cadastrar cliente!')
     }
   }
 
@@ -132,19 +132,35 @@ export default function RegisterPage() {
         <div className="flex flex-col gap-5">
           <span className="text-sm">Endereço</span>
           <div className="flex basis-1/4 gap-2">
-            <SelectInput
-              label="Estado"
-              options={stateOptions}
-              isDirty={!!dirtyFields.state}
-              hasError={!!errors.state}
-              {...register('state')}
+            <Controller
+              name="state"
+              control={control}
+              render={({ field: { value, onChange } }) => (
+                <SelectInput
+                  label="Estado"
+                  options={stateOptions}
+                  isDirty={!!dirtyFields.state}
+                  hasError={!!errors.state}
+                  onChangeValue={onChange}
+                  setValue={() => null}
+                  value={value}
+                />
+              )}
             />
-            <SelectInput
-              label="Cidade"
-              options={cityOptions}
-              isDirty={!!dirtyFields.city}
-              hasError={!!errors.city}
-              {...register('city')}
+            <Controller
+              name="city"
+              control={control}
+              render={({ field: { value, onChange } }) => (
+                <SelectInput
+                  label="Cidade"
+                  options={cityOptions}
+                  isDirty={!!dirtyFields.city}
+                  hasError={!!errors.city}
+                  onChangeValue={onChange}
+                  setValue={() => null}
+                  value={value}
+                />
+              )}
             />
           </div>
           <div className="">
@@ -179,20 +195,36 @@ export default function RegisterPage() {
               hasError={!!errors.socialMediaId}
               {...register('socialMediaId')}
             />
-            <SelectInput
-              label="Mídia social"
-              options={midiaOptions}
-              isDirty={!!dirtyFields.socialMedia}
-              hasError={!!errors.socialMedia}
-              {...register('socialMedia')}
+            <Controller
+              name="socialMedia"
+              control={control}
+              render={({ field: { value, onChange } }) => (
+                <SelectInput
+                  label="Mídia social"
+                  options={midiaOptions}
+                  isDirty={!!dirtyFields.socialMedia}
+                  hasError={!!errors.socialMedia}
+                  onChangeValue={onChange}
+                  setValue={() => null}
+                  value={value}
+                />
+              )}
             />
           </div>
-          <SelectInput
-            label="Como nos conheceu?"
-            options={midiaOptions}
-            isDirty={!!dirtyFields.knowUs}
-            hasError={!!errors.knowUs}
-            {...register('knowUs')}
+          <Controller
+            name="knowUs"
+            control={control}
+            render={({ field: { value, onChange } }) => (
+              <SelectInput
+                label="Como nos conheceu?"
+                options={midiaOptions}
+                isDirty={!!dirtyFields.knowUs}
+                hasError={!!errors.knowUs}
+                onChangeValue={onChange}
+                setValue={() => null}
+                value={value}
+              />
+            )}
           />
         </div>
         <div>

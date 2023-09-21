@@ -3,21 +3,24 @@ import TextInput from '@/components/form/inputs/TextInput'
 import { TableData } from '@/components/table/TableData'
 import { TableHead } from '@/components/table/TableHead'
 import { Trash2 } from 'lucide-react'
-import { useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { currencyFormatter } from '@/utils/formatter'
 import CurrencyInput from '@/components/form/inputs/CurrencyInput'
+import { graphqlClient } from '@/server/graphql-client'
+import { Procedure } from '@/models/Procedure'
+import { CREATE_PROCEDURE } from '@/server/mutations'
+import { toast } from 'react-toastify'
+import { useProceduresContext } from '@/contexts/ProcedureContext'
 
-interface Procedure {
-  name: string
-  value: number
+interface ResponseCreateProcedures {
+  createProcedure: Procedure
 }
 
 const schema = z.object({
   name: z.string(),
-  value: z.coerce.number().min(1),
+  price: z.coerce.number().min(1),
 })
 
 type ProcedureFormData = z.infer<typeof schema>
@@ -31,25 +34,48 @@ export default function Procedure() {
     resolver: zodResolver(schema),
     defaultValues: {
       name: undefined,
-      value: undefined,
+      price: undefined,
     },
     mode: 'onSubmit',
     reValidateMode: 'onChange',
   })
 
-  const [procedures, setProcedures] = useState<Procedure[]>([])
+  const { procedures, updateProcedures } = useProceduresContext()
 
-  function handleSaveProcedure(data: ProcedureFormData) {
-    setProcedures([...procedures, data])
+  async function handleSaveProcedure(data: ProcedureFormData) {
+    const loading = toast.loading('Salvando...')
+    try {
+      const response = await graphqlClient.request<ResponseCreateProcedures>(
+        CREATE_PROCEDURE,
+        {
+          createProcedureInput: {
+            name: data.name,
+            price: data.price,
+          },
+        },
+      )
+      toast.update(loading, {
+        render: 'Procedimento criado com sucesso!',
+        type: 'success',
+        isLoading: false,
+        autoClose: 5000,
+      })
+      updateProcedures([...procedures, response.createProcedure])
+    } catch (error: any) {
+      toast.update(loading, {
+        render: error.response.errors[0].message,
+        type: 'error',
+        isLoading: false,
+        autoClose: 5000,
+      })
+    }
   }
 
   const handleRemoveProcedure = (index: number) => {
     const proceduresCopy = [...procedures]
     proceduresCopy.splice(index, 1)
-    setProcedures(proceduresCopy)
+    updateProcedures(proceduresCopy)
   }
-
-  console.log(errors)
 
   return (
     <div className="h-full mx-10">
@@ -74,12 +100,12 @@ export default function Procedure() {
               )}
             />
             <Controller
-              name="value"
+              name="price"
               control={control}
               render={({ field: { value, onChange } }) => (
                 <CurrencyInput
                   label="Valor"
-                  hasError={!!errors.value}
+                  hasError={!!errors.price}
                   value={value}
                   setValue={onChange}
                 />
@@ -104,10 +130,10 @@ export default function Procedure() {
             </thead>
             <tbody>
               {procedures.map((procedure, index) => (
-                <tr key={index}>
+                <tr key={index} className="hover:bg-light-primary">
                   <TableData>{procedure.name}</TableData>
                   <TableData>
-                    {currencyFormatter.format(procedure.value)}
+                    {currencyFormatter.format(procedure.price)}
                   </TableData>
                   <TableData>
                     <div className="flex justify-end">

@@ -53,7 +53,7 @@ export default function ClientDetail({ params }: ClientDetailProps) {
     <div className="flex flex-col h-full mx-10">
       <h1 className="text-2xl py-3">{decodeStringParams(params.name)}</h1>
 
-      <div className="bg-white">
+      <div className="bg-white h-full overflow-auto">
         <div className="flex">
           <Link
             href="/client"

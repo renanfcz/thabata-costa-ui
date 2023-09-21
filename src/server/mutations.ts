@@ -139,3 +139,32 @@ export const UPDATE_SESSION = gql`
     }
   }
 `
+export const CREATE_PROCEDURE = gql`
+  mutation CreateProcedure($createProcedureInput: CreateProcedureInput!) {
+    createProcedure(createProcedureInput: $createProcedureInput) {
+      id
+      name
+      price
+    }
+  }
+`
+
+export const CREATE_SALE = gql`
+  mutation CreateSale($createSaleInput: CreateSaleInput!) {
+    createSale(createSaleInput: $createSaleInput) {
+      client {
+        name
+      }
+      createdAt
+      id
+      protocolDesc
+      protocolName
+      saleItems {
+        discount
+        id
+        value
+        sessionsNum
+      }
+    }
+  }
+`

@@ -1,12 +1,11 @@
 'use client'
-import { Procedure } from '@/models/Procedure'
+import { useProceduresContext } from '@/contexts/ProcedureContext'
 import { Session } from '@/models/Session'
 import { graphqlClient } from '@/server/graphql-client'
 import { UPDATE_SESSION } from '@/server/mutations'
-import { GET_PROCEDURES } from '@/server/queries'
 import { dateFormatter } from '@/utils/formatter'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import * as z from 'zod'
@@ -29,10 +28,6 @@ interface ResponseUpdateSession {
   updateSession: Session
 }
 
-interface ResponseGetProcedures {
-  findAllProcedures: [Procedure]
-}
-
 const schema = z.object({
   procedure: z.string(),
   dateSession: z.string(),
@@ -48,19 +43,7 @@ export default function FormEditProtocol({
   session,
   updateSession,
 }: FormEditProtocolProps) {
-  const [procedures, setProcedures] = useState<[Procedure]>()
-
-  async function getProcedures() {
-    const response = await graphqlClient.request<ResponseGetProcedures>(
-      GET_PROCEDURES,
-    )
-
-    setProcedures(response.findAllProcedures)
-  }
-
-  useEffect(() => {
-    getProcedures()
-  }, [])
+  const { procedures } = useProceduresContext()
 
   function buildHour(date: Date | undefined) {
     if (date !== undefined) {
@@ -86,9 +69,10 @@ export default function FormEditProtocol({
   }
 
   const {
-    register,
     handleSubmit,
     control,
+    setValue,
+    reset,
     formState: { errors, dirtyFields },
   } = useForm<ProtocolFormData>({
     resolver: zodResolver(schema),
@@ -170,6 +154,16 @@ export default function FormEditProtocol({
     return procedures.map((p) => p.name)
   }
 
+  useEffect(() => {
+    reset({
+      procedure: session?.saleItem.procedure.name,
+      dateSession: buildDaySession(session?.initDate),
+      initHour: buildHour(session?.initDate),
+      finalHour: buildHour(session?.finalDate),
+      obs: session?.obs,
+    })
+  }, [])
+
   console.log(errors)
 
   return (
@@ -178,15 +172,25 @@ export default function FormEditProtocol({
         <div className="flex flex-col gap-4 justify-center">
           <Title> Dados da sessão</Title>
           <div className="flex flex-col gap-4">
-            <SelectInput
-              label="Procedimento"
-              options={getAllProceduresNames()}
-              isDirty={
-                !!dirtyFields.procedure || !!session?.saleItem.procedure.name
-              }
-              hasError={!!errors.procedure}
-              value={session?.saleItem.procedure.name}
-              {...register('procedure')}
+            <Controller
+              name="procedure"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <SelectInput
+                  label="Procedimento"
+                  options={getAllProceduresNames()}
+                  isDirty={
+                    !!dirtyFields.procedure ||
+                    !!session?.saleItem.procedure.name
+                  }
+                  hasError={!!errors.procedure}
+                  value={value}
+                  onChangeValue={onChange}
+                  setValue={(selectedValue: string) =>
+                    setValue('procedure', selectedValue)
+                  }
+                />
+              )}
             />
             <Controller
               name="dateSession"

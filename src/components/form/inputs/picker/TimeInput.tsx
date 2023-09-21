@@ -21,14 +21,10 @@ export default function TimeInput({
   const [focused, setFocused] = useState(false)
 
   const handleUpdateTime = (timeArray: Date[]) => {
-    // console.log(timeArray[0])
-
     const newDate = new Date(value)
 
     newDate.setHours(timeArray[0].getHours())
     newDate.setMinutes(timeArray[0].getMinutes())
-
-    // console.log(newDate)
 
     setValue(newDate)
   }

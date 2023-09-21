@@ -1,5 +1,10 @@
 import { useNewSaleContext } from '@/contexts/NewSaleContext'
+import { Sale } from '@/models/Sale'
+import { graphqlClient } from '@/server/graphql-client'
+import { CREATE_SALE } from '@/server/mutations'
 import { currencyFormatter } from '@/utils/formatter'
+import { useRouter } from 'next/navigation'
+import { toast } from 'react-toastify'
 
 import ProcedureItem from './ProcedureItem'
 
@@ -10,8 +15,13 @@ enum PaymentType {
   CREDIT = 'credit',
 }
 
+interface ResponseCreateSale {
+  createSale: Sale
+}
+
 export default function ResumeBox() {
-  const { sale } = useNewSaleContext()
+  const router = useRouter()
+  const { sale, updateSale } = useNewSaleContext()
 
   function hasProtocol() {
     if (!sale.protocolName) {
@@ -33,11 +43,48 @@ export default function ResumeBox() {
     return sale.paymentType
   }
 
-  const handleSaveSale = () => {
+  function resetForm() {
+    updateSale({
+      clientId: '',
+      protocolName: '',
+      protocolDesc: '',
+      procedures: [],
+      paymentType: undefined,
+    })
+  }
+
+  const handleSaveSale = async () => {
     if (hasProtocol() && hasAnyProcedure() && hasPaymentType()) {
+      const loading = toast.loading('Salvando...')
+      try {
+        const data = await graphqlClient.request<ResponseCreateSale>(
+          CREATE_SALE,
+          {
+            createSaleInput: {
+              clientId: sale.clientId,
+              protocolName: sale.protocolName,
+              protocolDesc: sale.protocolDesc,
+              saleItems: sale.procedures,
+              paymentType: sale.paymentType,
+            },
+          },
+        )
+        toast.update(loading, {
+          render: 'Venda salva com sucesso!',
+          type: 'success',
+          isLoading: false,
+          autoClose: 5000,
+        })
+        resetForm()
+      } catch (error: any) {
+        toast.update(loading, {
+          render: error.response.errors[0].message,
+          type: 'error',
+          isLoading: false,
+          autoClose: 5000,
+        })
+      }
       console.log(sale)
-    } else {
-      console.log('Has errors')
     }
   }
 
@@ -54,16 +101,10 @@ export default function ResumeBox() {
   }
 
   const getSubtotal = (value: number, discount: number) => {
-    // const valueNum = parseFloat(value)
-    // const discountNum = parseFloat(discount)
-    // return valueNum - (valueNum * discountNum) / 100
     return value - (value * discount) / 100
   }
 
   const calculateDiscount = (value: number, discount: number) => {
-    // const valueNum = parseFloat(value)
-    // const discountNum = parseFloat(discount)
-    // return (valueNum * discountNum) / 100
     return (value * discount) / 100
   }
 
@@ -113,7 +154,7 @@ export default function ResumeBox() {
         <div>
           {sale?.procedures &&
             sale?.procedures.map((procedure, index) => (
-              <ProcedureItem key={index} procedure={procedure} />
+              <ProcedureItem key={index} procedure={procedure} index={index} />
             ))}
         </div>
         <div className="flex flex-col p-5 gap-2">

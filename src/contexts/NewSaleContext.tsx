@@ -7,13 +7,14 @@ enum PaymentType {
   CREDIT = 'credit',
 }
 interface Procedure {
-  name: string
+  procedureId: string
   value: number
   discount: number
-  sessions: number
+  sessionsNum: number
 }
 
 interface NewSale {
+  clientId: string
   protocolName: string
   protocolDesc: string
   procedures: Procedure[]
@@ -35,6 +36,7 @@ export const NewSaleProvider = ({
   children: React.ReactNode
 }) => {
   const [sale, setSale] = useState<NewSale>({
+    clientId: '',
     protocolName: '',
     protocolDesc: '',
     procedures: [],

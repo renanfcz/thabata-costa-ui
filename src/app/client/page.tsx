@@ -18,7 +18,6 @@ export default async function Client() {
   const data = await graphqlClient.request<Response>(GET_CLIENTS)
   const clients = data.findAllClients
 
-  console.log(clients)
   return (
     <div className="flex flex-col h-full mx-10">
       <div className="flex justify-between items-center py-3">

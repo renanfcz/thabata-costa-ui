@@ -1,56 +1,90 @@
 'use client'
 import SelectInput from '@/components/form/hook-form/SelectInput'
+import CurrencyInput from '@/components/form/inputs/CurrencyInput'
+import NumberInput from '@/components/form/inputs/NumberInput'
 import { useNewSaleContext } from '@/contexts/NewSaleContext'
+import { useProceduresContext } from '@/contexts/ProcedureContext'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
 import * as z from 'zod'
-import CurrencyInput from '@/components/form/inputs/CurrencyInput'
-import NumberInput from '@/components/form/inputs/NumberInput'
 
 const schema = z.object({
   name: z.string(),
-  sessions: z.coerce.number().max(100).min(1),
-  value: z.coerce.number().min(1),
-  discount: z.coerce.number().default(0),
+  sessions: z.string(),
+  price: z.string(),
+  discount: z.string().default('0'),
 })
 
 type ProcedureFormData = z.infer<typeof schema>
 
 export default function ProcedureCard() {
   const { sale, updateSale } = useNewSaleContext()
+  const { procedures } = useProceduresContext()
 
   const {
-    register,
     handleSubmit,
     watch,
     control,
+    setValue,
+    reset,
     formState: { errors, dirtyFields },
   } = useForm<ProcedureFormData>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      name: undefined,
-      sessions: undefined,
-      value: undefined,
-      discount: undefined,
-    },
     mode: 'onSubmit',
     reValidateMode: 'onChange',
+    defaultValues: {
+      name: '',
+      price: undefined,
+      sessions: undefined,
+      discount: undefined,
+    },
   })
 
   const watchName = watch('name')
   const watchSessions = watch('sessions')
-  const watchValue = watch('value')
+  const watchValue = watch('price')
 
   const isDisable = !watchName || !watchSessions || !watchValue
 
-  function addProcedure(data: ProcedureFormData) {
-    const saleCopy = { ...sale }
-    saleCopy.procedures.push(data)
-    updateSale(saleCopy)
-  }
-  const procedureList = ['Drenagem', 'Limpeza de pele', 'Sobrancelha']
+  function getProcedureId(procedureName: string) {
+    const procedure = procedures.find((p) => p.name === procedureName)
 
-  console.log(errors)
+    return procedure ? procedure.id : ''
+  }
+
+  function addProcedure(data: ProcedureFormData) {
+    if (procedures !== undefined) {
+      const saleCopy = { ...sale }
+      saleCopy.procedures.push({
+        procedureId: getProcedureId(data.name),
+        value: Number(data.price),
+        discount: Number(data.discount),
+        sessionsNum: Number(data.sessions),
+      })
+      updateSale(saleCopy)
+      reset()
+    }
+  }
+
+  function getAllProceduresNames() {
+    if (procedures === undefined) {
+      return ['']
+    }
+
+    return procedures.map((p) => p.name)
+  }
+
+  const setDefaultPrice = (selectedProcedure: string) => {
+    if (procedures !== undefined) {
+      const originalProcedure = procedures.filter(
+        (p) => p.name === selectedProcedure,
+      )[0]
+
+      if (originalProcedure !== undefined) {
+        setValue('price', originalProcedure.price.toString())
+      }
+    }
+  }
 
   return (
     <div>
@@ -61,13 +95,24 @@ export default function ProcedureCard() {
         <h2>Procedimento</h2>
         <div className="flex flex-col gap-5">
           <div className="flex gap-3">
-            <SelectInput
-              label="Procedimento"
-              options={procedureList}
-              isDirty={!!dirtyFields.name}
-              hasError={!!errors.name}
-              {...register('name')}
+            <Controller
+              name="name"
+              control={control}
+              render={({ field }) => (
+                <SelectInput
+                  label="Procedimento"
+                  options={getAllProceduresNames()}
+                  isDirty={!!dirtyFields.name}
+                  hasError={!!errors.name}
+                  onChangeValue={setDefaultPrice}
+                  setValue={(selectedProcedure: string) =>
+                    setValue('name', selectedProcedure)
+                  }
+                  {...field}
+                />
+              )}
             />
+
             <Controller
               name="sessions"
               control={control}
@@ -75,7 +120,7 @@ export default function ProcedureCard() {
                 <NumberInput
                   label="Nº de sessões"
                   hasError={!!errors.sessions}
-                  value={value}
+                  value={Number(value)}
                   setValue={onChange}
                 />
               )}
@@ -83,13 +128,13 @@ export default function ProcedureCard() {
           </div>
           <div className="flex gap-3">
             <Controller
-              name="value"
+              name="price"
               control={control}
               render={({ field: { value, onChange } }) => (
                 <CurrencyInput
                   label="Valor"
-                  hasError={!!errors.value}
-                  value={value}
+                  hasError={!!errors.price}
+                  value={Number(value)}
                   setValue={onChange}
                 />
               )}
@@ -102,7 +147,7 @@ export default function ProcedureCard() {
                 <NumberInput
                   label="Desconto (%)"
                   hasError={!!errors.discount}
-                  value={value}
+                  value={Number(value)}
                   setValue={onChange}
                 />
               )}

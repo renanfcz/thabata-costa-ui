@@ -1,21 +1,26 @@
 import { useNewSaleContext } from '@/contexts/NewSaleContext'
+import { useProceduresContext } from '@/contexts/ProcedureContext'
 import { currencyFormatter } from '@/utils/formatter'
 import { Trash2 } from 'lucide-react'
 
 interface Procedure {
-  name: string
+  procedureId: string
   value: number
   discount: number
-  sessions: number
+  sessionsNum: number
 }
 
 interface ProcedureItemProps {
   procedure: Procedure
-  key: number
+  index: number
 }
 
-export default function ProcedureItem({ procedure, key }: ProcedureItemProps) {
+export default function ProcedureItem({
+  procedure,
+  index,
+}: ProcedureItemProps) {
   const { sale, updateSale } = useNewSaleContext()
+  const { procedures } = useProceduresContext()
 
   const getValueWithDiscount = () => {
     return procedure.value - (procedure.value * procedure.discount) / 100
@@ -23,19 +28,27 @@ export default function ProcedureItem({ procedure, key }: ProcedureItemProps) {
 
   const removeProcedure = () => {
     const saleCopy = { ...sale }
-    saleCopy.procedures.splice(key, 1)
+    saleCopy.procedures.splice(index, 1)
     updateSale(saleCopy)
+  }
+
+  function getProcedureName() {
+    const procedureEntity = procedures.find(
+      (p) => p.id === procedure.procedureId,
+    )
+
+    return procedureEntity ? procedureEntity.name : ''
   }
 
   return (
     <div className="p-5 flex justify-between items-center border-b-2 border-gray-100">
       <div className="flex flex-col">
         <div>
-          <span>{procedure.name}</span>
+          <span>{getProcedureName()}</span>
         </div>
         <div>
           <span className="text-sm text-gray-400">Sessões: </span>
-          <span>{procedure.sessions}</span>
+          <span>{procedure.sessionsNum}</span>
         </div>
       </div>
       <div className="flex flex-col gap-2">
