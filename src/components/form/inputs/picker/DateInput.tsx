@@ -23,11 +23,15 @@ export default function DateTimeInput({
   const handleUpdateDate = (dateArray: Date[]) => {
     const newDate = new Date(value)
 
-    newDate.setFullYear(dateArray[0].getUTCFullYear())
-    newDate.setMonth(dateArray[0].getUTCMonth())
-    newDate.setDate(dateArray[0].getUTCDate())
+    if (dateArray !== undefined && dateArray.length > 0) {
+      newDate.setUTCFullYear(dateArray[0].getUTCFullYear())
+      newDate.setUTCMonth(dateArray[0].getUTCMonth())
+      newDate.setUTCDate(dateArray[0].getUTCDate())
 
-    setValue(dateFormatter.format(newDate))
+      setValue(dateFormatter.format(newDate))
+    } else {
+      setValue('')
+    }
   }
 
   return (
@@ -52,6 +56,7 @@ export default function DateTimeInput({
             ? 'border-danger'
             : 'border-gray-300/30 focus:border-secondary/60'
         }`}
+        {...rest}
       />
     </div>
   )

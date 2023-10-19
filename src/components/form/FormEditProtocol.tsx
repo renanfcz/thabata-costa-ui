@@ -112,7 +112,6 @@ export default function FormEditProtocol({
 
   async function saveProtocol(input: ProtocolFormData) {
     const loading = toast.loading('Salvando...')
-    console.log(input)
     try {
       const data = await graphqlClient.request<ResponseUpdateSession>(
         UPDATE_SESSION,
@@ -163,8 +162,6 @@ export default function FormEditProtocol({
       obs: session?.obs,
     })
   }, [])
-
-  console.log(errors)
 
   return (
     <div className="px-2">

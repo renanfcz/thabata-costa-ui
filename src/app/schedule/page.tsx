@@ -3,14 +3,17 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import brLocale from '@fullcalendar/core/locales/pt-br'
-import interactionPlugin from '@fullcalendar/interaction'
+import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction'
 import { EventClickArg } from '@fullcalendar/core'
 import FormEditSession from '@/components/form/FormEditSession'
 import DetailSessionModal from '@/components/modal/DetailSessionModal'
 import { useState } from 'react'
+import { createRef } from '@fullcalendar/core/preact'
 
 export default function Schedule() {
+  const calendarRef = createRef()
   const [modalOpen, setModalOpen] = useState(false)
+  const [selectedDate, setSelectedDate] = useState<Date>()
 
   const handleOpenModal = () => {
     setModalOpen(true)
@@ -47,12 +50,30 @@ export default function Schedule() {
     handleOpenModal()
   }
 
+  const handleDateClick = (info: DateClickArg) => {
+    if (
+      calendarRef.current &&
+      calendarRef.current.getApi().view.type === 'dayGridMonth'
+    ) {
+      calendarRef.current.getApi().changeView('timeGridWeek', info.dateStr)
+    }
+
+    if (
+      calendarRef.current &&
+      calendarRef.current.getApi().view.type === 'timeGridWeek'
+    ) {
+      handleOpenModal()
+      setSelectedDate(info.date)
+    }
+  }
+
   return (
     <div className="mx-10">
       <h1 className="text-2xl py-3">Agenda</h1>
       <div className=" bg-white py-2 px-5 rounded flex h-full w-full">
         <div className="w-full h-1/2">
           <FullCalendar
+            ref={calendarRef}
             timeZone="local"
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             initialView="timeGridWeek"
@@ -69,11 +90,12 @@ export default function Schedule() {
             selectable={true}
             eventClick={(e: EventClickArg) => handleEventClick(e)}
             eventClassNames="cursor-pointer"
+            dateClick={handleDateClick}
           />
         </div>
       </div>
       <DetailSessionModal isOpen={modalOpen}>
-        <FormEditSession onClose={handleCloseModal} />
+        <FormEditSession onClose={handleCloseModal} date={selectedDate} />
       </DetailSessionModal>
     </div>
   )

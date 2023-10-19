@@ -1,4 +1,5 @@
 'use client'
+import SugestionInput from '@/components/form/inputs/SugestionInput'
 import { useNewSaleContext } from '@/contexts/NewSaleContext'
 import { Client } from '@/models/Client'
 import { graphqlClient } from '@/server/graphql-client'
@@ -11,10 +12,9 @@ interface Response {
 }
 
 export default function ClientCard() {
-  const [name, setName] = useState('')
   const [clients, setClients] = useState<Client[]>([])
   const [suggestionsList, setSuggestionsList] = useState<Client[]>([])
-  const [isFocused, setIsFocused] = useState(false)
+  const [name, setName] = useState('')
   const { sale, updateSale } = useNewSaleContext()
 
   async function getAllClients() {
@@ -37,13 +37,6 @@ export default function ClientCard() {
     const originalClient = clients.find((c) => c.name === newValue)
     saleCopy.clientId = originalClient ? originalClient.id : ''
     updateSale(saleCopy)
-  }
-
-  const inputProps = {
-    value: name,
-    onChange,
-    onFocus: () => setIsFocused(true),
-    onBlur: () => setIsFocused(false),
   }
 
   const onSuggestionsFetchRequested = ({
@@ -71,36 +64,15 @@ export default function ClientCard() {
   return (
     <div className="bg-white rounded p-5 flex flex-col gap-3">
       <h2>Cliente</h2>
-      <div className="relative flex flex-col gap-1">
-        <label
-          className={`absolute transition-all duration-300 left-2 text-gray-600 ${
-            isFocused || name ? '-top-4 text-xs font-bold' : 'top-3 text-sm'
-          }
-        `}
-        >
-          Nome do Cliente
-        </label>
-        <Autosuggest
-          suggestions={suggestionsList}
-          onSuggestionsFetchRequested={onSuggestionsFetchRequested}
-          onSuggestionsClearRequested={onSuggestionsClearRequested}
-          getSuggestionValue={(suggestion: Client) => suggestion.name}
-          renderSuggestion={renderSuggestion}
-          inputProps={inputProps}
-          theme={{
-            container: `w-full p-0 ${
-              isFocused && 'border-secondary/60'
-            } border-2 border-gray-300/30 rounded`,
-            input: `w-full focus:outline-none px-3 py-2`,
-            suggestionsContainer: `absolute z-10 bg-white w-full -ml-[2px] rounded-b-sm ${
-              isFocused &&
-              suggestionsList.length > 0 &&
-              'border-2 border-secondary/60'
-            }`,
-            suggestion: 'p-2 hover:bg-gray-300/30 cursor-pointer',
-          }}
-        />
-      </div>
+      <SugestionInput
+        text={name}
+        onSuggestionsClearRequested={onSuggestionsClearRequested}
+        onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+        onChange={onChange}
+        suggestionsList={suggestionsList}
+        renderSuggestion={renderSuggestion}
+        label="Nome do cliente"
+      />
     </div>
   )
 }
