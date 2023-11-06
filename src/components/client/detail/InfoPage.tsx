@@ -119,7 +119,7 @@ export default function InfoPage() {
   }, [reset, client])
 
   return (
-    <div className="px-5 w-1/2">
+    <div className="px-5 lg:w-1/2">
       <form
         onSubmit={handleSubmit(handleSaveClient)}
         className="flex flex-col gap-5"
@@ -274,7 +274,7 @@ export default function InfoPage() {
         <div>
           <button
             type="submit"
-            className="px-10 py-3 font-bold border border-info rounded text-info hover:bg-info hover:text-white transition duration-200"
+            className="px-10 py-3 font-bold border border-info rounded text-info hover:bg-info hover:text-white transition duration-200 w-full"
           >
             Salvar
           </button>

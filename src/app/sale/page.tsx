@@ -1,4 +1,5 @@
 'use client'
+import BackArrow from '@/components/form/buttons/BackArrow'
 import HistSale from '@/components/sale/HistSale'
 import NewSale from '@/components/sale/new/NewSale'
 import { useState } from 'react'
@@ -19,7 +20,11 @@ export default function Sale() {
 
   return (
     <div className="flex flex-col mx-10">
-      <h1 className="text-2xl py-3">Vendas</h1>
+      <div className="flex justify-between items-center py-3">
+        <BackArrow />
+        <h1 className="text-2xl py-3">Vendas</h1>
+        <div></div>
+      </div>
 
       <div className="flex gap-5">
         <div className="flex flex-col gap-3 w-full">

@@ -7,6 +7,7 @@ import { GET_CLIENTS } from '@/server/queries'
 import { Client } from '@/models/Client'
 import { graphqlClient } from '@/server/graphql-client'
 import { dateFormatter } from '@/utils/formatter'
+import BackArrow from '@/components/form/buttons/BackArrow'
 
 interface Response {
   findAllClients: [Client]
@@ -21,6 +22,7 @@ export default async function Client() {
   return (
     <div className="flex flex-col h-full mx-10">
       <div className="flex justify-between items-center py-3">
+        <BackArrow />
         <h1 className="text-2xl">Clientes</h1>
         <Link
           href="/client/new"

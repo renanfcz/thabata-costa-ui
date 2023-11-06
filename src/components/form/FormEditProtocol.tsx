@@ -14,7 +14,7 @@ import Title from '../modal/Title'
 import CloseButton from './buttons/CloseButton'
 import SaveButton from './hook-form/SaveButton'
 import SelectInput from './hook-form/SelectInput'
-import DateTimeInput from './inputs/picker/DateInput'
+import DateInput from './inputs/picker/DateInput'
 import TimeInput from './inputs/picker/TimeInput'
 import TextAreaInput from './inputs/TextAreaInput'
 
@@ -196,7 +196,7 @@ export default function FormEditProtocol({
               name="dateSession"
               control={control}
               render={({ field: { value, onChange } }) => (
-                <DateTimeInput
+                <DateInput
                   label="Data da sessão"
                   hasError={!!errors.dateSession}
                   value={value}
@@ -244,7 +244,7 @@ export default function FormEditProtocol({
               />
             </div>
           </div>
-          <div className="flex gap-2 justify-end items-end w-full">
+          <div className="flex gap-2 justify-end items-end w-full lg:mt-0 md:-mt-2 xl:-mt-2">
             <CloseButton onClose={onClose} />
             <SaveButton />
           </div>

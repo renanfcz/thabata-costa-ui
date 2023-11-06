@@ -3,7 +3,6 @@ import { Sale } from '@/models/Sale'
 import { graphqlClient } from '@/server/graphql-client'
 import { CREATE_SALE } from '@/server/mutations'
 import { currencyFormatter } from '@/utils/formatter'
-import { useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
 
 import ProcedureItem from './ProcedureItem'
@@ -20,7 +19,6 @@ interface ResponseCreateSale {
 }
 
 export default function ResumeBox() {
-  const router = useRouter()
   const { sale, updateSale } = useNewSaleContext()
 
   function hasProtocol() {

@@ -9,8 +9,8 @@ export default function NewSale() {
   return (
     <div>
       <NewSaleProvider>
-        <div className="flex gap-3">
-          <div className="flex flex-col w-full gap-5">
+        <div className="flex lg:flex-row md:flex-col gap-3">
+          <div className="flex flex-col w-full">
             <ClientCard />
             <ProtocolCard />
             <ProcedureCard />

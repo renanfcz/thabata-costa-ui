@@ -35,7 +35,7 @@ export default function ProtocolsPage() {
     <div className="px-5">
       <div>
         {!openDatail ? (
-          <div className="grid grid-cols-3 gap-20">
+          <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-20">
             {protocols.map((protocol) => (
               <button
                 onClick={() => handleOpenDetail(protocol)}

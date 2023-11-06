@@ -13,6 +13,7 @@ import { Procedure } from '@/models/Procedure'
 import { CREATE_PROCEDURE } from '@/server/mutations'
 import { toast } from 'react-toastify'
 import { useProceduresContext } from '@/contexts/ProcedureContext'
+import BackArrow from '@/components/form/buttons/BackArrow'
 
 interface ResponseCreateProcedures {
   createProcedure: Procedure
@@ -79,9 +80,13 @@ export default function Procedure() {
 
   return (
     <div className="h-full mx-10">
-      <h1 className="text-2xl py-3">Procedimentos</h1>
+      <div className="flex justify-between items-center py-3">
+        <BackArrow />
+        <h1 className="text-2xl py-3">Procedimentos</h1>
+        <div></div>
+      </div>
       <div className=" bg-white py-2 rounded my-3 flex w-full">
-        <div className="w-1/3 px-5 py-3 flex flex-col gap-5 border-r-2 border-gray-300">
+        <div className="lg:w-1/3 md:w-1/2 px-5 py-3 flex flex-col gap-5 border-r-2 border-gray-300">
           <h2 className="font-bold">Novo procedimento</h2>
           <form
             onSubmit={handleSubmit(handleSaveProcedure)}

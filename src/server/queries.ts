@@ -198,3 +198,30 @@ export const GET_PROCEDURES = gql`
     }
   }
 `
+
+export const GET_ALL_SCHEDULE = gql`
+  query FindAllSessions {
+    findAllSessions {
+      saleItem {
+        id
+        value
+        discount
+        sessionsNum
+        procedure {
+          name
+          price
+          id
+        }
+        sale {
+          client {
+            name
+          }
+        }
+      }
+      id
+      initDate
+      finalDate
+      obs
+    }
+  }
+`

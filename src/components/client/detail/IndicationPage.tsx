@@ -108,7 +108,7 @@ export default function IndicationPage() {
   console.log(errors)
 
   return (
-    <div className="px-5 w-1/2">
+    <div className="px-5 lg:w-1/2">
       <div className="py-5">
         <table className="w-full divide-y divide-base-background">
           <thead>

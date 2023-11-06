@@ -46,18 +46,18 @@ export default function ProtocolCard({ protocol }: ProtocolCardProps) {
       <div className="p-4 flex flex-col gap-5">
         <div className="flex items-center gap-2">
           <ListOrdered className="text-primary" />
-          <span className="text-gray-600 ">
+          <span className="text-gray-600 text-left">
             Sessões restantes: {getRemainingSessions()}
           </span>
         </div>
         <div className="flex items-center gap-2">
           <CalendarCheck className="text-primary" />
-          <span className="text-gray-600">
+          <span className="text-gray-600 text-left">
             Próxima sessão: {getNextSessionDate()}
           </span>
         </div>
         <div className="flex">
-          <span className="text-gray-600">
+          <span className="text-gray-600 text-left">
             Status da próxima sessão: Agendado
           </span>
         </div>

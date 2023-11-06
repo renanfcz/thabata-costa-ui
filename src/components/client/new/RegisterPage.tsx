@@ -75,7 +75,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="px-5 w-1/2">
+    <div className="px-5 w-full">
       <form
         onSubmit={handleSubmit(handleSaveClient)}
         className="flex flex-col gap-5"

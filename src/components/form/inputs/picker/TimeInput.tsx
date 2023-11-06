@@ -21,7 +21,10 @@ export default function TimeInput({
   const [focused, setFocused] = useState(false)
 
   const handleUpdateTime = (timeArray: Date[]) => {
-    const newDate = new Date(value)
+    if (timeArray === undefined || timeArray.length === 0)
+      timeArray.push(new Date())
+
+    const newDate = value ? new Date(value) : new Date()
 
     newDate.setHours(timeArray[0].getHours())
     newDate.setMinutes(timeArray[0].getMinutes())
@@ -40,7 +43,7 @@ export default function TimeInput({
         {label}
       </label>
       <Flatpickr
-        key={value.toISOString()}
+        key={value?.toISOString()}
         onClose={handleUpdateTime}
         options={{
           enableTime: true,
@@ -48,6 +51,7 @@ export default function TimeInput({
           time_24hr: true,
           dateFormat: 'H:i',
           defaultDate: value,
+          disableMobile: true,
         }}
         className={`w-full border-2 focus:outline-none rounded px-3 py-2 h-full transition duration-200 ${
           hasError
