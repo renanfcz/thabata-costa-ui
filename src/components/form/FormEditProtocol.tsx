@@ -3,6 +3,7 @@ import { useProceduresContext } from '@/contexts/ProcedureContext'
 import { Session } from '@/models/Session'
 import { graphqlClient } from '@/server/graphql-client'
 import { UPDATE_SESSION } from '@/server/mutations'
+import { ResponseUpdateSession } from '@/server/mutations/responses/SessionResponses'
 import { dateFormatter } from '@/utils/formatter'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect } from 'react'
@@ -22,10 +23,6 @@ interface FormEditProtocolProps {
   onClose(): void
   session: Session | undefined
   updateSession(session: Session): void
-}
-
-interface ResponseUpdateSession {
-  updateSession: Session
 }
 
 const schema = z.object({
@@ -112,7 +109,6 @@ export default function FormEditProtocol({
 
   async function saveProtocol(input: ProtocolFormData) {
     const loading = toast.loading('Salvando...')
-    console.log(input)
     try {
       const data = await graphqlClient.request<ResponseUpdateSession>(
         UPDATE_SESSION,
@@ -163,8 +159,6 @@ export default function FormEditProtocol({
       obs: session?.obs,
     })
   }, [])
-
-  console.log(errors)
 
   return (
     <div className="px-2">

@@ -1,38 +1,56 @@
 'use client'
-import FullCalendar from '@fullcalendar/react'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import timeGridPlugin from '@fullcalendar/timegrid'
-import brLocale from '@fullcalendar/core/locales/pt-br'
-import interactionPlugin from '@fullcalendar/interaction'
-import { EventClickArg } from '@fullcalendar/core'
 import FormEditSession from '@/components/form/FormEditSession'
 import DetailSessionModal from '@/components/modal/DetailSessionModal'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import BackArrow from '@/components/form/buttons/BackArrow'
 import { graphqlClient } from '@/server/graphql-client'
 import { Session } from '@/models/Session'
 import { GET_ALL_SCHEDULE } from '@/server/queries'
+import {
+  Calendar,
+  EventPropGetter,
+  momentLocalizer,
+  SlotInfo,
+} from 'react-big-calendar'
+import 'react-big-calendar/lib/css/react-big-calendar.css'
+import moment from 'moment'
+import 'moment/locale/pt-br'
+import { convertDateToTimezone } from '@/utils/converter'
+import { ResponseFindAllSessions } from '@/server/queries/responses/SessionResponses'
+import ConfirmationForm from '@/components/form/FormRemoveSessionConfirmation'
+import { REMOVE_SESSION } from '@/server/mutations'
+import { toast } from 'react-toastify'
 
-interface ResponseGetAllSchedule {
-  findAllSessions: [Session]
+const localizer = momentLocalizer(moment)
+
+const messages = {
+  allDay: 'Dia Inteiro',
+  previous: '<',
+  next: '>',
+  today: 'Hoje',
+  month: 'Mês',
+  week: 'Semana',
+  day: 'Dia',
+  agenda: 'Agenda',
+  date: 'Data',
+  time: 'Hora',
+  event: 'Evento',
+  showMore: (total: number) => `+ (${total}) Eventos`,
 }
 
-export interface Event {
-  id: string
-  title: string
-  start: string
-  end: string
-  color: string
+export interface RangeHour {
+  start: Date
+  end: Date
 }
 
 export default function Schedule() {
   const [modalOpen, setModalOpen] = useState(false)
-  const [sessions, setSessions] = useState<Session[]>()
-  const [schedule, setSchedule] = useState<Event[]>()
+  const [sessions, setSessions] = useState<Session[]>([])
   const [selectedSession, setSelectedSession] = useState<Session | undefined>()
+  const [selectedRange, setSelectedRange] = useState<RangeHour | undefined>()
+  const [showConfirmationForm, setShowConfirmationForm] = useState(false)
 
   const handleOpenModal = () => {
-    console.log('Is open')
     setModalOpen(true)
   }
 
@@ -40,53 +58,96 @@ export default function Schedule() {
     setModalOpen(false)
   }
 
-  const handleEventClick = (e: EventClickArg) => {
+  const handleEventClick = (event: Session) => {
     handleOpenModal()
-    const id = e.event.id
-    const filteredSessions = sessions?.filter((session) => {
-      return session.id === id
-    })
-
-    const session = filteredSessions ? filteredSessions[0] : undefined
-    setSelectedSession(session)
+    setSelectedSession(event)
   }
 
-  function parseDateToString(date: Date) {
-    const data = new Date(date)
-    const fullDate = new Date(
-      data.getUTCFullYear(),
-      data.getUTCMonth(),
-      data.getUTCDay() - 2,
-      data.getUTCHours(),
-      data.getUTCMinutes(),
-    )
-    return fullDate.toISOString()
+  const handleSelect = ({ start, end }: SlotInfo) => {
+    handleOpenModal()
+    const session: RangeHour = {
+      start,
+      end,
+    }
+    setSelectedSession(undefined)
+    setSelectedRange(session)
   }
 
-  async function getAllSchedule() {
-    const data = await graphqlClient.request<ResponseGetAllSchedule>(
+  const getAllSchedule = useCallback(async () => {
+    const data = await graphqlClient.request<ResponseFindAllSessions>(
       GET_ALL_SCHEDULE,
     )
 
     setSessions(data.findAllSessions)
+  }, [])
 
-    const events = data.findAllSessions.map((session) => {
-      const event: Event = {
-        id: session.id,
-        title: session.saleItem.procedure.name,
-        start: parseDateToString(session.initDate),
-        end: parseDateToString(session.finalDate),
-        color: 'blue',
+  const updateSession = (session: Session) => {
+    const hasThatSession = sessions.find((s) => s.id === session.id)
+    if (!hasThatSession) {
+      setSessions((prev) => [...prev, session])
+    } else {
+      const newList = sessions.map((s) => (s.id === session.id ? session : s))
+      setSessions(newList)
+    }
+  }
+
+  function buildSessionTitle(session: Session) {
+    const procedure = session.saleItem.procedure.name
+    const client = session.saleItem.sale.client.name
+
+    return procedure.concat(' - ', client)
+  }
+
+  const handleSetEventColor: EventPropGetter<Session> = (event: Session) => {
+    return {
+      style: {
+        backgroundColor: event.saleItem.procedure.color,
+        color: 'white',
+        borderColor: event.saleItem.procedure.color,
+      },
+    }
+  }
+
+  const handleRemoveSession = async (id: string | undefined) => {
+    const loading = toast.loading('Removendo...')
+    try {
+      if (id !== undefined) {
+        await graphqlClient.request(REMOVE_SESSION, {
+          removeSessionId: id,
+        })
+        setSessions((prevState) =>
+          prevState.filter((session) => session.id !== id),
+        )
+        toast.update(loading, {
+          render: 'Sessão removida com sucesso!',
+          type: 'success',
+          isLoading: false,
+          autoClose: 5000,
+        })
+        setShowConfirmationForm(false)
+        handleCloseModal()
+      } else {
+        toast.update(loading, {
+          render: 'Ocorreu um erro ao tentar passar o ID da sessão!',
+          type: 'error',
+          isLoading: false,
+          autoClose: 5000,
+        })
       }
-      return event
-    })
-
-    setSchedule(events)
+    } catch (error: any) {
+      console.log(error)
+      toast.update(loading, {
+        render: error.response.errors[0].message,
+        type: 'error',
+        isLoading: false,
+        autoClose: 5000,
+      })
+    }
   }
 
   useEffect(() => {
     getAllSchedule()
-  }, [])
+  }, [getAllSchedule, sessions])
 
   return (
     <div className="mx-10">
@@ -97,28 +158,41 @@ export default function Schedule() {
       </div>
       <div className=" bg-white py-2 px-5 rounded flex h-full w-full">
         <div className="w-full h-1/2">
-          <FullCalendar
-            timeZone="local"
-            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-            initialView="timeGridWeek"
-            locale={brLocale}
-            events={schedule}
-            nowIndicator={true}
-            contentHeight={650}
-            headerToolbar={{
-              left: 'prev,next today',
-              center: 'title',
-              right: 'dayGridMonth,timeGridWeek',
-            }}
-            editable={false}
-            selectable={true}
-            eventClick={(e: EventClickArg) => handleEventClick(e)}
-            eventClassNames="cursor-pointer"
+          <Calendar
+            views={['day', 'week', 'month']}
+            selectable
+            popup
+            localizer={localizer}
+            defaultView="week"
+            titleAccessor={(event) => buildSessionTitle(event)}
+            startAccessor={(event) => convertDateToTimezone(event.initDate)}
+            endAccessor={(event) => convertDateToTimezone(event.finalDate)}
+            events={sessions}
+            style={{ height: 650 }}
+            messages={messages}
+            onSelectEvent={(event: Session) => handleEventClick(event)}
+            onSelectSlot={handleSelect}
+            eventPropGetter={handleSetEventColor}
           />
         </div>
       </div>
       <DetailSessionModal isOpen={modalOpen}>
-        <FormEditSession onClose={handleCloseModal} session={selectedSession} />
+        {showConfirmationForm ? (
+          <ConfirmationForm
+            label="Deseja mesmo remover a sessão abaixo?"
+            session={selectedSession}
+            onConfirm={handleRemoveSession}
+            onClose={() => setShowConfirmationForm(false)}
+          />
+        ) : (
+          <FormEditSession
+            onClose={handleCloseModal}
+            session={selectedSession}
+            updateSession={updateSession}
+            selectedRange={selectedRange}
+            showConfirmation={() => setShowConfirmationForm(true)}
+          />
+        )}
       </DetailSessionModal>
     </div>
   )

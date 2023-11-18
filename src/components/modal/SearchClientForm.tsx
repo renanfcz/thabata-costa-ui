@@ -2,6 +2,7 @@
 import { Client } from '@/models/Client'
 import { graphqlClient } from '@/server/graphql-client'
 import { GET_CLIENTS } from '@/server/queries'
+import { ResponseClients } from '@/server/queries/responses/ClientResponses'
 import { Check } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { SearchBarInput } from '../form/inputs/SearchBarInput'
@@ -11,10 +12,6 @@ import Title from './Title'
 interface SearchClientFormProps {
   setName(name: string): void
   onClose(): void
-}
-
-interface Response {
-  findAllClients: [Client]
 }
 
 export default function SearchClientForm({
@@ -27,7 +24,7 @@ export default function SearchClientForm({
   const [showList, setShowList] = useState(false)
 
   async function getAllClients() {
-    const data = await graphqlClient.request<Response>(GET_CLIENTS)
+    const data = await graphqlClient.request<ResponseClients>(GET_CLIENTS)
     setClients(data.findAllClients)
   }
 

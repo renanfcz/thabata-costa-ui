@@ -1,7 +1,7 @@
 import { useNewSaleContext } from '@/contexts/NewSaleContext'
-import { Sale } from '@/models/Sale'
 import { graphqlClient } from '@/server/graphql-client'
 import { CREATE_SALE } from '@/server/mutations'
+import { ResponseCreateSale } from '@/server/mutations/responses/SaleResponses'
 import { currencyFormatter } from '@/utils/formatter'
 import { toast } from 'react-toastify'
 
@@ -12,10 +12,6 @@ enum PaymentType {
   PIX = 'pix',
   DEBIT = 'debit',
   CREDIT = 'credit',
-}
-
-interface ResponseCreateSale {
-  createSale: Sale
 }
 
 export default function ResumeBox() {
@@ -55,18 +51,15 @@ export default function ResumeBox() {
     if (hasProtocol() && hasAnyProcedure() && hasPaymentType()) {
       const loading = toast.loading('Salvando...')
       try {
-        const data = await graphqlClient.request<ResponseCreateSale>(
-          CREATE_SALE,
-          {
-            createSaleInput: {
-              clientId: sale.clientId,
-              protocolName: sale.protocolName,
-              protocolDesc: sale.protocolDesc,
-              saleItems: sale.procedures,
-              paymentType: sale.paymentType,
-            },
+        await graphqlClient.request<ResponseCreateSale>(CREATE_SALE, {
+          createSaleInput: {
+            clientId: sale.clientId,
+            protocolName: sale.protocolName,
+            protocolDesc: sale.protocolDesc,
+            saleItems: sale.procedures,
+            paymentType: sale.paymentType,
           },
-        )
+        })
         toast.update(loading, {
           render: 'Venda salva com sucesso!',
           type: 'success',
@@ -82,7 +75,6 @@ export default function ResumeBox() {
           autoClose: 5000,
         })
       }
-      console.log(sale)
     }
   }
 

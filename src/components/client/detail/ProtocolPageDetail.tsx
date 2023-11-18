@@ -9,6 +9,7 @@ import { Sale } from '@/models/Sale'
 import { Session } from '@/models/Session'
 import { graphqlClient } from '@/server/graphql-client'
 import { UPDATE_PROTOCOL } from '@/server/mutations'
+import { ResponseUpdateSale } from '@/server/mutations/responses/SaleResponses'
 import { Pencil } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'react-toastify'
@@ -16,10 +17,6 @@ import { toast } from 'react-toastify'
 interface ProtocolPageDetailProps {
   protocol: Sale | undefined
   updateProtocol(protocol: Sale): void
-}
-
-interface ResponseUpdateSale {
-  updateSale: Sale
 }
 
 export default function ProtocolPageDetail({

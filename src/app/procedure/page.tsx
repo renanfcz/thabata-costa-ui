@@ -10,18 +10,20 @@ import { currencyFormatter } from '@/utils/formatter'
 import CurrencyInput from '@/components/form/inputs/CurrencyInput'
 import { graphqlClient } from '@/server/graphql-client'
 import { Procedure } from '@/models/Procedure'
-import { CREATE_PROCEDURE } from '@/server/mutations'
+import { CREATE_PROCEDURE, REMOVE_PROCEDURE } from '@/server/mutations'
 import { toast } from 'react-toastify'
 import { useProceduresContext } from '@/contexts/ProcedureContext'
 import BackArrow from '@/components/form/buttons/BackArrow'
-
-interface ResponseCreateProcedures {
-  createProcedure: Procedure
-}
+import {
+  ResponseCreateProcedures,
+  ResponseRemoveProcedure,
+} from '@/server/mutations/responses/ProcedureResponses'
+import { CirclePicker, ColorResult } from 'react-color'
 
 const schema = z.object({
   name: z.string(),
   price: z.coerce.number().min(1),
+  color: z.string(),
 })
 
 type ProcedureFormData = z.infer<typeof schema>
@@ -30,12 +32,14 @@ export default function Procedure() {
   const {
     control,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<ProcedureFormData>({
     resolver: zodResolver(schema),
     defaultValues: {
       name: undefined,
       price: undefined,
+      color: '',
     },
     mode: 'onSubmit',
     reValidateMode: 'onChange',
@@ -52,6 +56,7 @@ export default function Procedure() {
           createProcedureInput: {
             name: data.name,
             price: data.price,
+            color: data.color,
           },
         },
       )
@@ -72,10 +77,33 @@ export default function Procedure() {
     }
   }
 
-  const handleRemoveProcedure = (index: number) => {
-    const proceduresCopy = [...procedures]
-    proceduresCopy.splice(index, 1)
-    updateProcedures(proceduresCopy)
+  const handleRemoveProcedure = async (index: number, procedure: Procedure) => {
+    const loading = toast.loading('Removendo...')
+    try {
+      await graphqlClient.request<ResponseRemoveProcedure>(REMOVE_PROCEDURE, {
+        removeProcedureId: procedure.id,
+      })
+      toast.update(loading, {
+        render: 'Procedimento removido com sucesso!',
+        type: 'success',
+        isLoading: false,
+        autoClose: 5000,
+      })
+      const proceduresCopy = [...procedures]
+      proceduresCopy.splice(index, 1)
+      updateProcedures(proceduresCopy)
+    } catch (error: any) {
+      toast.update(loading, {
+        render: error.response.errors[0].message,
+        type: 'error',
+        isLoading: false,
+        autoClose: 5000,
+      })
+    }
+  }
+
+  const handleOnChangeColor = (color: ColorResult) => {
+    setValue('color', color.hex)
   }
 
   return (
@@ -116,6 +144,15 @@ export default function Procedure() {
                 />
               )}
             />
+            <div className="flex justify-center">
+              <Controller
+                name="color"
+                control={control}
+                render={({ field: { value } }) => (
+                  <CirclePicker color={value} onChange={handleOnChangeColor} />
+                )}
+              />
+            </div>
             <button
               type="submit"
               className="px-10 py-3 font-bold border border-info rounded text-info hover:bg-info hover:text-white transition duration-200"
@@ -130,6 +167,7 @@ export default function Procedure() {
               <tr>
                 <TableHead>Nome</TableHead>
                 <TableHead>Valor</TableHead>
+                <TableHead>Cor</TableHead>
                 <TableHead> </TableHead>
               </tr>
             </thead>
@@ -141,9 +179,15 @@ export default function Procedure() {
                     {currencyFormatter.format(procedure.price)}
                   </TableData>
                   <TableData>
+                    <div
+                      className={`rounded-full w-6 h-6`}
+                      style={{ backgroundColor: procedure.color }}
+                    ></div>
+                  </TableData>
+                  <TableData>
                     <div className="flex justify-end">
                       <Trash2
-                        onClick={() => handleRemoveProcedure(index)}
+                        onClick={() => handleRemoveProcedure(index, procedure)}
                         className="text-danger cursor-pointer"
                       />
                     </div>

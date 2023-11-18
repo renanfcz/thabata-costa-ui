@@ -117,6 +117,32 @@ export const UPDATE_PROTOCOL = gql`
     }
   }
 `
+export const CREATE_SESSION = gql`
+  mutation CreateSession($createSessionInput: CreateSessionInput!) {
+    createSession(createSessionInput: $createSessionInput) {
+      saleItem {
+        id
+        value
+        discount
+        sessionsNum
+        procedure {
+          name
+          price
+          id
+        }
+        sale {
+          client {
+            name
+          }
+        }
+      }
+      id
+      initDate
+      finalDate
+      obs
+    }
+  }
+`
 
 export const UPDATE_SESSION = gql`
   mutation UpdateSession($updateSessionInput: UpdateSessionInput!) {
@@ -131,6 +157,11 @@ export const UPDATE_SESSION = gql`
           price
           id
         }
+        sale {
+          client {
+            name
+          }
+        }
       }
       id
       initDate
@@ -139,12 +170,31 @@ export const UPDATE_SESSION = gql`
     }
   }
 `
+
+export const REMOVE_SESSION = gql`
+  mutation RemoveSession($removeSessionId: String!) {
+    removeSession(id: $removeSessionId)
+  }
+`
+
 export const CREATE_PROCEDURE = gql`
   mutation CreateProcedure($createProcedureInput: CreateProcedureInput!) {
     createProcedure(createProcedureInput: $createProcedureInput) {
       id
       name
       price
+      color
+    }
+  }
+`
+
+export const REMOVE_PROCEDURE = gql`
+  mutation RemoveProcedure($removeProcedureId: String!) {
+    removeProcedure(id: $removeProcedureId) {
+      id
+      name
+      price
+      color
     }
   }
 `

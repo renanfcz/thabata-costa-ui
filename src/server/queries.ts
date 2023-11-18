@@ -195,6 +195,7 @@ export const GET_PROCEDURES = gql`
       id
       name
       price
+      color
     }
   }
 `
@@ -211,6 +212,7 @@ export const GET_ALL_SCHEDULE = gql`
           name
           price
           id
+          color
         }
         sale {
           client {

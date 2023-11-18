@@ -2,15 +2,12 @@
 import { Procedure } from '@/models/Procedure'
 import { graphqlClient } from '@/server/graphql-client'
 import { GET_PROCEDURES } from '@/server/queries'
+import { ResponseFindeAllProcedures } from '@/server/queries/responses/ProcedureResponses'
 import { createContext, useContext, useEffect, useState } from 'react'
 
 interface ProceduresContextType {
   procedures: Procedure[]
   updateProcedures(procedures: Procedure[]): void
-}
-
-interface ResponseGetProcedures {
-  findAllProcedures: [Procedure]
 }
 
 const ProceduresContext = createContext({} as ProceduresContextType)
@@ -30,7 +27,7 @@ export const ProceduresProvider = ({
 
   async function getProcedures() {
     if (procedures.length === 0) {
-      const response = await graphqlClient.request<ResponseGetProcedures>(
+      const response = await graphqlClient.request<ResponseFindeAllProcedures>(
         GET_PROCEDURES,
       )
 

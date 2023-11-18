@@ -14,6 +14,7 @@ import { graphqlClient } from '@/server/graphql-client'
 import { useClientContext } from '@/contexts/client/ClientContext'
 import { CREATE_INDICATION, REMOVE_INDICATION } from '@/server/mutations'
 import { Indication } from '@/models/Indication'
+import { ResponseCreateIndication } from '@/server/mutations/responses/IndicationResponses'
 
 const schema = z.object({
   name: z.string().min(5),
@@ -23,10 +24,6 @@ const schema = z.object({
 })
 
 type IndicationFormData = z.infer<typeof schema>
-
-interface ResponseCreateIndication {
-  createIndication: Indication
-}
 
 export default function IndicationPage() {
   const { client } = useClientContext()
@@ -104,8 +101,6 @@ export default function IndicationPage() {
   useEffect(() => {
     setIndicationList(client?.indications || [])
   }, [client])
-
-  console.log(errors)
 
   return (
     <div className="px-5 lg:w-1/2">

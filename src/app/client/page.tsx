@@ -8,15 +8,12 @@ import { Client } from '@/models/Client'
 import { graphqlClient } from '@/server/graphql-client'
 import { dateFormatter } from '@/utils/formatter'
 import BackArrow from '@/components/form/buttons/BackArrow'
-
-interface Response {
-  findAllClients: [Client]
-}
+import { ResponseClients } from '@/server/queries/responses/ClientResponses'
 
 export const revalidate = 30
 
 export default async function Client() {
-  const data = await graphqlClient.request<Response>(GET_CLIENTS)
+  const data = await graphqlClient.request<ResponseClients>(GET_CLIENTS)
   const clients = data.findAllClients
 
   return (

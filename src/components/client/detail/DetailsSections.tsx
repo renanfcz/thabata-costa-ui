@@ -3,6 +3,7 @@ import { useClientContext } from '@/contexts/client/ClientContext'
 import { Client } from '@/models/Client'
 import { graphqlClient } from '@/server/graphql-client'
 import { GET_CLIENT_BY_NAME } from '@/server/queries'
+import { ResponseFindClientByName } from '@/server/queries/responses/ClientResponses'
 import React, { useEffect } from 'react'
 import FinanceInfoPage from './FinanceInfoPage'
 import IndicationPage from './IndicationPage'
@@ -17,10 +18,6 @@ interface DetailsSectionsProps {
   financeInfo: boolean
 }
 
-interface ResponseGetClient {
-  findClientByName: Client
-}
-
 export default function DetailsSections({
   clientName,
   info,
@@ -31,7 +28,7 @@ export default function DetailsSections({
   const { client, updateClient } = useClientContext()
 
   async function getClientByName() {
-    const data = await graphqlClient.request<ResponseGetClient>(
+    const data = await graphqlClient.request<ResponseFindClientByName>(
       GET_CLIENT_BY_NAME,
       {
         name: clientName,
