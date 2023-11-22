@@ -1,4 +1,4 @@
-import RegisterPage from '@/components/client/new/RegisterPage'
+import RegisterPage from '@/app/client/new/(register)/RegisterPage'
 import { ChevronLeft } from 'lucide-react'
 import Link from 'next/link'
 

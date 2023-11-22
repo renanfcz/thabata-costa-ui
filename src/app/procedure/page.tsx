@@ -10,7 +10,6 @@ import { currencyFormatter } from '@/utils/formatter'
 import CurrencyInput from '@/components/form/inputs/CurrencyInput'
 import { graphqlClient } from '@/server/graphql-client'
 import { Procedure } from '@/models/Procedure'
-import { CREATE_PROCEDURE, REMOVE_PROCEDURE } from '@/server/mutations'
 import { toast } from 'react-toastify'
 import { useProceduresContext } from '@/contexts/ProcedureContext'
 import BackArrow from '@/components/form/buttons/BackArrow'
@@ -19,6 +18,10 @@ import {
   ResponseRemoveProcedure,
 } from '@/server/mutations/responses/ProcedureResponses'
 import { CirclePicker, ColorResult } from 'react-color'
+import {
+  CREATE_PROCEDURE,
+  REMOVE_PROCEDURE,
+} from '@/server/mutations/requests/procedure/ProcedureMutations'
 
 const schema = z.object({
   name: z.string(),

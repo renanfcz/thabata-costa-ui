@@ -1,5 +1,5 @@
 'use client'
-import DetailsSections from '@/components/client/detail/DetailsSections'
+import DetailsSections from '@/app/client/detail/[name]/(components)/DetailsSections'
 import { ClientProvider } from '@/contexts/client/ClientContext'
 import { ChevronsLeft } from 'lucide-react'
 import Link from 'next/link'
@@ -16,12 +16,14 @@ export default function ClientDetail({ params }: ClientDetailProps) {
   const [indication, setIndication] = useState(false)
   const [protocols, setProtocols] = useState(false)
   const [financeInfo, setFinanceInfo] = useState(false)
+  const [anamnesis, setAnamnesis] = useState(false)
 
   const handleInfo = () => {
     setInfo(true)
     setIndication(false)
     setProtocols(false)
     setFinanceInfo(false)
+    setAnamnesis(false)
   }
 
   const handleIndication = () => {
@@ -29,6 +31,7 @@ export default function ClientDetail({ params }: ClientDetailProps) {
     setIndication(true)
     setProtocols(false)
     setFinanceInfo(false)
+    setAnamnesis(false)
   }
 
   const handleProtocols = () => {
@@ -36,6 +39,7 @@ export default function ClientDetail({ params }: ClientDetailProps) {
     setIndication(false)
     setProtocols(true)
     setFinanceInfo(false)
+    setAnamnesis(false)
   }
 
   const handleFinanceInfo = () => {
@@ -43,6 +47,15 @@ export default function ClientDetail({ params }: ClientDetailProps) {
     setIndication(false)
     setProtocols(false)
     setFinanceInfo(true)
+    setAnamnesis(false)
+  }
+
+  const handleAnamnesis = () => {
+    setInfo(false)
+    setIndication(false)
+    setProtocols(false)
+    setFinanceInfo(false)
+    setAnamnesis(true)
   }
 
   function decodeStringParams(param: string) {
@@ -106,6 +119,16 @@ export default function ClientDetail({ params }: ClientDetailProps) {
           >
             Dados financeiros
           </button>
+          <button
+            onClick={handleAnamnesis}
+            className={`border-b-2 hover:border-b-light-secondary p-3 transition duration-200 ${
+              anamnesis
+                ? 'border-b-light-secondary font-bold'
+                : 'border-b-gray-300'
+            }`}
+          >
+            Anamneses
+          </button>
         </div>
         <div className="py-5">
           <ClientProvider>
@@ -115,6 +138,7 @@ export default function ClientDetail({ params }: ClientDetailProps) {
               indication={indication}
               protocols={protocols}
               financeInfo={financeInfo}
+              anamnesis={anamnesis}
             />
           </ClientProvider>
         </div>

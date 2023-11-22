@@ -3,12 +3,12 @@ import { TableData } from '@/components/table/TableData'
 import { TableHead } from '@/components/table/TableHead'
 import { Plus } from 'lucide-react'
 import Link from 'next/link'
-import { GET_CLIENTS } from '@/server/queries'
 import { Client } from '@/models/Client'
 import { graphqlClient } from '@/server/graphql-client'
 import { dateFormatter } from '@/utils/formatter'
 import BackArrow from '@/components/form/buttons/BackArrow'
 import { ResponseClients } from '@/server/queries/responses/ClientResponses'
+import { GET_CLIENTS } from '@/server/queries/requests/client/ClientQueries'
 
 export const revalidate = 30
 

@@ -1,7 +1,7 @@
 'use client'
 import BackArrow from '@/components/form/buttons/BackArrow'
-import HistSale from '@/components/sale/HistSale'
-import NewSale from '@/components/sale/new/NewSale'
+import HistSale from '@/app/sale/(hist)/HistSale'
+import NewSale from '@/app/sale/(new)/NewSale'
 import { useState } from 'react'
 
 export default function Sale() {

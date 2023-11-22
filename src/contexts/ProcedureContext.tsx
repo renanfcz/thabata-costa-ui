@@ -1,7 +1,7 @@
 'use client'
 import { Procedure } from '@/models/Procedure'
 import { graphqlClient } from '@/server/graphql-client'
-import { GET_PROCEDURES } from '@/server/queries'
+import { GET_PROCEDURES } from '@/server/queries/requests/procedure/ProcedureQueries'
 import { ResponseFindeAllProcedures } from '@/server/queries/responses/ProcedureResponses'
 import { createContext, useContext, useEffect, useState } from 'react'
 

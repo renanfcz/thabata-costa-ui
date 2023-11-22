@@ -1,11 +1,6 @@
+import { PaymentTypeEnum } from '@/enum/PaymentTypeEnum'
 import { createContext, useContext, useState } from 'react'
 
-enum PaymentType {
-  MONEY = 'money',
-  PIX = 'pix',
-  DEBIT = 'debit',
-  CREDIT = 'credit',
-}
 interface Procedure {
   procedureId: string
   value: number
@@ -18,7 +13,7 @@ interface NewSale {
   protocolName: string
   protocolDesc: string
   procedures: Procedure[]
-  paymentType: PaymentType | undefined
+  paymentType: PaymentTypeEnum | undefined
 }
 
 interface NewSaleContextType {

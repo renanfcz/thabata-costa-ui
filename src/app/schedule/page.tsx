@@ -5,7 +5,6 @@ import { useCallback, useEffect, useState } from 'react'
 import BackArrow from '@/components/form/buttons/BackArrow'
 import { graphqlClient } from '@/server/graphql-client'
 import { Session } from '@/models/Session'
-import { GET_ALL_SCHEDULE } from '@/server/queries'
 import {
   Calendar,
   EventPropGetter,
@@ -18,8 +17,9 @@ import 'moment/locale/pt-br'
 import { convertDateToTimezone } from '@/utils/converter'
 import { ResponseFindAllSessions } from '@/server/queries/responses/SessionResponses'
 import ConfirmationForm from '@/components/form/FormRemoveSessionConfirmation'
-import { REMOVE_SESSION } from '@/server/mutations'
 import { toast } from 'react-toastify'
+import { GET_ALL_SCHEDULE } from '@/server/queries/requests/session/SessionQueries'
+import { REMOVE_SESSION } from '@/server/mutations/requests/session/SessionMutations'
 
 const localizer = momentLocalizer(moment)
 
