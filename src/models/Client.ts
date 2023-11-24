@@ -1,3 +1,4 @@
+import { Anamnesis } from './Anamnesis'
 import { Indication } from './Indication'
 import { Sale } from './Sale'
 
@@ -19,4 +20,5 @@ export type Client = {
   socialMedia: string
   sales: Sale[]
   clientStatus: string
+  anamnesis: Anamnesis[]
 }

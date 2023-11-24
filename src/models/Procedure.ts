@@ -5,4 +5,5 @@ export type Procedure = {
   name: string
   price: number
   sessions: Session[]
+  color: string
 }

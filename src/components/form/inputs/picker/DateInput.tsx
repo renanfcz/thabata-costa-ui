@@ -4,24 +4,27 @@ import Flatpickr from 'react-flatpickr'
 import 'flatpickr/dist/themes/airbnb.css'
 import { dateFormatter } from '@/utils/formatter'
 
-interface DateTimeInputProps {
+interface DateInputProps {
   label: string
   hasError?: boolean
   value: string
   setValue(date: string): void
 }
 
-export default function DateTimeInput({
+export default function DateInput({
   label,
   hasError,
   value,
   setValue,
   ...rest
-}: DateTimeInputProps) {
+}: DateInputProps) {
   const [focused, setFocused] = useState(false)
 
   const handleUpdateDate = (dateArray: Date[]) => {
-    const newDate = new Date(value)
+    if (dateArray === undefined || dateArray.length === 0)
+      dateArray.push(new Date())
+
+    const newDate = value ? new Date(value) : new Date()
 
     if (dateArray !== undefined && dateArray.length > 0) {
       newDate.setUTCFullYear(dateArray[0].getUTCFullYear())
@@ -50,6 +53,7 @@ export default function DateTimeInput({
         options={{
           dateFormat: 'd/m/Y',
           defaultDate: value,
+          disableMobile: true,
         }}
         className={`w-full border-2 focus:outline-none rounded px-3 py-2 h-full transition duration-200 ${
           hasError
