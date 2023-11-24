@@ -1,7 +1,7 @@
 'use client'
 import { Client } from '@/models/Client'
 import { graphqlClient } from '@/server/graphql-client'
-import { GET_CLIENTS } from '@/server/queries'
+import { GET_CLIENTS } from '@/server/queries/requests/client/ClientQueries'
 import { ResponseClients } from '@/server/queries/responses/ClientResponses'
 import { Check } from 'lucide-react'
 import { useEffect, useState } from 'react'

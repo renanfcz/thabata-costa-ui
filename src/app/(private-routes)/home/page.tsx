@@ -6,6 +6,7 @@ import {
   ShoppingBag,
   Users,
 } from 'lucide-react'
+import LogOutButton from '@/components/form/buttons/LogOutButton'
 
 export default function Home() {
   return (
@@ -43,6 +44,9 @@ export default function Home() {
         >
           <ShoppingBag size={50} /> <strong className="text-2xl">Vendas</strong>
         </Link>
+      </div>
+      <div className="fixed top-0 right-0 m-4">
+        <LogOutButton />
       </div>
     </div>
   )

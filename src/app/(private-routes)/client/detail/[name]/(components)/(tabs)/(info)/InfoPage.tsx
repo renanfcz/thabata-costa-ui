@@ -10,11 +10,14 @@ import DateInput from '@/components/form/inputs/DateInput'
 import CellPhoneInput from '@/components/form/inputs/CellPhoneInput'
 import { useClientContext } from '@/contexts/client/ClientContext'
 import { graphqlClient } from '@/server/graphql-client'
-import { CREATE_CLIENT, UPDATE_CLIENT } from '@/server/mutations'
 import { dateFormatter, formatDateString } from '@/utils/formatter'
 import { toast } from 'react-toastify'
 import { Client } from '@/models/Client'
 import { useEffect } from 'react'
+import {
+  CREATE_CLIENT,
+  UPDATE_CLIENT,
+} from '@/server/mutations/requests/client/ClientMutations'
 
 const schema = z.object({
   name: z.string().min(5),

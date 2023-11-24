@@ -1,5 +1,5 @@
 'use client'
-import DetailsSections from '@/app/client/detail/[name]/(components)/DetailsSections'
+import DetailsSections from '@/app/(private-routes)/client/detail/[name]/(components)/DetailsSections'
 import { ClientProvider } from '@/contexts/client/ClientContext'
 import { ChevronsLeft } from 'lucide-react'
 import Link from 'next/link'

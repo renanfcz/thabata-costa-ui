@@ -4,7 +4,7 @@ import { useClientContext } from '@/contexts/client/ClientContext'
 import { Sale } from '@/models/Sale'
 import { useEffect, useState } from 'react'
 
-import ProtocolCard from '@/app/client/detail/[name]/(components)/(tabs)/(protocol)/ProtocolCard'
+import ProtocolCard from '@/app/(private-routes)/client/detail/[name]/(components)/(tabs)/(protocol)/ProtocolCard'
 import ProtocolPageDetail from './ProtocolPageDetail'
 
 export default function ProtocolsPage() {

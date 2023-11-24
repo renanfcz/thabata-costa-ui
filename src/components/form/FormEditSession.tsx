@@ -14,18 +14,21 @@ import { Session } from '@/models/Session'
 import { dateFormatter } from '@/utils/formatter'
 import { toast } from 'react-toastify'
 import { graphqlClient } from '@/server/graphql-client'
-import { CREATE_SESSION, UPDATE_SESSION } from '@/server/mutations'
 import AutosuggestField from './inputs/AutosuggestField'
 import { useEffect, useState } from 'react'
-import { GET_CLIENTS } from '@/server/queries'
 import { Client } from '@/models/Client'
 import Autosuggest from 'react-autosuggest'
-import { RangeHour } from '@/app/schedule/page'
+import { RangeHour } from '@/app/(private-routes)/schedule/page'
 import {
   ResponseCreateSession,
   ResponseUpdateSession,
 } from '@/server/mutations/responses/SessionResponses'
 import { ResponseClients } from '@/server/queries/responses/ClientResponses'
+import {
+  CREATE_SESSION,
+  UPDATE_SESSION,
+} from '@/server/mutations/requests/session/SessionMutations'
+import { GET_CLIENTS } from '@/server/queries/requests/client/ClientQueries'
 
 interface FormEditSessionProps {
   onClose(): void

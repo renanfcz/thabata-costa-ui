@@ -1,6 +1,5 @@
 'use client'
 import { Client } from '@/models/Client'
-import { REMOVE_CLIENT } from '@/server/mutations'
 import { dateFormatter } from '@/utils/formatter'
 import { Info, Trash2 } from 'lucide-react'
 import { useState } from 'react'
@@ -11,6 +10,7 @@ import { useRouter } from 'next/navigation'
 import RemoveItemModal from '../modal/RemoveItemModal'
 import Link from 'next/link'
 import { toast } from 'react-toastify'
+import { REMOVE_CLIENT } from '@/server/mutations/requests/client/ClientMutations'
 
 interface ActionGroupProps {
   client: Client

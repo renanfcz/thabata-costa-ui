@@ -4,7 +4,6 @@ import CellPhoneInput from '@/components/form/inputs/CellPhoneInput'
 import { useClientContext } from '@/contexts/client/ClientContext'
 import { Indication } from '@/models/Indication'
 import { graphqlClient } from '@/server/graphql-client'
-import { CREATE_INDICATION, REMOVE_INDICATION } from '@/server/mutations'
 import { ResponseCreateIndication } from '@/server/mutations/responses/IndicationResponses'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { X } from 'lucide-react'
@@ -15,6 +14,10 @@ import * as z from 'zod'
 
 import SelectInput from '@/components/form/hook-form/SelectInput'
 import { TableHead } from '@/components/table/TableHead'
+import {
+  CREATE_INDICATION,
+  REMOVE_INDICATION,
+} from '@/server/mutations/requests/indication/IndicationMutations'
 
 const schema = z.object({
   name: z.string().min(5),

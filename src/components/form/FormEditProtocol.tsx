@@ -2,7 +2,7 @@
 import { useProceduresContext } from '@/contexts/ProcedureContext'
 import { Session } from '@/models/Session'
 import { graphqlClient } from '@/server/graphql-client'
-import { UPDATE_SESSION } from '@/server/mutations'
+import { UPDATE_SESSION } from '@/server/mutations/requests/session/SessionMutations'
 import { ResponseUpdateSession } from '@/server/mutations/responses/SessionResponses'
 import { dateFormatter } from '@/utils/formatter'
 import { zodResolver } from '@hookform/resolvers/zod'
