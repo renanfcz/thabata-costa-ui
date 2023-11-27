@@ -3,7 +3,7 @@ import SugestionInput from '@/components/form/inputs/SugestionInput'
 import { useNewSaleContext } from '@/contexts/NewSaleContext'
 import { Client } from '@/models/Client'
 import { graphqlClient } from '@/server/graphql-client'
-import { GET_CLIENTS } from '@/server/queries'
+import { GET_CLIENTS } from '@/server/queries/requests/client/ClientQueries'
 import { FormEvent, useEffect, useState } from 'react'
 import Autosuggest from 'react-autosuggest'
 
