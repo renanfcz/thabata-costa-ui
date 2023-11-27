@@ -2,7 +2,6 @@
 import { useState } from 'react'
 import Flatpickr from 'react-flatpickr'
 import 'flatpickr/dist/themes/airbnb.css'
-import { dateTimeFormatter, timeFormatter } from '@/utils/formatter'
 
 interface TimeInputProps {
   label: string

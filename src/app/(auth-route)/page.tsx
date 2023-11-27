@@ -1,7 +1,7 @@
 'use client'
 import LogInButton from '@/components/form/buttons/LogInButton'
 import PasswordInput from '@/components/form/inputs/PasswordInput'
-import TextInput from '@/components/form/inputs/TextInput'
+import UserInput from '@/components/form/inputs/UserInput'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
@@ -56,17 +56,17 @@ export default function Home() {
   }
 
   return (
-    <div className="h-full w-full">
+    <div className="h-full w-full bg-gray-100">
       <form
         onSubmit={handleSubmit(handleLogin)}
         className=" flex items-center justify-center w-full h-full"
       >
-        <div className="flex flex-col gap-5 w-1/4 p-7 rounded shadow-md">
+        <div className="flex flex-col gap-5 w-1/4 p-7 rounded shadow-md bg-white">
           <Controller
             name="email"
             control={control}
             render={({ field: { value, onChange } }) => (
-              <TextInput
+              <UserInput
                 label="Email"
                 hasError={!!errors.email}
                 value={value}

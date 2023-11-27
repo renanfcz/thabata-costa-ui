@@ -39,6 +39,9 @@ const nextAuthOptions: NextAuthOptions = {
   pages: {
     signIn: '/',
   },
+  session: {
+    maxAge: 86400,
+  },
 }
 
 const handler = NextAuth(nextAuthOptions)

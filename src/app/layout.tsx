@@ -21,7 +21,7 @@ export default function RootLayout({
       <body suppressHydrationWarning={true}>
         <header></header>
         <div className="flex flex-1 h-screen">
-          <main className="bg-white flex-1 h-full py-2">
+          <main className="flex-1 h-full">
             <NextAuthSessionProvider>
               <ProceduresProvider>{children}</ProceduresProvider>
             </NextAuthSessionProvider>

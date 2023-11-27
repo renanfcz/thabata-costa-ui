@@ -9,24 +9,6 @@ import * as z from 'zod'
 import TextAreaInput from './inputs/TextAreaInput'
 import Title from '../modal/Title'
 import { useProceduresContext } from '@/contexts/ProcedureContext'
-<<<<<<< HEAD
-import SugestionInput from './inputs/SugestionInput'
-import { FormEvent, useEffect, useState } from 'react'
-import { Client } from '@/models/Client'
-import { graphqlClient } from '@/server/graphql-client'
-import { GET_CLIENTS } from '@/server/queries'
-import Autosuggest from 'react-autosuggest'
-import TimeInput from './inputs/picker/TimeInput'
-import { dateFormatter, timeFormatter } from '@/utils/formatter'
-
-interface FormEditSessionProps {
-  onClose(): void
-  date: Date | undefined
-}
-
-interface Response {
-  findAllClients: Client[]
-=======
 import TimeInput from './inputs/picker/TimeInput'
 import { Session } from '@/models/Session'
 import { dateFormatter } from '@/utils/formatter'
@@ -54,7 +36,6 @@ interface FormEditSessionProps {
   updateSession(session: Session): void
   selectedRange: RangeHour | undefined
   showConfirmation(): void
->>>>>>> feature/refactoring-layout
 }
 
 const schema = z.object({
@@ -70,55 +51,14 @@ type SessionFormData = z.infer<typeof schema>
 
 export default function FormEditSession({
   onClose,
-<<<<<<< HEAD
-  date,
-=======
   session,
   updateSession,
   selectedRange,
   showConfirmation,
->>>>>>> feature/refactoring-layout
 }: FormEditSessionProps) {
   const { procedures } = useProceduresContext()
   const [clients, setClients] = useState<Client[]>([])
   const [suggestionsList, setSuggestionsList] = useState<Client[]>([])
-<<<<<<< HEAD
-  const [name, setName] = useState('')
-  // const [calendarDate, setCalendarDate] = useState(date)
-
-  async function getAllClients() {
-    const data = await graphqlClient.request<Response>(GET_CLIENTS)
-    setClients(data.findAllClients)
-  }
-
-  const renderSuggestion = (suggestion: Client) => <div>{suggestion.name}</div>
-
-  const onChange = (
-    event: FormEvent<HTMLElement>,
-    { newValue }: Autosuggest.ChangeEvent,
-  ) => {
-    setName(newValue)
-  }
-
-  const onSuggestionsFetchRequested = ({
-    value,
-  }: Autosuggest.SuggestionsFetchRequestedParams) => {
-    const inputValue = value.toLowerCase()
-    const filteredSuggestions = clients.filter((client) =>
-      client.name.toLowerCase().includes(inputValue),
-    )
-    if (filteredSuggestions.length > 5) {
-      setSuggestionsList(filteredSuggestions.slice(0, 5))
-    } else {
-      setSuggestionsList(filteredSuggestions)
-    }
-  }
-
-  const onSuggestionsClearRequested = () => {
-    setSuggestionsList([])
-  }
-=======
->>>>>>> feature/refactoring-layout
 
   function buildHour(date: Date | undefined) {
     if (date !== undefined) {
@@ -126,11 +66,7 @@ export default function FormEditSession({
       const fullDate = new Date(
         data.getUTCFullYear(),
         data.getUTCMonth(),
-<<<<<<< HEAD
-        data.getUTCDay(),
-=======
         data.getUTCDate(),
->>>>>>> feature/refactoring-layout
         data.getUTCHours(),
         data.getUTCMinutes(),
       )
@@ -138,8 +74,6 @@ export default function FormEditSession({
     }
     return undefined
   }
-<<<<<<< HEAD
-=======
 
   function buildDaySession(date: Date | undefined) {
     if (date !== undefined) {
@@ -148,23 +82,14 @@ export default function FormEditSession({
     }
     return undefined
   }
->>>>>>> feature/refactoring-layout
 
   const {
     handleSubmit,
     control,
-    reset,
     formState: { errors, dirtyFields },
   } = useForm<SessionFormData>({
     resolver: zodResolver(schema),
     defaultValues: {
-<<<<<<< HEAD
-      procedure: undefined,
-      sessionDate: dateFormatter.format(date),
-      initHour: buildHour(date),
-      finalHour: undefined,
-      obs: undefined,
-=======
       client: session?.saleItem.sale.client.name,
       procedure: session?.saleItem.procedure.name,
       sessionDate: buildDaySession(session?.initDate || selectedRange?.start),
@@ -173,7 +98,6 @@ export default function FormEditSession({
         selectedRange?.end ||
         buildHour(session?.finalDate || selectedRange?.end),
       obs: session?.obs || '',
->>>>>>> feature/refactoring-layout
     },
     mode: 'onSubmit',
     reValidateMode: 'onChange',
@@ -282,17 +206,6 @@ export default function FormEditSession({
     return procedures.map((p) => p.name)
   }
 
-<<<<<<< HEAD
-  useEffect(() => {
-    getAllClients()
-    reset({
-      procedure: undefined,
-      sessionDate: dateFormatter.format(date),
-      initHour: buildHour(date),
-      finalHour: undefined,
-      obs: undefined,
-    })
-=======
   async function getAllClients() {
     const data = await graphqlClient.request<ResponseClients>(GET_CLIENTS)
     setClients(data.findAllClients)
@@ -324,7 +237,6 @@ export default function FormEditSession({
 
   useEffect(() => {
     getAllClients()
->>>>>>> feature/refactoring-layout
   }, [])
 
   return (
@@ -336,19 +248,6 @@ export default function FormEditSession({
         <Title>Dados da sessão</Title>
         <div className="flex flex-col gap-5 justify-center h-full">
           <div className="flex gap-2">
-<<<<<<< HEAD
-            <div className="w-full">
-              <SugestionInput
-                text={name}
-                onSuggestionsClearRequested={onSuggestionsClearRequested}
-                onSuggestionsFetchRequested={onSuggestionsFetchRequested}
-                onChange={onChange}
-                suggestionsList={suggestionsList}
-                renderSuggestion={renderSuggestion}
-                label="Nome do cliente"
-              />
-            </div>
-=======
             <Controller
               name="client"
               control={control}
@@ -364,7 +263,6 @@ export default function FormEditSession({
                 />
               )}
             />
->>>>>>> feature/refactoring-layout
             <Controller
               name="sessionDate"
               control={control}

@@ -1,20 +1,21 @@
 'use client'
-import { useState } from 'react'
+import React, { useState } from 'react'
 
-interface PasswordInputProps {
+interface UserInputProps {
   label: string
   hasError?: boolean
   value: string
   setValue(value: string): void
 }
 
-export default function PasswordInput({
+export default function UserInput({
   label,
   hasError,
   value,
   setValue,
-}: PasswordInputProps) {
+}: UserInputProps) {
   const [focused, setFocused] = useState(false)
+
   return (
     <div className="relative w-full">
       <label
@@ -23,12 +24,12 @@ export default function PasswordInput({
             ? '-top-4 text-xs font-bold text-info'
             : 'top-3 text-sm'
         }
-    `}
+          `}
       >
         {label}
       </label>
       <input
-        type="password"
+        type="text"
         className={`w-full border-b-2 focus:outline-none px-3 py-2 h-full transition duration-200 ${
           hasError ? 'border-danger' : 'border-info/50 focus:border-info'
         }`}
