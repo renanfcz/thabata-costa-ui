@@ -68,9 +68,9 @@ export default function TableFinanceAccordion() {
           </tr>
         </tbody>
       </table>
-      <EditModal isOpen={modalOpen}>
-        {/* <FormEditProtocol onClose={handleCloseModal} session={}/> */}
-      </EditModal>
+      {/* <EditModal isOpen={modalOpen}>
+        <FormEditProtocol onClose={handleCloseModal} session={}/>
+      </EditModal> */}
     </div>
   )
 }
