@@ -2,7 +2,6 @@
 import { Info } from 'lucide-react'
 import { useState } from 'react'
 
-import FormEditProtocol from '../form/FormEditProtocol'
 import EditModal from '../modal/EditProtocolModal'
 import { TableData } from '../table/TableData'
 import { TableHead } from '../table/TableHead'
@@ -70,7 +69,7 @@ export default function TableFinanceAccordion() {
         </tbody>
       </table>
       <EditModal isOpen={modalOpen}>
-        <FormEditProtocol onClose={handleCloseModal} />
+        {/* <FormEditProtocol onClose={handleCloseModal} session={}/> */}
       </EditModal>
     </div>
   )
