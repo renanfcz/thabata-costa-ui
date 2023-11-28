@@ -10,7 +10,7 @@ import { toast } from 'react-toastify'
 import { z } from 'zod'
 
 const schema = z.object({
-  email: z.string().min(5),
+  email: z.string().min(5).toLowerCase().trim(),
   password: z.string().min(6),
 })
 
@@ -61,7 +61,7 @@ export default function Home() {
         onSubmit={handleSubmit(handleLogin)}
         className=" flex items-center justify-center w-full h-full"
       >
-        <div className="flex flex-col gap-5 w-1/4 p-7 rounded shadow-md bg-white">
+        <div className="flex flex-col gap-5 lg:w-1/4 md:w-2/4 sm:w-3/4 p-7 rounded shadow-md bg-white">
           <Controller
             name="email"
             control={control}
