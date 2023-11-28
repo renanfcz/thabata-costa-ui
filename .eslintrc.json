@@ -1,3 +1,10 @@
 {
-  "extends": ["@rocketseat/eslint-config/react", "next/core-web-vitals"]
+  "extends": ["@rocketseat/eslint-config/react", "next/core-web-vitals"],
+  "plugins": ["prettier"],
+  "prettier/prettier": [
+    "error",
+    {
+       "printWidth": 200
+    }
+]
 }
