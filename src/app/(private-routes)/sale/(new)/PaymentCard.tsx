@@ -13,32 +13,32 @@ export default function PaymentCard() {
   const [debitButtonClicked, setDebitButtonClicked] = useState(false)
   const [creditButtonClicked, setCreditButtonClicked] = useState(false)
 
-  const setPaymentMethod = (type: PaymentTypeEnum) => {
+  const setPaymentMethod = (type: string) => {
     const saleCopy = { ...sale }
-    saleCopy.paymentType = type
+    saleCopy.paymentType = PaymentTypeEnum.getKey(type)
     updateSale(saleCopy)
   }
 
-  const handlePaymentMethod = (type: PaymentTypeEnum) => {
-    if (type === 'money' && moneyButtonClicked === false) {
+  const handlePaymentMethod = (type: string) => {
+    if (type === PaymentTypeEnum.MONEY && moneyButtonClicked === false) {
       setMoneyButtonClicked(!moneyButtonClicked)
       setPixButtonClicked(false)
       setDebitButtonClicked(false)
       setCreditButtonClicked(false)
       setPaymentMethod(type)
-    } else if (type === 'pix' && pixButtonClicked === false) {
+    } else if (type === PaymentTypeEnum.PIX && pixButtonClicked === false) {
       setMoneyButtonClicked(false)
       setPixButtonClicked(!pixButtonClicked)
       setDebitButtonClicked(false)
       setCreditButtonClicked(false)
       setPaymentMethod(type)
-    } else if (type === 'debit' && debitButtonClicked === false) {
+    } else if (type === PaymentTypeEnum.DEBIT && debitButtonClicked === false) {
       setMoneyButtonClicked(false)
       setPixButtonClicked(false)
       setDebitButtonClicked(!debitButtonClicked)
       setCreditButtonClicked(false)
       setPaymentMethod(type)
-    } else if (type === 'credit' && creditButtonClicked === false) {
+    } else if (type === PaymentTypeEnum.CREDIT && creditButtonClicked === false) {
       setMoneyButtonClicked(false)
       setPixButtonClicked(false)
       setDebitButtonClicked(false)
@@ -56,28 +56,28 @@ export default function PaymentCard() {
           isClicked={moneyButtonClicked}
         >
           <Banknote />
-          Dinheiro
+          {PaymentTypeEnum.MONEY}
         </RadioButton>
         <RadioButton
           onClick={() => handlePaymentMethod(PaymentTypeEnum.PIX)}
           isClicked={pixButtonClicked}
         >
           <SmartphoneNfc />
-          Pix
+          {PaymentTypeEnum.PIX}
         </RadioButton>
         <RadioButton
           onClick={() => handlePaymentMethod(PaymentTypeEnum.DEBIT)}
           isClicked={debitButtonClicked}
         >
           <Landmark />
-          Débito
+          {PaymentTypeEnum.DEBIT}
         </RadioButton>
         <RadioButton
           onClick={() => handlePaymentMethod(PaymentTypeEnum.CREDIT)}
           isClicked={creditButtonClicked}
         >
           <CreditCard />
-          Crédito
+          {PaymentTypeEnum.CREDIT}
         </RadioButton>
       </div>
     </div>

@@ -13,11 +13,15 @@ import { graphqlClient } from '@/server/graphql-client'
 import { dateFormatter, formatDateString } from '@/utils/formatter'
 import { toast } from 'react-toastify'
 import { Client } from '@/models/Client'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import {
   CREATE_CLIENT,
   UPDATE_CLIENT,
 } from '@/server/mutations/requests/client/ClientMutations'
+import { SocialMediaEnum } from '@/enum/SocialMediaEnum'
+import { KnowUsEnum } from '@/enum/KnowUsEnum'
+import AutosuggestField from '@/components/form/inputs/AutosuggestField'
+import Autosuggest from 'react-autosuggest'
 
 const schema = z.object({
   name: z.string().min(5),
@@ -26,12 +30,13 @@ const schema = z.object({
   celphone: z.string().min(11),
   state: z.string().min(2),
   city: z.string().min(3),
-  street: z.string().min(5),
-  number: z.coerce.number().min(1),
-  complement: z.string(),
-  socialMediaId: z.string(),
-  socialMedia: z.string(),
-  knowUs: z.string(),
+  street: z.string().min(5).optional(),
+  number: z.coerce.number().min(1).optional(),
+  complement: z.string().optional(),
+  socialMediaId: z.string().optional(),
+  socialMedia: z.enum([SocialMediaEnum.FACEBOOK, SocialMediaEnum.INSTAGRAM]).optional(),
+  knowUs: z.enum([KnowUsEnum.FACEBOOK, KnowUsEnum.INDICATION, KnowUsEnum.INSTAGRAM]).optional(),
+  recommendedBy: z.string().optional(),
 })
 
 type ClientFormData = z.infer<typeof schema>
@@ -42,11 +47,15 @@ interface UpdateClientResponse {
 
 export default function InfoPage() {
   const { client, updateClient } = useClientContext()
+  const [clients, setClients] = useState<Client[]>([])
+  const [suggestionsList, setSuggestionsList] = useState<Client[]>([])
+
   const {
     register,
     handleSubmit,
     control,
     reset,
+    watch,
     formState: { errors, dirtyFields },
   } = useForm<ClientFormData>({
     resolver: zodResolver(schema),
@@ -63,12 +72,17 @@ export default function InfoPage() {
       socialMediaId: undefined,
       socialMedia: undefined,
       knowUs: undefined,
+      recommendedBy: undefined
     },
     mode: 'onSubmit',
     reValidateMode: 'onChange',
   })
 
-  const midiaOptions = ['Instagram', 'Facebook']
+  const knowUsWatch = watch('knowUs')
+
+  const midiaOptions = Object.values(SocialMediaEnum)
+
+  const knowUsOptions = Object.values(KnowUsEnum)
 
   const stateOptions = ['RJ', 'SP', 'MG']
 
@@ -102,6 +116,34 @@ export default function InfoPage() {
     }
   }
 
+  const buildClientNameList = () => {
+    return suggestionsList.map((suggestion) => {
+      return suggestion.name
+    })
+  }
+
+  const onSuggestionsFetchRequested = ({
+    value,
+  }: Autosuggest.SuggestionsFetchRequestedParams) => {
+    const inputValue = value.toLowerCase()
+    const filteredSuggestions = clients.filter((client) =>
+      client.name.toLowerCase().includes(inputValue),
+    )
+    if (filteredSuggestions.length > 5) {
+      setSuggestionsList(filteredSuggestions.slice(0, 5))
+    } else {
+      setSuggestionsList(filteredSuggestions)
+    }
+  }
+
+  const onSuggestionsClearRequested = () => {
+    setSuggestionsList([])
+  }
+
+  function indicationKnowUsIsSelected() {
+    return knowUsWatch === KnowUsEnum.INDICATION
+  }
+
   useEffect(() => {
     reset({
       name: client?.name,
@@ -116,8 +158,8 @@ export default function InfoPage() {
       number: client?.number,
       complement: client?.complement,
       socialMediaId: client?.socialMediaId,
-      socialMedia: client?.socialMedia,
-      knowUs: client?.knowUs,
+      socialMedia: SocialMediaEnum.getValue(client?.socialMedia),
+      knowUs: KnowUsEnum.getValue(client?.knowUs),
     })
   }, [reset, client])
 
@@ -258,21 +300,44 @@ export default function InfoPage() {
               )}
             />
           </div>
-          <Controller
-            name="knowUs"
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <SelectInput
-                label="Como nos conheceu?"
-                options={midiaOptions}
-                isDirty={!!dirtyFields.knowUs || !!client?.knowUs}
-                hasError={!!errors.knowUs}
-                onChangeValue={onChange}
-                setValue={() => null}
-                value={value}
+          <div>
+            <Controller
+              name="knowUs"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <SelectInput
+                  label="Como nos conheceu?"
+                  options={knowUsOptions}
+                  isDirty={!!dirtyFields.knowUs || !!client?.knowUs}
+                  hasError={!!errors.knowUs}
+                  onChangeValue={onChange}
+                  setValue={() => null}
+                  value={value}
+                />
+              )}
+            />
+          </div>
+          <div>
+          {indicationKnowUsIsSelected() && (
+          <div>
+            <Controller
+                name="recommendedBy"
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <AutosuggestField
+                      label="Quem te indicou?"
+                      onGetSuggestionValue={(suggestion: string) => suggestion}
+                      onSuggestionsClearRequested={onSuggestionsClearRequested}
+                      onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+                      suggestionsList={buildClientNameList()}
+                      updateContext={onChange}
+                      value={value}
+                    />
+                  )}
               />
-            )}
-          />
+          </div>
+        )}
+          </div>
         </div>
         <div>
           <button

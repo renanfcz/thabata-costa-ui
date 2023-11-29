@@ -18,12 +18,13 @@ import {
   CREATE_INDICATION,
   REMOVE_INDICATION,
 } from '@/server/mutations/requests/indication/IndicationMutations'
+import { SocialMediaEnum } from '@/enum/SocialMediaEnum'
 
 const schema = z.object({
   name: z.string().min(5),
   celphone: z.string().min(11),
-  socialMediaId: z.string(),
-  socialMedia: z.string(),
+  socialMediaId: z.string().optional(),
+  socialMedia: z.string().optional(),
 })
 
 type IndicationFormData = z.infer<typeof schema>
@@ -52,7 +53,7 @@ export default function IndicationPage() {
     client?.indications || [],
   )
 
-  const options = ['Instagram', 'Facebook']
+  const options = Object.values(SocialMediaEnum)
 
   async function addIndication(input: IndicationFormData) {
     const loading = toast.loading('Salvando...')
@@ -78,6 +79,7 @@ export default function IndicationPage() {
       setIndicationList([...indicationList, data.createIndication])
       reset()
     } catch (error: any) {
+      console.log(error)
       toast.update(loading, {
         render: error.response.errors[0].message,
         type: 'error',
