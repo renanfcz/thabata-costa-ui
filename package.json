@@ -18,10 +18,10 @@
     "@types/node": "20.4.2",
     "@types/react": "18.2.15",
     "@types/react-dom": "18.2.7",
+    "antd": "^5.12.2",
     "autoprefixer": "10.4.14",
     "date-fns": "^2.30.0",
     "date-fns-tz": "^2.0.0",
-    "eslint": "8.45.0",
     "eslint-config-next": "13.4.10",
     "graphql": "^16.8.0",
     "graphql-request": "^6.1.0",
@@ -37,7 +37,6 @@
     "react-big-calendar": "^1.8.5",
     "react-color": "^2.19.3",
     "react-dom": "18.2.0",
-    "react-flatpickr": "^3.10.13",
     "react-hook-form": "^7.45.2",
     "react-loader-spinner": "^5.4.5",
     "react-number-format": "^5.2.2",
@@ -53,7 +52,7 @@
     "@types/react-autosuggest": "^10.1.6",
     "@types/react-big-calendar": "^1.8.3",
     "@types/react-color": "^3.0.10",
-    "@types/react-flatpickr": "^3.8.8",
-    "encoding": "^0.1.13"
+    "encoding": "^0.1.13",
+    "eslint": "^8.55.0"
   }
 }

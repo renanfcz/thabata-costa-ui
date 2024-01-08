@@ -4,8 +4,10 @@ import CurrencyInput from '@/components/form/inputs/CurrencyInput'
 import NumberInput from '@/components/form/inputs/NumberInput'
 import { useNewSaleContext } from '@/contexts/NewSaleContext'
 import { useProceduresContext } from '@/contexts/ProcedureContext'
+import { CreateSaleItem } from '@/dtos/saleItem/CreateSaleItem'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
 import * as z from 'zod'
 
 const schema = z.object({
@@ -17,7 +19,15 @@ const schema = z.object({
 
 type ProcedureFormData = z.infer<typeof schema>
 
-export default function ProcedureCard() {
+interface ProcedureCardProps {
+  protocol: {
+    protocolName: string
+    protocolDesc: string
+    saleItems: CreateSaleItem[]
+  }
+}
+
+export default function ProcedureCard({ protocol }: ProcedureCardProps) {
   const { sale, updateSale } = useNewSaleContext()
   const { procedures } = useProceduresContext()
 
@@ -53,17 +63,51 @@ export default function ProcedureCard() {
   }
 
   function addProcedure(data: ProcedureFormData) {
-    if (procedures !== undefined) {
-      const saleCopy = { ...sale }
-      saleCopy.procedures.push({
+    const saleCopy = { ...sale }
+    const findProtocol = saleCopy.protocols?.find(
+      (p) => p.protocolName === protocol.protocolName,
+    )
+    const findProtocolAndProcedure = saleCopy.protocols
+      ?.find((p) => p.protocolName === protocol.protocolName)
+      ?.saleItems.find((item) => item.procedureId === getProcedureId(data.name))
+
+    if (findProtocolAndProcedure) {
+      toast.error(
+        'Esse procedimento já consta no protocolo ' +
+          findProtocol?.protocolName +
+          '.',
+        {
+          autoClose: 5000,
+        },
+      )
+      return
+    }
+
+    if (findProtocol) {
+      const protocolCopy = findProtocol
+      protocolCopy.saleItems.push({
         procedureId: getProcedureId(data.name),
         value: Number(data.price),
         discount: Number(data.discount),
         sessionsNum: Number(data.sessions),
       })
-      updateSale(saleCopy)
-      reset()
+    } else {
+      const newProtocol = { ...protocol }
+      newProtocol.saleItems = []
+      newProtocol.saleItems.push({
+        procedureId: getProcedureId(data.name),
+        value: Number(data.price),
+        discount: Number(data.discount),
+        sessionsNum: Number(data.sessions),
+      })
+      if (saleCopy.protocols === undefined) {
+        saleCopy.protocols = []
+      }
+      saleCopy.protocols.push(newProtocol)
     }
+
+    updateSale(saleCopy)
+    reset()
   }
 
   function getAllProceduresNames() {
@@ -90,7 +134,7 @@ export default function ProcedureCard() {
     <div>
       <form
         onSubmit={handleSubmit(addProcedure)}
-        className="bg-white rounded p-5 flex flex-col gap-3"
+        className="bg-white rounded flex flex-col gap-3"
       >
         <h2>Procedimento</h2>
         <div className="flex flex-col gap-5">

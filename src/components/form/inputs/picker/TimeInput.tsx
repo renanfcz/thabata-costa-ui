@@ -1,7 +1,9 @@
 'use client'
-import { useState } from 'react'
-import Flatpickr from 'react-flatpickr'
-import 'flatpickr/dist/themes/airbnb.css'
+import { TimePicker, TimePickerProps } from 'antd'
+import { CSSProperties, useState } from 'react'
+import dayjs from 'dayjs'
+import type { Dayjs } from 'dayjs'
+import ptBR from 'antd/es/date-picker/locale/pt_BR'
 
 interface TimeInputProps {
   label: string
@@ -15,9 +17,9 @@ export default function TimeInput({
   hasError,
   value,
   setValue,
-  ...rest
 }: TimeInputProps) {
   const [focused, setFocused] = useState(false)
+  const [selectedTime, setSelectedTime] = useState(new Date())
 
   const handleUpdateTime = (timeArray: Date[]) => {
     if (timeArray === undefined || timeArray.length === 0)
@@ -31,6 +33,33 @@ export default function TimeInput({
     setValue(newDate)
   }
 
+  const handleOnChange: TimePickerProps['onChange'] = (date, dateString) => {
+    console.log(date)
+    if (date?.toDate() !== undefined) setValue(date?.toDate())
+  }
+
+  const onChange = (time: Dayjs) => {
+    if (time?.toDate() !== undefined) setValue(time.toDate())
+  }
+
+  const inputStyle: CSSProperties = {
+    padding: '8px',
+    border: `2px solid ${
+      focused ? 'rgb(249 115 22 / 0.6)' : 'rgb(209 213 219 / 0.3)'
+    }`,
+    borderRadius: '4px',
+    outline: 'none',
+    transition: 'border-color 0.2s ease-in-out',
+  }
+
+  function handleFocus() {
+    setFocused(true)
+  }
+
+  function handleBlur() {
+    setFocused(false)
+  }
+
   return (
     <div className="relative w-full">
       <label
@@ -41,22 +70,17 @@ export default function TimeInput({
       >
         {label}
       </label>
-      <Flatpickr
-        key={value?.toISOString()}
-        onClose={handleUpdateTime}
-        options={{
-          enableTime: true,
-          noCalendar: true,
-          time_24hr: true,
-          dateFormat: 'H:i',
-          defaultDate: value,
-          disableMobile: true,
-        }}
-        className={`w-full border-2 focus:outline-none rounded px-3 py-2 h-full transition duration-200 ${
-          hasError
-            ? 'border-danger'
-            : 'border-gray-300/30 focus:border-secondary/60'
-        }`}
+      <TimePicker
+        value={dayjs(value)}
+        format="HH:mm"
+        onChange={handleOnChange}
+        onSelect={onChange}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        locale={ptBR}
+        style={inputStyle}
+        minuteStep={15}
+        className={`w-full border-2 focus:outline-none rounded px-3 py-2 h-full`}
       />
     </div>
   )

@@ -21,7 +21,7 @@ export default function ClientCard() {
   function updateSaleContext(newValue: string) {
     const saleCopy = { ...sale }
     const originalClient = clients.find((c) => c.name === newValue)
-    saleCopy.clientId = originalClient ? originalClient.id : ''
+    saleCopy.clientId = originalClient?.id
     updateSale(saleCopy)
   }
 

@@ -34,8 +34,12 @@ const schema = z.object({
   number: z.coerce.number().min(1).optional(),
   complement: z.string().optional(),
   socialMediaId: z.string().optional(),
-  socialMedia: z.enum([SocialMediaEnum.FACEBOOK, SocialMediaEnum.INSTAGRAM]).optional(),
-  knowUs: z.enum([KnowUsEnum.FACEBOOK, KnowUsEnum.INDICATION, KnowUsEnum.INSTAGRAM]).optional(),
+  socialMedia: z
+    .enum([SocialMediaEnum.FACEBOOK, SocialMediaEnum.INSTAGRAM])
+    .optional(),
+  knowUs: z
+    .enum([KnowUsEnum.FACEBOOK, KnowUsEnum.INDICATION, KnowUsEnum.INSTAGRAM])
+    .optional(),
   recommendedBy: z.string().optional(),
 })
 
@@ -72,7 +76,7 @@ export default function InfoPage() {
       socialMediaId: undefined,
       socialMedia: undefined,
       knowUs: undefined,
-      recommendedBy: undefined
+      recommendedBy: undefined,
     },
     mode: 'onSubmit',
     reValidateMode: 'onChange',
@@ -318,13 +322,13 @@ export default function InfoPage() {
             />
           </div>
           <div>
-          {indicationKnowUsIsSelected() && (
-          <div>
-            <Controller
-                name="recommendedBy"
-                control={control}
-                render={({ field: { value, onChange } }) => (
-                  <AutosuggestField
+            {indicationKnowUsIsSelected() && (
+              <div>
+                <Controller
+                  name="recommendedBy"
+                  control={control}
+                  render={({ field: { value, onChange } }) => (
+                    <AutosuggestField
                       label="Quem te indicou?"
                       onGetSuggestionValue={(suggestion: string) => suggestion}
                       onSuggestionsClearRequested={onSuggestionsClearRequested}
@@ -334,9 +338,9 @@ export default function InfoPage() {
                       value={value}
                     />
                   )}
-              />
-          </div>
-        )}
+                />
+              </div>
+            )}
           </div>
         </div>
         <div>

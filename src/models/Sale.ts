@@ -1,11 +1,11 @@
+import { PaymentTypeEnum } from '@/enum/PaymentTypeEnum'
 import { Client } from './Client'
-import { SaleItem } from './SaleItem'
+import { Protocol } from './Protocol'
 
 export type Sale = {
   id: string
-  protocolName: string
-  protocolDesc: string
+  protocols: Protocol[]
   createdAt: Date
-  saleItems: SaleItem[]
   client: Client
+  paymentType: PaymentTypeEnum
 }

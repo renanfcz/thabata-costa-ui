@@ -1,19 +1,19 @@
 'use client'
 import BackButton from '@/components/form/buttons/BackButton'
 import { useClientContext } from '@/contexts/client/ClientContext'
-import { Sale } from '@/models/Sale'
 import { useEffect, useState } from 'react'
 
 import ProtocolCard from '@/app/(private-routes)/client/detail/[name]/(components)/(tabs)/(protocol)/ProtocolCard'
 import ProtocolPageDetail from './ProtocolPageDetail'
+import { Protocol } from '@/models/Protocol'
 
 export default function ProtocolsPage() {
   const { client } = useClientContext()
   const [openDatail, setOpenDetail] = useState(false)
-  const [protocols, setProtocols] = useState<Sale[]>([])
-  const [selectedProtocol, setSelectedProtocol] = useState<Sale>()
+  const [protocols, setProtocols] = useState<Protocol[]>([])
+  const [selectedProtocol, setSelectedProtocol] = useState<Protocol>()
 
-  const handleOpenDetail = (protocol: Sale) => {
+  const handleOpenDetail = (protocol: Protocol) => {
     setSelectedProtocol(protocol)
     setOpenDetail(true)
   }
@@ -23,12 +23,13 @@ export default function ProtocolsPage() {
     setOpenDetail(false)
   }
 
-  const handleUpdateSelectedProtocol = (protocol: Sale) => {
+  const handleUpdateSelectedProtocol = (protocol: Protocol) => {
     setSelectedProtocol(protocol)
   }
 
   useEffect(() => {
-    setProtocols(client?.sales || [])
+    const protocols = client?.sales.flatMap((sale) => sale.protocols)
+    setProtocols(protocols || [])
   }, [client])
 
   return (

@@ -3,6 +3,7 @@ import BackArrow from '@/components/form/buttons/BackArrow'
 import HistSale from '@/app/(private-routes)/sale/(hist)/HistSale'
 import NewSale from '@/app/(private-routes)/sale/(new)/NewSale'
 import { useState } from 'react'
+import { NewSaleProvider } from '@/contexts/NewSaleContext'
 
 export default function Sale() {
   const [newSale, setNewSale] = useState(true)
@@ -54,7 +55,7 @@ export default function Sale() {
           </div>
           <div className="">
             <div className="py-3">
-              {newSale && <NewSale />}
+              <NewSaleProvider>{newSale && <NewSale />}</NewSaleProvider>
               {histSale && <HistSale />}
             </div>
           </div>

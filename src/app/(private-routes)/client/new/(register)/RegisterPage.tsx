@@ -32,8 +32,12 @@ const schema = z.object({
   number: z.coerce.number().min(1).optional(),
   complement: z.string().optional(),
   socialMediaId: z.string().optional(),
-  socialMedia: z.enum([SocialMediaEnum.FACEBOOK, SocialMediaEnum.INSTAGRAM]).optional(),
-  knowUs: z.enum([KnowUsEnum.FACEBOOK, KnowUsEnum.INDICATION, KnowUsEnum.INSTAGRAM]).optional(),
+  socialMedia: z
+    .enum([SocialMediaEnum.FACEBOOK, SocialMediaEnum.INSTAGRAM])
+    .optional(),
+  knowUs: z
+    .enum([KnowUsEnum.FACEBOOK, KnowUsEnum.INDICATION, KnowUsEnum.INSTAGRAM])
+    .optional(),
   recommendedBy: z.string().optional(),
 })
 
@@ -64,7 +68,7 @@ export default function RegisterPage() {
       socialMediaId: undefined,
       socialMedia: undefined,
       knowUs: undefined,
-      recommendedBy: undefined
+      recommendedBy: undefined,
     },
     mode: 'onSubmit',
     reValidateMode: 'onChange',
@@ -85,7 +89,7 @@ export default function RegisterPage() {
       ...clientInput,
       knowUs: KnowUsEnum.getKey(clientInput.knowUs),
       socialMedia: SocialMediaEnum.getKey(clientInput.socialMedia),
-      recommendedBy: clientInput.recommendedBy
+      recommendedBy: clientInput.recommendedBy,
     }
     inputData.dateBirth = formatDateString(clientInput.dateBirth)
     try {
@@ -293,20 +297,20 @@ export default function RegisterPage() {
         {indicationKnowUsIsSelected() && (
           <div>
             <Controller
-                name="recommendedBy"
-                control={control}
-                render={({ field: { value, onChange } }) => (
-                  <AutosuggestField
-                      label="Quem te indicou?"
-                      onGetSuggestionValue={(suggestion: string) => suggestion}
-                      onSuggestionsClearRequested={onSuggestionsClearRequested}
-                      onSuggestionsFetchRequested={onSuggestionsFetchRequested}
-                      suggestionsList={buildClientNameList()}
-                      updateContext={onChange}
-                      value={value}
-                    />
-                  )}
-              />
+              name="recommendedBy"
+              control={control}
+              render={({ field: { value, onChange } }) => (
+                <AutosuggestField
+                  label="Quem te indicou?"
+                  onGetSuggestionValue={(suggestion: string) => suggestion}
+                  onSuggestionsClearRequested={onSuggestionsClearRequested}
+                  onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+                  suggestionsList={buildClientNameList()}
+                  updateContext={onChange}
+                  value={value}
+                />
+              )}
+            />
           </div>
         )}
         <div>

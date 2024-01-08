@@ -3,26 +3,19 @@ import { gql } from 'graphql-request'
 export const CREATE_SESSION = gql`
   mutation CreateSession($createSessionInput: CreateSessionInput!) {
     createSession(createSessionInput: $createSessionInput) {
+      id
       saleItem {
         id
-        value
-        discount
-        sessionsNum
         procedure {
           name
-          price
-          id
         }
-        sale {
-          client {
-            name
-          }
-        }
+        value
+        discount
       }
-      id
-      initDate
-      finalDate
       obs
+      finalDate
+      initDate
+      status
     }
   }
 `

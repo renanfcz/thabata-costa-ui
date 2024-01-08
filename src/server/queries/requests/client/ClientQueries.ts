@@ -26,38 +26,24 @@ export const GET_CLIENTS = gql`
       createdAt
       name
       sales {
-        createdAt
         id
-        protocolDesc
-        protocolName
-        saleItems {
-          discount
+        protocols {
           id
-          value
-          sessions {
+          protocolName
+          protocolDesc
+          saleItems {
             id
-            initDate
-            obs
-            finalDate
-            saleItem {
-              discount
-              id
-              sessionsNum
-              value
-              procedure {
-                id
-                name
-                price
-              }
+            value
+            discount
+            sessionsNum
+            procedure {
+              name
+              color
             }
           }
-          procedure {
-            id
-            name
-            price
-          }
-          sessionsNum
         }
+        createdAt
+        paymentType
       }
     }
   }
@@ -89,38 +75,24 @@ export const GET_CLIENT_BY_NAME = gql`
       createdAt
       name
       sales {
-        createdAt
         id
-        protocolDesc
-        protocolName
-        saleItems {
-          discount
+        protocols {
           id
-          value
-          sessions {
+          protocolName
+          protocolDesc
+          saleItems {
             id
-            initDate
-            obs
-            finalDate
-            saleItem {
-              discount
-              id
-              sessionsNum
-              value
-              procedure {
-                id
-                name
-                price
-              }
+            value
+            discount
+            sessionsNum
+            procedure {
+              name
+              color
             }
           }
-          procedure {
-            id
-            name
-            price
-          }
-          sessionsNum
         }
+        createdAt
+        paymentType
       }
     }
   }
@@ -174,6 +146,7 @@ export const GET_CLIENT_BY_ID = gql`
                 id
                 name
                 price
+                color
               }
             }
           }
@@ -181,6 +154,7 @@ export const GET_CLIENT_BY_ID = gql`
             id
             name
             price
+            color
           }
           sessionsNum
         }

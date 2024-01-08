@@ -1,63 +1,66 @@
 import { useNewSaleContext } from '@/contexts/NewSaleContext'
+import { PaymentTypeEnum } from '@/enum/PaymentTypeEnum'
 import { graphqlClient } from '@/server/graphql-client'
 import { CREATE_SALE } from '@/server/mutations/requests/sale/SaleMutations'
 import { ResponseCreateSale } from '@/server/mutations/responses/SaleResponses'
 import { currencyFormatter } from '@/utils/formatter'
 import { toast } from 'react-toastify'
 
-import ProcedureItem from './ProcedureItem'
-
-enum PaymentType {
-  MONEY = 'money',
-  PIX = 'pix',
-  DEBIT = 'debit',
-  CREDIT = 'credit',
-}
+import ProtocolItem from './ProtocolItem'
 
 export default function ResumeBox() {
   const { sale, updateSale } = useNewSaleContext()
 
   function hasProtocol() {
-    if (!sale.protocolName) {
-      return false
+    if (sale?.protocols) {
+      return true
     }
 
-    if (!sale.protocolDesc) {
-      return false
-    }
+    toast.error('Adicione pelo menos um protocolo.', {
+      autoClose: 5000,
+    })
 
-    return true
+    return false
   }
 
-  function hasAnyProcedure() {
-    return sale.procedures.length > 0
+  function hasClient() {
+    if (sale?.clientId) {
+      return true
+    }
+    toast.error('Selecione um Cliente.', {
+      autoClose: 5000,
+    })
+    return false
   }
 
   function hasPaymentType() {
-    return sale.paymentType
+    if (sale?.paymentType) {
+      return true
+    }
+
+    toast.error('Selecione método de pagamento.', {
+      autoClose: 5000,
+    })
+    return false
   }
 
   function resetForm() {
     updateSale({
       clientId: '',
-      protocolName: '',
-      protocolDesc: '',
-      procedures: [],
+      protocols: [],
       paymentType: undefined,
     })
   }
 
   const handleSaveSale = async () => {
-    if (hasProtocol() && hasAnyProcedure() && hasPaymentType()) {
+    if (hasClient() && hasProtocol() && hasPaymentType()) {
       const loading = toast.loading('Salvando...')
       try {
         await graphqlClient.request<ResponseCreateSale>(CREATE_SALE, {
           createSaleInput: {
-            clientId: sale.clientId,
-            protocolName: sale.protocolName,
-            protocolDesc: sale.protocolDesc,
-            saleItems: sale.procedures,
-            paymentType: sale.paymentType,
+            clientId: sale?.clientId,
+            protocols: sale?.protocols,
+            paymentType: PaymentTypeEnum.getKey(sale?.paymentType),
           },
         })
         toast.update(loading, {
@@ -78,18 +81,6 @@ export default function ResumeBox() {
     }
   }
 
-  const getPaymentMethod = () => {
-    if (sale?.paymentType === PaymentType.MONEY) {
-      return 'Dinheiro'
-    } else if (sale?.paymentType === PaymentType.PIX) {
-      return 'Pix'
-    } else if (sale?.paymentType === PaymentType.DEBIT) {
-      return 'Débito'
-    } else if (sale?.paymentType === PaymentType.CREDIT) {
-      return 'Crédito'
-    }
-  }
-
   const getSubtotal = (value: number, discount: number) => {
     return value - (value * discount) / 100
   }
@@ -99,17 +90,19 @@ export default function ResumeBox() {
   }
 
   const getDiscount = () => {
-    const valueWithDiscount = sale?.procedures.map((item) =>
+    const saleItems = sale?.protocols?.flatMap((protocol) => protocol.saleItems)
+    const valueWithDiscount = saleItems?.map((item) =>
       calculateDiscount(item.value, item.discount),
     )
-    return valueWithDiscount?.reduce((acc, cur) => acc + cur, 0)
+    return valueWithDiscount?.reduce((acc, cur) => acc + cur, 0) || 0
   }
 
   const getTotalValue = () => {
-    const valueWithDiscount = sale?.procedures.map((item) =>
+    const saleItems = sale?.protocols?.flatMap((protocol) => protocol.saleItems)
+    const valueWithDiscount = saleItems?.map((item) =>
       getSubtotal(item.value, item.discount),
     )
-    return valueWithDiscount?.reduce((acc, cur) => acc + cur, 0)
+    return valueWithDiscount?.reduce((acc, cur) => acc + cur, 0) || 0
   }
 
   return (
@@ -117,34 +110,21 @@ export default function ResumeBox() {
       <h1 className="text-lg font py-3">Resumo da venda</h1>
       <div className="flex flex-col">
         <div className="flex w-full justify-between">
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center h-5 gap-1">
-              <span className="text-gray-400 text-sm">Protocolo:</span>
-              <span>{sale?.protocolName}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <span className="text-gray-400 text-sm w-fit">
-                Descrição do protocolo:
-              </span>
-              <p className="line-clamp-3">{sale?.protocolDesc}</p>
-            </div>
-            <div className="flex h-5">
-              <span className="text-gray-400 text-sm">Procedimentos:</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-1 w-fit">
-            <span className="text-gray-400 text-sm w-full">
-              Forma de pagamento:
-            </span>
-            <span className="w-16 flex justify-center">
-              {getPaymentMethod()}
+          <div className="flex w-full justify-end gap-2">
+            <span>Forma de pagamento: </span>
+            <span className="w-16 font-bold">
+              {sale?.paymentType ? sale?.paymentType.toString() : ''}
             </span>
           </div>
         </div>
-        <div>
-          {sale?.procedures &&
-            sale?.procedures.map((procedure, index) => (
-              <ProcedureItem key={index} procedure={procedure} index={index} />
+        <div className="flex flex-col gap-2">
+          {sale?.protocols &&
+            sale?.protocols?.map((protocol, index) => (
+              <ProtocolItem
+                key={index}
+                protocol={protocol}
+                protocolIndex={index}
+              />
             ))}
         </div>
         <div className="flex flex-col p-5 gap-2">

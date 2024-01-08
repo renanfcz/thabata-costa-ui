@@ -1,24 +1,9 @@
-import { PaymentTypeEnum } from '@/enum/PaymentTypeEnum'
+import { CreateSale } from '@/dtos/sale/CreateSale'
 import { createContext, useContext, useState } from 'react'
 
-interface Procedure {
-  procedureId: string
-  value: number
-  discount: number
-  sessionsNum: number
-}
-
-interface NewSale {
-  clientId: string
-  protocolName: string
-  protocolDesc: string
-  procedures: Procedure[]
-  paymentType: PaymentTypeEnum | undefined
-}
-
 interface NewSaleContextType {
-  sale: NewSale
-  updateSale(sale: NewSale): void
+  sale: CreateSale | undefined
+  updateSale(sale: CreateSale): void
 }
 
 const NewSaleContext = createContext({} as NewSaleContextType)
@@ -30,15 +15,9 @@ export const NewSaleProvider = ({
 }: {
   children: React.ReactNode
 }) => {
-  const [sale, setSale] = useState<NewSale>({
-    clientId: '',
-    protocolName: '',
-    protocolDesc: '',
-    procedures: [],
-    paymentType: undefined,
-  })
+  const [sale, setSale] = useState<CreateSale>()
 
-  const updateSale = (sale: NewSale) => {
+  const updateSale = (sale: CreateSale) => {
     setSale(sale)
   }
 

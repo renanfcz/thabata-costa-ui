@@ -1,5 +1,5 @@
 import { Procedure } from './Procedure'
-import { Sale } from './Sale'
+import { Protocol } from './Protocol'
 import { Session } from './Session'
 
 export type SaleItem = {
@@ -7,7 +7,7 @@ export type SaleItem = {
   value: number
   discount: number
   procedure: Procedure
-  sale: Sale
   sessions: Session[]
   sessionsNum: number
+  protocol: Protocol
 }

@@ -90,7 +90,7 @@ export default function FormEditSession({
   } = useForm<SessionFormData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      client: session?.saleItem.sale.client.name,
+      client: undefined,
       procedure: session?.saleItem.procedure.name,
       sessionDate: buildDaySession(session?.initDate || selectedRange?.start),
       initHour: selectedRange?.start || buildHour(session?.initDate),

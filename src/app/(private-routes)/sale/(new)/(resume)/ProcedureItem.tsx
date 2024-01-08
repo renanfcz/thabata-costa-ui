@@ -1,23 +1,19 @@
 import { useNewSaleContext } from '@/contexts/NewSaleContext'
 import { useProceduresContext } from '@/contexts/ProcedureContext'
+import { CreateSaleItem } from '@/dtos/saleItem/CreateSaleItem'
 import { currencyFormatter } from '@/utils/formatter'
 import { Trash2 } from 'lucide-react'
 
-interface Procedure {
-  procedureId: string
-  value: number
-  discount: number
-  sessionsNum: number
-}
-
 interface ProcedureItemProps {
-  procedure: Procedure
-  index: number
+  procedure: CreateSaleItem
+  protocolIndex: number
+  procedureIndex: number
 }
 
 export default function ProcedureItem({
   procedure,
-  index,
+  protocolIndex,
+  procedureIndex,
 }: ProcedureItemProps) {
   const { sale, updateSale } = useNewSaleContext()
   const { procedures } = useProceduresContext()
@@ -28,8 +24,13 @@ export default function ProcedureItem({
 
   const removeProcedure = () => {
     const saleCopy = { ...sale }
-    saleCopy.procedures.splice(index, 1)
-    updateSale(saleCopy)
+    if (saleCopy.protocols) {
+      saleCopy.protocols[protocolIndex].saleItems.splice(procedureIndex, 1)
+      if (saleCopy.protocols[protocolIndex].saleItems.length === 0) {
+        saleCopy.protocols.splice(protocolIndex, 1)
+      }
+      updateSale(saleCopy)
+    }
   }
 
   function getProcedureName() {

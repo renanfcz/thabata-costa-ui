@@ -1,5 +1,4 @@
 'use client'
-import FormEditSession from '@/components/form/FormEditSession'
 import DetailSessionModal from '@/components/modal/DetailSessionModal'
 import { useCallback, useEffect, useState } from 'react'
 import BackArrow from '@/components/form/buttons/BackArrow'
@@ -20,6 +19,7 @@ import ConfirmationForm from '@/components/form/FormRemoveSessionConfirmation'
 import { toast } from 'react-toastify'
 import { GET_ALL_SCHEDULE } from '@/server/queries/requests/session/SessionQueries'
 import { REMOVE_SESSION } from '@/server/mutations/requests/session/SessionMutations'
+import CreateSession from './(createSession)/CreateSessionPage'
 
 const localizer = momentLocalizer(moment)
 
@@ -74,9 +74,8 @@ export default function Schedule() {
   }
 
   const getAllSchedule = useCallback(async () => {
-    const data = await graphqlClient.request<ResponseFindAllSessions>(
-      GET_ALL_SCHEDULE,
-    )
+    const data =
+      await graphqlClient.request<ResponseFindAllSessions>(GET_ALL_SCHEDULE)
 
     setSessions(data.findAllSessions)
   }, [])
@@ -93,7 +92,7 @@ export default function Schedule() {
 
   function buildSessionTitle(session: Session) {
     const procedure = session.saleItem.procedure.name
-    const client = session.saleItem.sale.client.name
+    const client = session.saleItem.protocol.sale.client.name
 
     return procedure.concat(' - ', client)
   }
@@ -185,12 +184,16 @@ export default function Schedule() {
             onClose={() => setShowConfirmationForm(false)}
           />
         ) : (
-          <FormEditSession
+          // <FormEditSession
+          //   onClose={handleCloseModal}
+          //   session={selectedSession}
+          //   updateSession={updateSession}
+          //   selectedRange={selectedRange}
+          //   showConfirmation={() => setShowConfirmationForm(true)}
+          // />
+          <CreateSession
             onClose={handleCloseModal}
-            session={selectedSession}
-            updateSession={updateSession}
             selectedRange={selectedRange}
-            showConfirmation={() => setShowConfirmationForm(true)}
           />
         )}
       </DetailSessionModal>

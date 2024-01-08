@@ -1,14 +1,15 @@
 'use client'
-import { useState } from 'react'
-import Flatpickr from 'react-flatpickr'
-import 'flatpickr/dist/themes/airbnb.css'
-import { dateFormatter } from '@/utils/formatter'
+import { CSSProperties, useState } from 'react'
+import { DatePicker, DatePickerProps } from 'antd'
+import dayjs from 'dayjs'
+import ptBR from 'antd/es/date-picker/locale/pt_BR'
+import { RangePickerProps } from 'antd/es/date-picker'
 
 interface DateInputProps {
   label: string
   hasError?: boolean
-  value: string
-  setValue(date: string): void
+  value: Date
+  setValue(date: Date): void
 }
 
 export default function DateInput({
@@ -16,9 +17,9 @@ export default function DateInput({
   hasError,
   value,
   setValue,
-  ...rest
 }: DateInputProps) {
   const [focused, setFocused] = useState(false)
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date())
 
   const handleUpdateDate = (dateArray: Date[]) => {
     if (dateArray === undefined || dateArray.length === 0)
@@ -31,10 +32,37 @@ export default function DateInput({
       newDate.setUTCMonth(dateArray[0].getUTCMonth())
       newDate.setUTCDate(dateArray[0].getUTCDate())
 
-      setValue(dateFormatter.format(newDate))
+      setValue(newDate)
     } else {
-      setValue('')
+      setValue(new Date())
     }
+  }
+
+  const handleOnChange: DatePickerProps['onChange'] = (date, dateString) => {
+    console.log(date)
+    if (date?.toDate() !== undefined) setValue(date?.toDate())
+  }
+
+  const inputStyle: CSSProperties = {
+    padding: '8px',
+    border: `2px solid ${
+      focused ? 'rgb(249 115 22 / 0.6)' : 'rgb(209 213 219 / 0.3)'
+    }`,
+    borderRadius: '4px',
+    outline: 'none',
+    transition: 'border-color 0.2s ease-in-out',
+  }
+
+  function handleFocus() {
+    setFocused(true)
+  }
+
+  function handleBlur() {
+    setFocused(false)
+  }
+
+  const disabledDate: RangePickerProps['disabledDate'] = (current) => {
+    return current && current < dayjs().startOf('day')
   }
 
   return (
@@ -47,20 +75,16 @@ export default function DateInput({
       >
         {label}
       </label>
-      <Flatpickr
-        key={value}
-        onClose={handleUpdateDate}
-        options={{
-          dateFormat: 'd/m/Y',
-          defaultDate: value,
-          disableMobile: true,
-        }}
-        className={`w-full border-2 focus:outline-none rounded px-3 py-2 h-full transition duration-200 ${
-          hasError
-            ? 'border-danger'
-            : 'border-gray-300/30 focus:border-secondary/60'
-        }`}
-        {...rest}
+      <DatePicker
+        format={'DD/MM/YYYY'}
+        onChange={handleOnChange}
+        locale={ptBR}
+        value={dayjs(value)}
+        style={inputStyle}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        disabledDate={disabledDate}
+        className={`w-full border-2 focus:outline-none rounded px-3 py-2 h-full`}
       />
     </div>
   )

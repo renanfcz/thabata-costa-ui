@@ -5,7 +5,7 @@ import TextAreaInput from '@/components/form/inputs/TextAreaInput'
 import Modal from '@/components/modal/Modal'
 import Title from '@/components/modal/Title'
 import TableDetailProtocolCard from '@/components/table/TableDetailProtocolCard'
-import { Sale } from '@/models/Sale'
+import { Protocol } from '@/models/Protocol'
 import { Session } from '@/models/Session'
 import { graphqlClient } from '@/server/graphql-client'
 import { UPDATE_PROTOCOL } from '@/server/mutations/requests/sale/SaleMutations'
@@ -15,8 +15,8 @@ import { useState } from 'react'
 import { toast } from 'react-toastify'
 
 interface ProtocolPageDetailProps {
-  protocol: Sale | undefined
-  updateProtocol(protocol: Sale): void
+  protocol: Protocol | undefined
+  updateProtocol(protocol: Protocol): void
 }
 
 export default function ProtocolPageDetail({
@@ -24,7 +24,9 @@ export default function ProtocolPageDetail({
   updateProtocol,
 }: ProtocolPageDetailProps) {
   const [sessions, setSessions] = useState(
-    protocol?.saleItems?.flatMap((item) => item.sessions),
+    protocol?.saleItems?.flatMap((item) => {
+      return item.sessions ? item.sessions : []
+    }),
   )
   const [isOpen, setIsOpen] = useState(false)
   const [description, setDescription] = useState(protocol?.protocolDesc || '')
@@ -44,22 +46,19 @@ export default function ProtocolPageDetail({
   const handleUpdateDescription = async () => {
     const loading = toast.loading('Salvando...')
     try {
-      const data = await graphqlClient.request<ResponseUpdateSale>(
-        UPDATE_PROTOCOL,
-        {
-          id: protocol?.id,
-          sale: {
-            protocolDesc: description,
-          },
+      await graphqlClient.request<ResponseUpdateSale>(UPDATE_PROTOCOL, {
+        id: protocol?.id,
+        sale: {
+          protocolDesc: description,
         },
-      )
+      })
       toast.update(loading, {
         render: 'Descrição atualizada com sucesso!',
         type: 'success',
         isLoading: false,
         autoClose: 5000,
       })
-      updateProtocol(data.updateSale)
+      // updateProtocol(data.updateSale)
       setIsOpen(false)
     } catch (error: any) {
       toast.update(loading, {

@@ -15,7 +15,7 @@ export default function PaymentCard() {
 
   const setPaymentMethod = (type: string) => {
     const saleCopy = { ...sale }
-    saleCopy.paymentType = PaymentTypeEnum.getKey(type)
+    saleCopy.paymentType = type
     updateSale(saleCopy)
   }
 
@@ -38,7 +38,10 @@ export default function PaymentCard() {
       setDebitButtonClicked(!debitButtonClicked)
       setCreditButtonClicked(false)
       setPaymentMethod(type)
-    } else if (type === PaymentTypeEnum.CREDIT && creditButtonClicked === false) {
+    } else if (
+      type === PaymentTypeEnum.CREDIT &&
+      creditButtonClicked === false
+    ) {
       setMoneyButtonClicked(false)
       setPixButtonClicked(false)
       setDebitButtonClicked(false)

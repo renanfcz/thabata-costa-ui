@@ -12,11 +12,15 @@ export const GET_ALL_SCHEDULE = gql`
           name
           price
           id
-          color
         }
-        sale {
-          client {
-            name
+        protocol {
+          id
+          protocolName
+          protocolDesc
+          sale {
+            client {
+              name
+            }
           }
         }
       }
@@ -24,6 +28,7 @@ export const GET_ALL_SCHEDULE = gql`
       initDate
       finalDate
       obs
+      status
     }
   }
 `

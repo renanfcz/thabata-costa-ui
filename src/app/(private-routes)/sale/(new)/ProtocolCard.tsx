@@ -1,20 +1,25 @@
 import TextAreaInput from '@/components/form/inputs/TextAreaInput'
 import TextInput from '@/components/form/inputs/TextInput'
-import { useNewSaleContext } from '@/contexts/NewSaleContext'
+import { useState } from 'react'
+import ProcedureCard from './ProcedureCard'
 
 export default function ProtocolCard() {
-  const { sale, updateSale } = useNewSaleContext()
+  const [protocol, setProtocol] = useState({
+    protocolName: '',
+    protocolDesc: '',
+    saleItems: [],
+  })
 
   const updateProtocolName = (value: string) => {
-    const saleCopy = { ...sale }
-    saleCopy.protocolName = value
-    updateSale(saleCopy)
+    const protocolCopy = { ...protocol }
+    protocolCopy.protocolName = value
+    setProtocol(protocolCopy)
   }
 
   const updateProtocolDesc = (value: string) => {
-    const saleCopy = { ...sale }
-    saleCopy.protocolDesc = value
-    updateSale(saleCopy)
+    const protocolCopy = { ...protocol }
+    protocolCopy.protocolDesc = value
+    setProtocol(protocolCopy)
   }
 
   return (
@@ -23,15 +28,16 @@ export default function ProtocolCard() {
       <div className="flex flex-col gap-5">
         <TextInput
           label="Protocolo"
-          value={sale?.protocolName}
+          value={protocol.protocolName}
           setValue={updateProtocolName}
         />
         <TextAreaInput
           label="Descrição do protocolo"
-          value={sale?.protocolDesc}
+          value={protocol.protocolDesc}
           setValue={updateProtocolDesc}
         />
       </div>
+      <ProcedureCard protocol={protocol} />
     </div>
   )
 }

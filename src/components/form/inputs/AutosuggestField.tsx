@@ -70,7 +70,7 @@ export default function AutosuggestField({
           suggestionsContainer: `absolute z-10 bg-white w-full -ml-[2px] rounded-b-sm ${
             isFocused &&
             suggestionsList.length > 0 &&
-            'border-2 border-t-0 border-secondary/60'
+            'border-2 border-secondary/60'
           }`,
           suggestion: 'p-2 hover:bg-gray-300/30 cursor-pointer',
         }}

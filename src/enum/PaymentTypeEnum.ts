@@ -4,15 +4,18 @@ export class PaymentTypeEnum {
   static DEBIT = 'Débito'
   static CREDIT = 'Crédito'
 
-  static getKey(value: string | undefined) {
+  static getKey(value: PaymentTypeEnum | undefined) {
     const index = Object.values(PaymentTypeEnum).indexOf(value)
     return Object.keys(PaymentTypeEnum)[index]
   }
 
   static getValue(key: string | undefined) {
-    if(key === undefined)
-      return ""
+    if (key === undefined) return ''
     const index = Object.keys(PaymentTypeEnum).indexOf(key)
     return Object.values(PaymentTypeEnum)[index]
+  }
+
+  static get(value: PaymentTypeEnum) {
+    return value
   }
 }

@@ -47,13 +47,19 @@ export const CREATE_SALE = gql`
       }
       createdAt
       id
-      protocolDesc
-      protocolName
-      saleItems {
-        discount
-        id
-        value
-        sessionsNum
+      paymentType
+      protocols {
+        protocolName
+        protocolDesc
+        saleItems {
+          value
+          discount
+          sessionsNum
+          procedure {
+            name
+            color
+          }
+        }
       }
     }
   }

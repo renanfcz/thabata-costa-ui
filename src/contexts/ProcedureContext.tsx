@@ -27,9 +27,8 @@ export const ProceduresProvider = ({
 
   async function getProcedures() {
     if (procedures.length === 0) {
-      const response = await graphqlClient.request<ResponseFindeAllProcedures>(
-        GET_PROCEDURES,
-      )
+      const response =
+        await graphqlClient.request<ResponseFindeAllProcedures>(GET_PROCEDURES)
 
       updateProcedures(response.findAllProcedures)
     }
