@@ -1,4 +1,4 @@
-export type CreateSession = {
+export type SessionForm = {
   initDate?: Date | undefined
   finalDate?: Date | undefined
   obs?: string | undefined

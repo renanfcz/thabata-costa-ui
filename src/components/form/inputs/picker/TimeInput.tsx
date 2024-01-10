@@ -3,7 +3,6 @@ import { TimePicker, TimePickerProps } from 'antd'
 import { CSSProperties, useState } from 'react'
 import dayjs from 'dayjs'
 import type { Dayjs } from 'dayjs'
-import ptBR from 'antd/es/date-picker/locale/pt_BR'
 
 interface TimeInputProps {
   label: string
@@ -77,7 +76,6 @@ export default function TimeInput({
         onSelect={onChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        locale={ptBR}
         style={inputStyle}
         minuteStep={15}
         className={`w-full border-2 focus:outline-none rounded px-3 py-2 h-full`}

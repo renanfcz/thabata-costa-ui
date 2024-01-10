@@ -1,15 +1,16 @@
 import BackButton from '@/components/form/buttons/BackButton'
 import CloseButton from '@/components/form/buttons/CloseButton'
-import { CreateSession } from '@/dtos/session/CreateSession'
+import { SessionForm } from '@/dtos/session/SessionForm'
 import { Client } from '@/models/Client'
 import { graphqlClient } from '@/server/graphql-client'
 import { CREATE_SESSION } from '@/server/mutations/requests/session/SessionMutations'
 import { ResponseCreateSession } from '@/server/mutations/responses/SessionResponses'
+import { convertIsoToDate } from '@/utils/converter'
 import { dateTimeFormatter, timeFormatter } from '@/utils/formatter'
 import { toast } from 'react-toastify'
 
 interface ConfirmCreateSessionProps {
-  createSession: CreateSession | undefined
+  createSession: SessionForm | undefined
   clients: Client[]
   onClose(): void
   prevForm(): void
@@ -38,17 +39,14 @@ export default function ConfirmCreateSession({
 
       const loading = toast.loading('Salvando...')
       try {
-        const result = await graphqlClient.request<ResponseCreateSession>(
-          CREATE_SESSION,
-          {
-            createSessionInput: {
-              obs: createSession.obs,
-              finalDate: buildHour(createSession.finalDate),
-              initDate: buildHour(createSession.initDate),
-              saleItemId: saleItem?.id,
-            },
+        await graphqlClient.request<ResponseCreateSession>(CREATE_SESSION, {
+          createSessionInput: {
+            obs: createSession.obs,
+            finalDate: buildHour(createSession.finalDate),
+            initDate: buildHour(createSession.initDate),
+            saleItemId: saleItem?.id,
           },
-        )
+        })
         toast.update(loading, {
           render: 'Sessão criada com sucesso!',
           type: 'success',
@@ -69,9 +67,7 @@ export default function ConfirmCreateSession({
 
   function buildHour(date: Date | undefined) {
     if (date !== undefined) {
-      const data = new Date(date)
-      data.setUTCHours(data.getUTCHours() - 3)
-      return data
+      return convertIsoToDate(date)
     }
     return undefined
   }

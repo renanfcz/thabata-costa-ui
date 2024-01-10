@@ -3,8 +3,8 @@ import CloseButton from '@/components/form/buttons/CloseButton'
 import DateInput from '@/components/form/inputs/picker/DateInput'
 import TimeInput from '@/components/form/inputs/picker/TimeInput'
 import TextAreaInput from '@/components/form/inputs/TextAreaInput'
-import { CreateSession } from '@/dtos/session/CreateSession'
-import { dateFormatter } from '@/utils/formatter'
+import { SessionForm } from '@/dtos/session/SessionForm'
+import { convertIsoToDate } from '@/utils/converter'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
 import * as z from 'zod'
@@ -14,8 +14,8 @@ interface FormSelectDateProps {
   prevForm(): void
   initDate: Date | undefined
   finalDate: Date | undefined
-  createSession: CreateSession | undefined
-  setCreateSession(session: CreateSession | undefined): void
+  createSession: SessionForm | undefined
+  setCreateSession(session: SessionForm | undefined): void
   openConfirmPage(): void
 }
 
@@ -54,10 +54,23 @@ export default function FormSelectDate({
     reValidateMode: 'onChange',
   })
 
+  function buildDate(date: Date | undefined) {
+    if (date !== undefined) {
+      return convertIsoToDate(date)
+    }
+
+    return undefined
+  }
+
+  function adjustHour(date: Date) {
+    date.setHours(date.getHours() - 3)
+    return date
+  }
+
   function saveSassion(input: FormData) {
     const newSession = { ...createSession }
-    newSession.initDate = input.initHour
-    newSession.finalDate = input.finalHour
+    newSession.initDate = adjustHour(input.initHour)
+    newSession.finalDate = adjustHour(input.finalHour)
     newSession.obs = input.obs
 
     setCreateSession(newSession)
@@ -65,7 +78,6 @@ export default function FormSelectDate({
   }
 
   function handleChange(e: Date) {
-    console.log(e)
     setValue('initHour', e)
   }
 

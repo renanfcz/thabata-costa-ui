@@ -1,5 +1,5 @@
 import Title from '@/components/modal/Title'
-import { CreateSession } from '@/dtos/session/CreateSession'
+import { SessionForm } from '@/dtos/session/SessionForm'
 import { Client } from '@/models/Client'
 import { graphqlClient } from '@/server/graphql-client'
 import { GET_CLIENTS } from '@/server/queries/requests/client/ClientQueries'
@@ -13,14 +13,18 @@ import FormSelectProcedure from './FormSelectProcedure'
 interface CreateSessionPageProps {
   onClose(): void
   selectedRange: RangeHour | undefined
+  selectedSession: SessionForm | undefined
 }
 
 export default function CreateSessionPage({
   onClose,
   selectedRange,
+  selectedSession,
 }: CreateSessionPageProps) {
   const [clients, setClients] = useState<Client[]>([])
-  const [createSession, setCreateSession] = useState<CreateSession>()
+  const [createSession, setCreateSession] = useState<SessionForm | undefined>(
+    selectedSession,
+  )
   const [selectProcedureForm, setSelectProcedureForm] = useState(true)
   const [selectDateForm, setSelectDateForm] = useState(false)
   const [confirmPage, setConfirmPage] = useState(false)
@@ -70,8 +74,8 @@ export default function CreateSessionPage({
             <FormSelectDate
               onClose={onClose}
               prevForm={openSelectProcedureForm}
-              initDate={selectedRange?.start}
-              finalDate={selectedRange?.end}
+              initDate={selectedRange?.start || createSession?.initDate}
+              finalDate={selectedRange?.end || createSession?.finalDate}
               createSession={createSession}
               setCreateSession={setCreateSession}
               openConfirmPage={openConfirmPage}

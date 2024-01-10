@@ -15,11 +15,11 @@ import moment from 'moment'
 import 'moment/locale/pt-br'
 import { convertDateToTimezone } from '@/utils/converter'
 import { ResponseFindAllSessions } from '@/server/queries/responses/SessionResponses'
-import ConfirmationForm from '@/components/form/FormRemoveSessionConfirmation'
 import { toast } from 'react-toastify'
 import { GET_ALL_SCHEDULE } from '@/server/queries/requests/session/SessionQueries'
 import { REMOVE_SESSION } from '@/server/mutations/requests/session/SessionMutations'
 import CreateSession from './(createSession)/CreateSessionPage'
+import { SessionForm } from '@/dtos/session/SessionForm'
 
 const localizer = momentLocalizer(moment)
 
@@ -46,7 +46,9 @@ export interface RangeHour {
 export default function Schedule() {
   const [modalOpen, setModalOpen] = useState(false)
   const [sessions, setSessions] = useState<Session[]>([])
-  const [selectedSession, setSelectedSession] = useState<Session | undefined>()
+  const [selectedSession, setSelectedSession] = useState<
+    SessionForm | undefined
+  >()
   const [selectedRange, setSelectedRange] = useState<RangeHour | undefined>()
   const [showConfirmationForm, setShowConfirmationForm] = useState(false)
 
@@ -58,9 +60,22 @@ export default function Schedule() {
     setModalOpen(false)
   }
 
+  function parseToSessionForm(session: Session) {
+    const sessionForm: SessionForm = {
+      clientName: session.saleItem.protocol.sale.client.name,
+      procedure: session.saleItem.procedure.name,
+      protocol: session.saleItem.protocol.protocolName,
+      initDate: session.initDate,
+      finalDate: session.finalDate,
+      obs: session.obs,
+    }
+
+    return sessionForm
+  }
+
   const handleEventClick = (event: Session) => {
     handleOpenModal()
-    setSelectedSession(event)
+    setSelectedSession(parseToSessionForm(event))
   }
 
   const handleSelect = ({ start, end }: SlotInfo) => {
@@ -176,26 +191,11 @@ export default function Schedule() {
         </div>
       </div>
       <DetailSessionModal isOpen={modalOpen}>
-        {showConfirmationForm ? (
-          <ConfirmationForm
-            label="Deseja mesmo remover a sessão abaixo?"
-            session={selectedSession}
-            onConfirm={handleRemoveSession}
-            onClose={() => setShowConfirmationForm(false)}
-          />
-        ) : (
-          // <FormEditSession
-          //   onClose={handleCloseModal}
-          //   session={selectedSession}
-          //   updateSession={updateSession}
-          //   selectedRange={selectedRange}
-          //   showConfirmation={() => setShowConfirmationForm(true)}
-          // />
-          <CreateSession
-            onClose={handleCloseModal}
-            selectedRange={selectedRange}
-          />
-        )}
+        <CreateSession
+          onClose={handleCloseModal}
+          selectedRange={selectedRange}
+          selectedSession={selectedSession}
+        />
       </DetailSessionModal>
     </div>
   )

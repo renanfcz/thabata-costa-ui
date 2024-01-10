@@ -1,21 +1,21 @@
 import CloseButton from '@/components/form/buttons/CloseButton'
 import SelectInput from '@/components/form/hook-form/SelectInput'
 import AutosuggestField from '@/components/form/inputs/AutosuggestField'
-import { CreateSession } from '@/dtos/session/CreateSession'
+import { SessionForm } from '@/dtos/session/SessionForm'
 import { SessionStatusEnum } from '@/enum/SessionStatusEnum'
 import { Client } from '@/models/Client'
 import { Procedure } from '@/models/Procedure'
 import { Protocol } from '@/models/Protocol'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Autosuggest from 'react-autosuggest'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 interface FormSelectProcedureProps {
   clients: Client[]
-  createSession: CreateSession | undefined
-  setCreateSession(session: CreateSession | undefined): void
+  createSession: SessionForm | undefined
+  setCreateSession(session: SessionForm | undefined): void
   nextForm(): void
   onClose(): void
 }
@@ -129,19 +129,31 @@ export default function FormSelectProcedure({
   }
 
   function handleContinue(input: FormData) {
-    const newSession: CreateSession = {
+    const newSession: SessionForm = {
       clientName: input.clientName,
       protocol: input.protocol,
       procedure: input.procedure,
-      initDate: undefined,
-      finalDate: undefined,
-      obs: undefined,
+      initDate: createSession?.initDate || undefined,
+      finalDate: createSession?.finalDate || undefined,
+      obs: createSession?.obs || undefined,
     }
 
     setCreateSession(newSession)
 
     nextForm()
   }
+
+  useEffect(() => {
+    if (
+      createSession !== undefined &&
+      createSession.clientName !== undefined &&
+      createSession.protocol !== undefined &&
+      createSession.procedure !== undefined
+    ) {
+      updateClient(createSession.clientName)
+      updateProtocol(createSession.protocol)
+    }
+  }, [createSession, updateClient, updateProtocol])
 
   return (
     <div>
