@@ -4,10 +4,9 @@ import AutosuggestField from '@/components/form/inputs/AutosuggestField'
 import { SessionForm } from '@/dtos/session/SessionForm'
 import { SessionStatusEnum } from '@/enum/SessionStatusEnum'
 import { Client } from '@/models/Client'
-import { Procedure } from '@/models/Procedure'
 import { Protocol } from '@/models/Protocol'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import Autosuggest from 'react-autosuggest'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -36,13 +35,15 @@ export default function FormSelectProcedure({
   onClose,
 }: FormSelectProcedureProps) {
   const [suggestionsList, setSuggestionsList] = useState<Client[]>([])
-  const [protocols, setProtocols] = useState<Protocol[]>()
-  const [procedures, setProcedures] = useState<Procedure[]>()
+  const [protocolNames, setProtocolsNames] = useState([''])
+  const [procedureNames, setProcedureNames] = useState([''])
+  const [isLoadingFields, setIsLoadingFields] = useState(true)
 
   const {
     handleSubmit,
     control,
     setValue,
+    getValues,
     formState: { errors, dirtyFields },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -94,48 +95,51 @@ export default function FormSelectProcedure({
     })
   }
 
-  function updateClient(clientName: string) {
-    setValue('clientName', clientName)
-    const client = clients.find((c) => c.name === clientName)
-    const protocols = client?.sales.flatMap((s) => s.protocols) || []
-    setProtocols(getOnlyInProgressProtocols(protocols))
+  const findClient = useCallback(
+    async (clientName: string) => {
+      return clients.find((c) => c.name === clientName)
+    },
+    [clients],
+  )
+
+  function findProtocols(client: Client | undefined) {
+    return client?.sales.flatMap((s) => s.protocols) || []
   }
 
-  function updateProtocol(protocolName: string) {
+  const updateClient = async (clientName: string) => {
+    setValue('clientName', clientName)
+    const client = await findClient(clientName)
+    const protocols = findProtocols(client)
+    if (protocols !== undefined && protocols.length > 0) {
+      setProtocolsNames(
+        getOnlyInProgressProtocols(protocols).map((p) => p.protocolName),
+      )
+    }
+  }
+
+  const updateProtocol = async (protocolName: string) => {
     setValue('protocol', protocolName)
-    if (protocolName === '') {
-      setProcedures([])
-    } else {
+    if (protocolName !== '' || protocolName !== undefined) {
+      const client = await findClient(getValues('clientName'))
+      const protocols = findProtocols(client)
       const protocol = protocols?.find((p) => p.protocolName === protocolName)
       const procedures = protocol?.saleItems.flatMap((s) => s.procedure)
-      setProcedures(procedures)
+      if (procedures !== undefined && procedures.length > 0) {
+        setProcedureNames(procedures.map((p) => p.name))
+      }
     }
-  }
-
-  function getAllProtocolNames() {
-    if (protocols === undefined) {
-      return ['']
-    }
-
-    return protocols.map((p) => p.protocolName)
-  }
-
-  function getAllProcedureNames() {
-    if (procedures === undefined) {
-      return ['']
-    }
-
-    return procedures.map((p) => p.name)
   }
 
   function handleContinue(input: FormData) {
     const newSession: SessionForm = {
+      id: createSession?.id,
       clientName: input.clientName,
       protocol: input.protocol,
       procedure: input.procedure,
       initDate: createSession?.initDate || undefined,
       finalDate: createSession?.finalDate || undefined,
       obs: createSession?.obs || undefined,
+      status: createSession?.status,
     }
 
     setCreateSession(newSession)
@@ -143,17 +147,39 @@ export default function FormSelectProcedure({
     nextForm()
   }
 
-  useEffect(() => {
+  const populateFields = useCallback(async () => {
     if (
       createSession !== undefined &&
       createSession.clientName !== undefined &&
       createSession.protocol !== undefined &&
       createSession.procedure !== undefined
     ) {
-      updateClient(createSession.clientName)
-      updateProtocol(createSession.protocol)
+      setValue('clientName', createSession.clientName)
+      const client = await findClient(createSession.clientName)
+      const protocols = findProtocols(client)
+      if (protocols !== undefined && protocols.length > 0) {
+        setProtocolsNames(
+          getOnlyInProgressProtocols(protocols).map((p) => p.protocolName),
+        )
+        const protocol = protocols?.find(
+          (p) => p.protocolName === createSession.protocol,
+        )
+        setValue('protocol', createSession.protocol)
+        const procedures = protocol?.saleItems.flatMap((s) => s.procedure)
+        if (procedures !== undefined && procedures.length > 0) {
+          setProcedureNames(procedures.map((p) => p.name))
+          setValue('procedure', createSession.procedure)
+        }
+      }
+      setIsLoadingFields(false)
     }
-  }, [createSession, updateClient, updateProtocol])
+  }, [createSession, findClient, setValue])
+
+  useEffect(() => {
+    if (isLoadingFields) {
+      populateFields()
+    }
+  }, [isLoadingFields, populateFields])
 
   return (
     <div>
@@ -183,10 +209,10 @@ export default function FormSelectProcedure({
           render={({ field: { value } }) => (
             <SelectInput
               label="Protocolos"
-              options={getAllProtocolNames()}
+              options={protocolNames}
               onChangeValue={updateProtocol}
-              setValue={() => null}
               value={value}
+              setValue={() => null}
               hasError={!!errors.protocol}
               isDirty={!!dirtyFields.protocol}
             />
@@ -199,10 +225,10 @@ export default function FormSelectProcedure({
           render={({ field: { value, onChange } }) => (
             <SelectInput
               label="Procedimentos"
-              options={getAllProcedureNames()}
+              options={procedureNames}
               onChangeValue={onChange}
-              setValue={() => null}
               value={value}
+              setValue={() => null}
               hasError={!!errors.procedure}
               isDirty={!!dirtyFields.procedure}
             />

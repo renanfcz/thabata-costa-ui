@@ -3,13 +3,13 @@ export const dateFormatter = new Intl.DateTimeFormat('pt-BR', {
 })
 
 export const dateTimeFormatter = new Intl.DateTimeFormat('pt-BR', {
-  timeZone: 'UTC',
+  timeZone: 'America/Sao_Paulo',
   dateStyle: 'short',
   timeStyle: 'short',
 })
 
 export const timeFormatter = new Intl.DateTimeFormat('pt-BR', {
-  timeZone: 'UTC',
+  timeZone: 'America/Sao_Paulo',
   timeStyle: 'short',
 })
 

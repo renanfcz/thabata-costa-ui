@@ -7,21 +7,27 @@ import { Session } from '@/models/Session'
 import {
   Calendar,
   EventPropGetter,
-  momentLocalizer,
   SlotInfo,
+  momentLocalizer,
 } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
-import moment from 'moment'
 import 'moment/locale/pt-br'
-import { convertDateToTimezone } from '@/utils/converter'
+import {
+  convertDateToTimezone,
+  convertManuallyToBrazilTimezone,
+  unconvertManuallyToBrazilTimezone,
+} from '@/utils/converter'
 import { ResponseFindAllSessions } from '@/server/queries/responses/SessionResponses'
 import { toast } from 'react-toastify'
 import { GET_ALL_SCHEDULE } from '@/server/queries/requests/session/SessionQueries'
 import { REMOVE_SESSION } from '@/server/mutations/requests/session/SessionMutations'
 import CreateSession from './(createSession)/CreateSessionPage'
 import { SessionForm } from '@/dtos/session/SessionForm'
-
-const localizer = momentLocalizer(moment)
+import moment from 'moment'
+import 'moment-timezone'
+import { ResponseClients } from '@/server/queries/responses/ClientResponses'
+import { GET_CLIENTS } from '@/server/queries/requests/client/ClientQueries'
+import { Client } from '@/models/Client'
 
 const messages = {
   allDay: 'Dia Inteiro',
@@ -44,6 +50,10 @@ export interface RangeHour {
 }
 
 export default function Schedule() {
+  moment.tz.setDefault('America/Sao_Paulo')
+  const localizer = momentLocalizer(moment)
+
+  const [clients, setClients] = useState<Client[]>([])
   const [modalOpen, setModalOpen] = useState(false)
   const [sessions, setSessions] = useState<Session[]>([])
   const [selectedSession, setSelectedSession] = useState<
@@ -60,22 +70,33 @@ export default function Schedule() {
     setModalOpen(false)
   }
 
+  async function getAllClients() {
+    const data = await graphqlClient.request<ResponseClients>(GET_CLIENTS)
+    setClients(data.findAllClients)
+  }
+
   function parseToSessionForm(session: Session) {
     const sessionForm: SessionForm = {
+      id: session.id,
       clientName: session.saleItem.protocol.sale.client.name,
       procedure: session.saleItem.procedure.name,
       protocol: session.saleItem.protocol.protocolName,
       initDate: session.initDate,
       finalDate: session.finalDate,
       obs: session.obs,
+      status: session.status,
     }
 
     return sessionForm
   }
 
   const handleEventClick = (event: Session) => {
+    const buildEvent = { ...event }
+    buildEvent.initDate = unconvertManuallyToBrazilTimezone(event.initDate)
+    buildEvent.finalDate = unconvertManuallyToBrazilTimezone(event.finalDate)
+    setSelectedSession(parseToSessionForm(buildEvent))
+    setSelectedRange(undefined)
     handleOpenModal()
-    setSelectedSession(parseToSessionForm(event))
   }
 
   const handleSelect = ({ start, end }: SlotInfo) => {
@@ -92,18 +113,18 @@ export default function Schedule() {
     const data =
       await graphqlClient.request<ResponseFindAllSessions>(GET_ALL_SCHEDULE)
 
-    setSessions(data.findAllSessions)
-  }, [])
+    const sessionList: [Session] = data.findAllSessions
 
-  const updateSession = (session: Session) => {
-    const hasThatSession = sessions.find((s) => s.id === session.id)
-    if (!hasThatSession) {
-      setSessions((prev) => [...prev, session])
-    } else {
-      const newList = sessions.map((s) => (s.id === session.id ? session : s))
-      setSessions(newList)
-    }
-  }
+    setSessions(
+      sessionList.map((s) => {
+        const sessionBuild = { ...s }
+        sessionBuild.initDate = convertManuallyToBrazilTimezone(s.initDate)
+        sessionBuild.finalDate = convertManuallyToBrazilTimezone(s.finalDate)
+
+        return sessionBuild
+      }),
+    )
+  }, [])
 
   function buildSessionTitle(session: Session) {
     const procedure = session.saleItem.procedure.name
@@ -161,6 +182,7 @@ export default function Schedule() {
 
   useEffect(() => {
     getAllSchedule()
+    getAllClients()
   }, [getAllSchedule, sessions])
 
   return (
@@ -187,6 +209,7 @@ export default function Schedule() {
             onSelectEvent={(event: Session) => handleEventClick(event)}
             onSelectSlot={handleSelect}
             eventPropGetter={handleSetEventColor}
+            scrollToTime={new Date()}
           />
         </div>
       </div>
@@ -195,6 +218,8 @@ export default function Schedule() {
           onClose={handleCloseModal}
           selectedRange={selectedRange}
           selectedSession={selectedSession}
+          updateSelectedSession={setSelectedSession}
+          clients={clients}
         />
       </DetailSessionModal>
     </div>

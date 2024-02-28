@@ -23,26 +23,33 @@ export const CREATE_SESSION = gql`
 export const UPDATE_SESSION = gql`
   mutation UpdateSession($updateSessionInput: UpdateSessionInput!) {
     updateSession(updateSessionInput: $updateSessionInput) {
-      saleItem {
-        id
-        value
-        discount
-        sessionsNum
-        procedure {
-          name
-          price
-          id
-        }
-        sale {
-          client {
-            name
-          }
-        }
-      }
       id
       initDate
       finalDate
       obs
+      status
+      saleItem {
+        id
+        sessionsNum
+        value
+        discount
+        procedure {
+          name
+          price
+          color
+          id
+        }
+        protocol {
+          id
+          protocolName
+          protocolDesc
+          sale {
+            client {
+              name
+            }
+          }
+        }
+      }
     }
   }
 `

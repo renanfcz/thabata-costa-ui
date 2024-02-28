@@ -12,6 +12,7 @@ export const GET_ALL_SCHEDULE = gql`
           name
           price
           id
+          color
         }
         protocol {
           id

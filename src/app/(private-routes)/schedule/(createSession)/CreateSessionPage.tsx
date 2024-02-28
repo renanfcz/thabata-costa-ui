@@ -1,10 +1,7 @@
 import Title from '@/components/modal/Title'
 import { SessionForm } from '@/dtos/session/SessionForm'
 import { Client } from '@/models/Client'
-import { graphqlClient } from '@/server/graphql-client'
-import { GET_CLIENTS } from '@/server/queries/requests/client/ClientQueries'
-import { ResponseClients } from '@/server/queries/responses/ClientResponses'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { RangeHour } from '../page'
 import ConfirmCreateSession from './ConfirmCreateSession'
 import FormSelectDate from './FormSelectDate'
@@ -14,25 +11,20 @@ interface CreateSessionPageProps {
   onClose(): void
   selectedRange: RangeHour | undefined
   selectedSession: SessionForm | undefined
+  updateSelectedSession(sessionForm: SessionForm): void
+  clients: Client[]
 }
 
 export default function CreateSessionPage({
   onClose,
   selectedRange,
   selectedSession,
+  updateSelectedSession,
+  clients,
 }: CreateSessionPageProps) {
-  const [clients, setClients] = useState<Client[]>([])
-  const [createSession, setCreateSession] = useState<SessionForm | undefined>(
-    selectedSession,
-  )
   const [selectProcedureForm, setSelectProcedureForm] = useState(true)
   const [selectDateForm, setSelectDateForm] = useState(false)
   const [confirmPage, setConfirmPage] = useState(false)
-
-  async function getAllClients() {
-    const data = await graphqlClient.request<ResponseClients>(GET_CLIENTS)
-    setClients(data.findAllClients)
-  }
 
   function openSelectDateForm() {
     setSelectProcedureForm(false)
@@ -52,10 +44,6 @@ export default function CreateSessionPage({
     setConfirmPage(true)
   }
 
-  useEffect(() => {
-    getAllClients()
-  }, [])
-
   return (
     <div>
       <div className="flex flex-col gap-2">
@@ -64,8 +52,8 @@ export default function CreateSessionPage({
           {selectProcedureForm && (
             <FormSelectProcedure
               clients={clients}
-              createSession={createSession}
-              setCreateSession={setCreateSession}
+              createSession={selectedSession}
+              setCreateSession={updateSelectedSession}
               nextForm={openSelectDateForm}
               onClose={onClose}
             />
@@ -74,16 +62,16 @@ export default function CreateSessionPage({
             <FormSelectDate
               onClose={onClose}
               prevForm={openSelectProcedureForm}
-              initDate={selectedRange?.start || createSession?.initDate}
-              finalDate={selectedRange?.end || createSession?.finalDate}
-              createSession={createSession}
-              setCreateSession={setCreateSession}
+              initDate={selectedRange?.start}
+              finalDate={selectedRange?.end}
+              createSession={selectedSession}
+              setCreateSession={updateSelectedSession}
               openConfirmPage={openConfirmPage}
             />
           )}
           {confirmPage && (
             <ConfirmCreateSession
-              createSession={createSession}
+              createSession={selectedSession}
               clients={clients}
               onClose={onClose}
               prevForm={openSelectDateForm}

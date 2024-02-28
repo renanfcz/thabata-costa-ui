@@ -3,7 +3,10 @@ import CloseButton from '@/components/form/buttons/CloseButton'
 import { SessionForm } from '@/dtos/session/SessionForm'
 import { Client } from '@/models/Client'
 import { graphqlClient } from '@/server/graphql-client'
-import { CREATE_SESSION } from '@/server/mutations/requests/session/SessionMutations'
+import {
+  CREATE_SESSION,
+  UPDATE_SESSION,
+} from '@/server/mutations/requests/session/SessionMutations'
 import { ResponseCreateSession } from '@/server/mutations/responses/SessionResponses'
 import { convertIsoToDate } from '@/utils/converter'
 import { dateTimeFormatter, timeFormatter } from '@/utils/formatter'
@@ -39,16 +42,31 @@ export default function ConfirmCreateSession({
 
       const loading = toast.loading('Salvando...')
       try {
-        await graphqlClient.request<ResponseCreateSession>(CREATE_SESSION, {
-          createSessionInput: {
-            obs: createSession.obs,
-            finalDate: buildHour(createSession.finalDate),
-            initDate: buildHour(createSession.initDate),
-            saleItemId: saleItem?.id,
-          },
-        })
+        console.log(createSession)
+        if (createSession.id === undefined) {
+          await graphqlClient.request<ResponseCreateSession>(CREATE_SESSION, {
+            createSessionInput: {
+              obs: createSession.obs,
+              finalDate: createSession.finalDate,
+              initDate: createSession.initDate,
+              saleItemId: saleItem?.id,
+            },
+          })
+        } else {
+          await graphqlClient.request<ResponseCreateSession>(UPDATE_SESSION, {
+            updateSessionInput: {
+              id: createSession.id,
+              obs: createSession.obs,
+              finalDate: createSession.finalDate,
+              initDate: createSession.initDate,
+              saleItemId: saleItem?.id,
+              status: createSession.status,
+            },
+          })
+        }
+
         toast.update(loading, {
-          render: 'Sessão criada com sucesso!',
+          render: 'Sessão salva com sucesso!',
           type: 'success',
           isLoading: false,
           autoClose: 5000,
@@ -65,19 +83,10 @@ export default function ConfirmCreateSession({
     }
   }
 
-  function buildHour(date: Date | undefined) {
-    if (date !== undefined) {
-      return convertIsoToDate(date)
-    }
-    return undefined
-  }
-
   function getSessionDate(start: Date | undefined, end: Date | undefined) {
     if (start !== undefined && end !== undefined) {
-      const startSession = dateTimeFormatter.format(buildHour(start))
-      return (
-        startSession.toString() + ' - ' + timeFormatter.format(buildHour(end))
-      )
+      const startSession = dateTimeFormatter.format(start)
+      return startSession.toString() + ' - ' + timeFormatter.format(end)
     }
   }
 
@@ -114,7 +123,7 @@ export default function ConfirmCreateSession({
           className="px-10 py-3 font-bold border border-info rounded text-info hover:bg-info hover:text-white transition duration-200"
           onClick={handleCreateSession}
         >
-          Criar sessão
+          Salvar sessão
         </button>
       </div>
     </div>

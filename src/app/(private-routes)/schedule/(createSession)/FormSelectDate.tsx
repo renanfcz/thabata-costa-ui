@@ -4,7 +4,6 @@ import DateInput from '@/components/form/inputs/picker/DateInput'
 import TimeInput from '@/components/form/inputs/picker/TimeInput'
 import TextAreaInput from '@/components/form/inputs/TextAreaInput'
 import { SessionForm } from '@/dtos/session/SessionForm'
-import { convertIsoToDate } from '@/utils/converter'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
 import * as z from 'zod'
@@ -45,9 +44,9 @@ export default function FormSelectDate({
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      sessionDate: initDate,
-      initHour: initDate,
-      finalHour: finalDate,
+      sessionDate: initDate || buildDate(createSession?.initDate),
+      initHour: initDate || buildDate(createSession?.initDate),
+      finalHour: finalDate || buildDate(createSession?.finalDate),
       obs: '',
     },
     mode: 'onSubmit',
@@ -56,29 +55,41 @@ export default function FormSelectDate({
 
   function buildDate(date: Date | undefined) {
     if (date !== undefined) {
-      return convertIsoToDate(date)
+      return date
     }
 
     return undefined
   }
 
   function adjustHour(date: Date) {
-    date.setHours(date.getHours() - 3)
+    date.setHours(date.getHours() + 3)
     return date
   }
 
   function saveSassion(input: FormData) {
     const newSession = { ...createSession }
-    newSession.initDate = adjustHour(input.initHour)
-    newSession.finalDate = adjustHour(input.finalHour)
+    newSession.initDate = buildSessionDateHour(
+      input.sessionDate,
+      input.initHour,
+    )
+    newSession.finalDate = buildSessionDateHour(
+      input.sessionDate,
+      input.finalHour,
+    )
     newSession.obs = input.obs
 
     setCreateSession(newSession)
     openConfirmPage()
   }
 
-  function handleChange(e: Date) {
-    setValue('initHour', e)
+  function buildSessionDateHour(sessionDate: Date, sessionHour: Date) {
+    const date = new Date()
+    date.setDate(sessionDate.getDate())
+    date.setMonth(sessionDate.getMonth())
+    date.setFullYear(sessionDate.getFullYear())
+    date.setHours(sessionHour.getHours())
+    date.setMinutes(sessionHour.getMinutes())
+    return date
   }
 
   return (
@@ -96,7 +107,7 @@ export default function FormSelectDate({
               label="Data da sessão"
               hasError={!!errors.sessionDate}
               value={value}
-              setValue={(e: Date) => setValue('sessionDate', e)}
+              setValue={onChange}
             />
           )}
         />
@@ -109,7 +120,7 @@ export default function FormSelectDate({
                 label="De"
                 hasError={!!errors.initHour}
                 value={value}
-                setValue={handleChange}
+                setValue={(e: Date) => setValue('initHour', e)}
               />
             )}
           />
