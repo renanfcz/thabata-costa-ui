@@ -85,6 +85,7 @@ export default function Schedule() {
       finalDate: session.finalDate,
       obs: session.obs,
       status: session.status,
+      saleItemId: session.saleItem.id,
     }
 
     return sessionForm

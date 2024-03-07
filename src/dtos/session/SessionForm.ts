@@ -9,5 +9,5 @@ export type SessionForm = {
   protocol?: string | undefined
   procedure?: string | undefined
   status?: SessionStatusEnum
-  saleItemId: string | undefined
+  saleItemId?: string | undefined
 }
