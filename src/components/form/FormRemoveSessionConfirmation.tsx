@@ -34,7 +34,7 @@ export default function FormRemoveSessionConfirmation({
           Procedimento: {session?.saleItem.procedure.name}
         </span>
         <span className="flex justify-center">
-          Cliente: {session?.saleItem.sale.client.name}
+          Cliente: {session?.saleItem.protocol.sale.client.name}
         </span>
         <span className="flex justify-center">
           Horário:{' '}
