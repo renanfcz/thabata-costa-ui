@@ -208,7 +208,7 @@ export default function FormSelectProcedure({
           control={control}
           render={({ field: { value } }) => (
             <SelectInput
-              label="Protocolos"
+              label="Protocolo"
               options={protocolNames}
               onChangeValue={updateProtocol}
               value={value}
@@ -224,7 +224,7 @@ export default function FormSelectProcedure({
           control={control}
           render={({ field: { value, onChange } }) => (
             <SelectInput
-              label="Procedimentos"
+              label="Procedimento"
               options={procedureNames}
               onChangeValue={onChange}
               value={value}

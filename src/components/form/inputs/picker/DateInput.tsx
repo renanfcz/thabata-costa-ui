@@ -19,24 +19,24 @@ export default function DateInput({
   setValue,
 }: DateInputProps) {
   const [focused, setFocused] = useState(false)
-  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date())
+  // const [selectedDate, setSelectedDate] = useState<Date | null>(new Date())
 
-  const handleUpdateDate = (dateArray: Date[]) => {
-    if (dateArray === undefined || dateArray.length === 0)
-      dateArray.push(new Date())
+  // const handleUpdateDate = (dateArray: Date[]) => {
+  //   if (dateArray === undefined || dateArray.length === 0)
+  //     dateArray.push(new Date())
 
-    const newDate = value ? new Date(value) : new Date()
+  //   const newDate = value ? new Date(value) : new Date()
 
-    if (dateArray !== undefined && dateArray.length > 0) {
-      newDate.setUTCFullYear(dateArray[0].getUTCFullYear())
-      newDate.setUTCMonth(dateArray[0].getUTCMonth())
-      newDate.setUTCDate(dateArray[0].getUTCDate())
+  //   if (dateArray !== undefined && dateArray.length > 0) {
+  //     newDate.setUTCFullYear(dateArray[0].getUTCFullYear())
+  //     newDate.setUTCMonth(dateArray[0].getUTCMonth())
+  //     newDate.setUTCDate(dateArray[0].getUTCDate())
 
-      setValue(newDate)
-    } else {
-      setValue(new Date())
-    }
-  }
+  //     setValue(newDate)
+  //   } else {
+  //     setValue(new Date())
+  //   }
+  // }
 
   const handleOnChange: DatePickerProps['onChange'] = (date, dateString) => {
     console.log(date)

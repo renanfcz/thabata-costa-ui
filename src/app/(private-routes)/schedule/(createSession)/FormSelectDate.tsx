@@ -40,7 +40,7 @@ export default function FormSelectDate({
     handleSubmit,
     control,
     setValue,
-    formState: { errors, dirtyFields },
+    formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {

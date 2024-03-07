@@ -21,13 +21,13 @@ import { ResponseFindAllSessions } from '@/server/queries/responses/SessionRespo
 import { toast } from 'react-toastify'
 import { GET_ALL_SCHEDULE } from '@/server/queries/requests/session/SessionQueries'
 import { REMOVE_SESSION } from '@/server/mutations/requests/session/SessionMutations'
-import CreateSession from './(createSession)/CreateSessionPage'
 import { SessionForm } from '@/dtos/session/SessionForm'
 import moment from 'moment'
 import 'moment-timezone'
 import { ResponseClients } from '@/server/queries/responses/ClientResponses'
 import { GET_CLIENTS } from '@/server/queries/requests/client/ClientQueries'
 import { Client } from '@/models/Client'
+import EditSession from './(createSession)/EditSession'
 
 const messages = {
   allDay: 'Dia Inteiro',
@@ -214,7 +214,7 @@ export default function Schedule() {
         </div>
       </div>
       <DetailSessionModal isOpen={modalOpen}>
-        <CreateSession
+        <EditSession
           onClose={handleCloseModal}
           selectedRange={selectedRange}
           selectedSession={selectedSession}

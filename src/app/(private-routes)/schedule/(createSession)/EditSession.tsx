@@ -7,7 +7,7 @@ import ConfirmCreateSession from './ConfirmCreateSession'
 import FormSelectDate from './FormSelectDate'
 import FormSelectProcedure from './FormSelectProcedure'
 
-interface CreateSessionPageProps {
+interface EditSessionProps {
   onClose(): void
   selectedRange: RangeHour | undefined
   selectedSession: SessionForm | undefined
@@ -15,13 +15,13 @@ interface CreateSessionPageProps {
   clients: Client[]
 }
 
-export default function CreateSessionPage({
+export default function EditSession({
   onClose,
   selectedRange,
   selectedSession,
   updateSelectedSession,
   clients,
-}: CreateSessionPageProps) {
+}: EditSessionProps) {
   const [selectProcedureForm, setSelectProcedureForm] = useState(true)
   const [selectDateForm, setSelectDateForm] = useState(false)
   const [confirmPage, setConfirmPage] = useState(false)

@@ -16,7 +16,8 @@ export default function Home() {
           href="/dashboard"
           className="flex flex-col items-center gap-2 px-5 text-gray-600 transition duration-200 hover:text-white hover:bg-dark-primary p-3"
         >
-          <House size={50} /> <strong className="text-2xl">Dashboard</strong>
+          <House size={50} />{' '}
+          <strong className="text-2xl">Painel de controle</strong>
         </Link>
         <Link
           href="/client"

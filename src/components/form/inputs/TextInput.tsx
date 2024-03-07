@@ -6,6 +6,7 @@ interface TextInputProps {
   hasError?: boolean
   value: string
   setValue(value: string): void
+  disable?: boolean
 }
 
 export default function TextInput({
@@ -13,6 +14,7 @@ export default function TextInput({
   hasError,
   value,
   setValue,
+  disable,
 }: TextInputProps) {
   const [focused, setFocused] = useState(false)
 
@@ -37,6 +39,7 @@ export default function TextInput({
         onBlur={() => setFocused(false)}
         onChange={(e) => setValue(e.target.value)}
         value={value}
+        disabled={disable}
       />
     </div>
   )

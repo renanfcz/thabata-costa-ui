@@ -25,8 +25,10 @@ export const GET_CLIENTS = gql`
       clientStatus
       createdAt
       name
+      recommendedBy
       sales {
         id
+        paymentType
         protocols {
           id
           protocolName
@@ -34,16 +36,23 @@ export const GET_CLIENTS = gql`
           saleItems {
             id
             value
-            discount
             sessionsNum
+            discount
             procedure {
+              id
               name
+              price
               color
+            }
+            sessions {
+              id
+              initDate
+              finalDate
+              obs
+              status
             }
           }
         }
-        createdAt
-        paymentType
       }
     }
   }
@@ -53,6 +62,7 @@ export const GET_CLIENT_BY_NAME = gql`
   query FindClientByName($name: String!) {
     findClientByName(name: $name) {
       id
+      name
       cpf
       dateBirth
       celphone
@@ -62,20 +72,21 @@ export const GET_CLIENT_BY_NAME = gql`
       number
       complement
       indications {
-        name
         celphone
+        clientId
+        name
         socialMedia
         socialMediaId
-        clientId
       }
+      createdAt
       knowUs
       socialMediaId
       socialMedia
       clientStatus
-      createdAt
-      name
+      recommendedBy
       sales {
         id
+        paymentType
         protocols {
           id
           protocolName
@@ -86,13 +97,20 @@ export const GET_CLIENT_BY_NAME = gql`
             discount
             sessionsNum
             procedure {
+              id
               name
+              price
               color
+            }
+            sessions {
+              id
+              initDate
+              finalDate
+              obs
+              status
             }
           }
         }
-        createdAt
-        paymentType
       }
     }
   }

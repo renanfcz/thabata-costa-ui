@@ -1,14 +1,13 @@
 'use client'
 import { Client } from '@/models/Client'
 import { dateFormatter } from '@/utils/formatter'
-import { Info, Trash2 } from 'lucide-react'
+import { Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import CloseButton from '../form/buttons/CloseButton'
 import RemoveButton from '../form/buttons/RemoveButton'
 import { graphqlClient } from '@/server/graphql-client'
 import { useRouter } from 'next/navigation'
 import RemoveItemModal from '../modal/RemoveItemModal'
-import Link from 'next/link'
 import { toast } from 'react-toastify'
 import { REMOVE_CLIENT } from '@/server/mutations/requests/client/ClientMutations'
 
@@ -43,9 +42,6 @@ export function ActionGroup({ client }: ActionGroupProps) {
 
   return (
     <div className="flex gap-4 justify-end">
-      <Link href={`/client/detail/${client.name}`}>
-        <Info className="text-info text-xs" />
-      </Link>
       <button onClick={handleOpenModal}>
         <Trash2 className="text-danger text-xs" />
       </button>

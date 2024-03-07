@@ -9,6 +9,7 @@ import { dateFormatter } from '@/utils/formatter'
 import BackArrow from '@/components/form/buttons/BackArrow'
 import { ResponseClients } from '@/server/queries/responses/ClientResponses'
 import { GET_CLIENTS } from '@/server/queries/requests/client/ClientQueries'
+import TableRow from '@/components/table/TableRow'
 
 export const revalidate = 30
 
@@ -41,7 +42,7 @@ export default async function Client() {
           </thead>
           <tbody>
             {clients.map((client, index) => (
-              <tr className="hover:bg-light-primary" key={index}>
+              <TableRow key={index} client={client}>
                 <TableData>{client.name}</TableData>
                 <TableData>{client.celphone}</TableData>
                 <TableData>{client.cpf}</TableData>
@@ -51,7 +52,7 @@ export default async function Client() {
                 <TableData>
                   <ActionGroup client={client} />
                 </TableData>
-              </tr>
+              </TableRow>
             ))}
           </tbody>
         </table>

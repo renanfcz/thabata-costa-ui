@@ -4,7 +4,7 @@ import { useClientContext } from '@/contexts/client/ClientContext'
 import { useEffect, useState } from 'react'
 
 import ProtocolCard from '@/app/(private-routes)/client/detail/[name]/(components)/(tabs)/(protocol)/ProtocolCard'
-import ProtocolPageDetail from './ProtocolPageDetail'
+import ProtocolPageDetail from './(details)/ProtocolPageDetail'
 import { Protocol } from '@/models/Protocol'
 
 export default function ProtocolsPage() {
@@ -21,10 +21,6 @@ export default function ProtocolsPage() {
   const handleCloseDetail = () => {
     setSelectedProtocol(undefined)
     setOpenDetail(false)
-  }
-
-  const handleUpdateSelectedProtocol = (protocol: Protocol) => {
-    setSelectedProtocol(protocol)
   }
 
   useEffect(() => {
@@ -51,10 +47,7 @@ export default function ProtocolsPage() {
             <div className="flex justify-between w-full">
               <BackButton onClick={handleCloseDetail} />
             </div>
-            <ProtocolPageDetail
-              protocol={selectedProtocol}
-              updateProtocol={handleUpdateSelectedProtocol}
-            />
+            <ProtocolPageDetail protocol={selectedProtocol} />
           </div>
         )}
       </div>
