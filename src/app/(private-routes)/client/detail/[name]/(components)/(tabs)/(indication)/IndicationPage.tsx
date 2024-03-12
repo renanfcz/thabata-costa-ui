@@ -65,7 +65,7 @@ export default function IndicationPage() {
             name: input.name,
             celphone: input.celphone,
             socialMediaId: input.socialMediaId,
-            socialMedia: input.socialMedia,
+            socialMedia: SocialMediaEnum.getValue(input.socialMedia),
             clientId: client?.id,
           },
         },
