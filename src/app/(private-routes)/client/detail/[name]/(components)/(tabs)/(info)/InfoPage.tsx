@@ -49,9 +49,12 @@ interface UpdateClientResponse {
   updateClient: Client
 }
 
-export default function InfoPage() {
+interface InfoPageProps {
+  clients: Client[]
+}
+
+export default function InfoPage({ clients }: InfoPageProps) {
   const { client, updateClient } = useClientContext()
-  const [clients, setClients] = useState<Client[]>([])
   const [suggestionsList, setSuggestionsList] = useState<Client[]>([])
 
   const {
