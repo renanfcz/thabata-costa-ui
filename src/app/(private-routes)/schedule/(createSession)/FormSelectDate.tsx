@@ -6,6 +6,7 @@ import TextAreaInput from '@/components/form/inputs/TextAreaInput'
 import { SessionForm } from '@/dtos/session/SessionForm'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
 import * as z from 'zod'
 
 interface FormSelectDateProps {
@@ -68,18 +69,21 @@ export default function FormSelectDate({
 
   function saveSassion(input: FormData) {
     const newSession = { ...createSession }
-    newSession.initDate = buildSessionDateHour(
-      input.sessionDate,
-      input.initHour,
-    )
-    newSession.finalDate = buildSessionDateHour(
-      input.sessionDate,
-      input.finalHour,
-    )
-    newSession.obs = input.obs
+    const initHour = buildSessionDateHour(input.sessionDate, input.initHour)
+    const finalHour = buildSessionDateHour(input.sessionDate, input.finalHour)
 
-    setCreateSession(newSession)
-    openConfirmPage()
+    if (initHour >= finalHour) {
+      toast.error(
+        'O horário de inicio da sessão deve ser anterior ao horário de término.',
+      )
+    } else {
+      newSession.initDate = initHour
+      newSession.finalDate = finalHour
+      newSession.obs = input.obs
+
+      setCreateSession(newSession)
+      openConfirmPage()
+    }
   }
 
   function buildSessionDateHour(sessionDate: Date, sessionHour: Date) {

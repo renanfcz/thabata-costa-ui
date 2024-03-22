@@ -10,6 +10,7 @@ interface TimeInputProps {
   hasError?: boolean
   value: Date
   setValue(time: Date): void
+  anotherRangeTime?: Date
 }
 
 export default function TimeInput({
@@ -17,6 +18,7 @@ export default function TimeInput({
   hasError,
   value,
   setValue,
+  anotherRangeTime,
 }: TimeInputProps) {
   const [focused, setFocused] = useState(false)
   const [selectedTime, setSelectedTime] = useState(new Date())
