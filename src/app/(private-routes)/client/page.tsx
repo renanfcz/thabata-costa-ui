@@ -42,11 +42,11 @@ export default async function Client() {
           </thead>
           <tbody>
             {clients.map((client, index) => (
-              <TableRow key={index} client={client}>
-                <TableData>{client.name}</TableData>
-                <TableData>{client.celphone}</TableData>
-                <TableData>{client.cpf}</TableData>
-                <TableData>
+              <TableRow key={index}>
+                <TableData client={client}>{client.name}</TableData>
+                <TableData client={client}>{client.celphone}</TableData>
+                <TableData client={client}>{client.cpf}</TableData>
+                <TableData client={client}>
                   {dateFormatter.format(new Date(client.dateBirth))}
                 </TableData>
                 <TableData>
