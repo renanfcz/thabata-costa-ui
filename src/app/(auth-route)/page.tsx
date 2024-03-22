@@ -10,7 +10,7 @@ import { toast } from 'react-toastify'
 import { z } from 'zod'
 
 const schema = z.object({
-  email: z.string().min(5).toLowerCase().trim(),
+  nickname: z.string().min(5).toLowerCase().trim(),
   password: z.string().min(6),
 })
 
@@ -31,13 +31,13 @@ export default function Home() {
 
   async function handleLogin(loginInput: LoginFormData) {
     const result = await signIn('credentials', {
-      email: loginInput.email,
+      nickname: loginInput.nickname,
       password: loginInput.password,
       redirect: false,
     })
 
     if (result?.error) {
-      toast.error('E-mail ou senha incorretos', {
+      toast.error('Usuário ou senha incorretos', {
         position: 'top-right',
         autoClose: 5000,
         hideProgressBar: false,
@@ -63,12 +63,12 @@ export default function Home() {
       >
         <div className="flex flex-col gap-5 lg:w-1/4 md:w-2/4 sm:w-3/4 p-7 rounded shadow-md bg-white">
           <Controller
-            name="email"
+            name="nickname"
             control={control}
             render={({ field: { value, onChange } }) => (
               <UserInput
-                label="Email"
-                hasError={!!errors.email}
+                label="Usuário"
+                hasError={!!errors.nickname}
                 value={value}
                 setValue={onChange}
               />

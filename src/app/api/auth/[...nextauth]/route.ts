@@ -10,17 +10,17 @@ const nextAuthOptions: NextAuthOptions = {
     CredentialsProvider({
       name: 'credentials',
       credentials: {
-        email: { label: 'email', type: 'text' },
+        nickname: { label: 'nickname', type: 'text' },
         password: { label: 'password', type: 'password' },
       },
 
       async authorize(
-        credentials: Record<'email' | 'password', string> | undefined,
+        credentials: Record<'nickname' | 'password', string> | undefined,
       ) {
         return graphqlClient
           .request<ResponseAuthenticate>(AUTHENTICATE, {
             authInput: {
-              email: credentials?.email,
+              nickname: credentials?.nickname,
               password: credentials?.password,
             },
           })

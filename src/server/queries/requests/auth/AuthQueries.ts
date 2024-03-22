@@ -7,6 +7,7 @@ export const AUTHENTICATE = gql`
       user {
         id
         email
+        nickname
         name
       }
     }
