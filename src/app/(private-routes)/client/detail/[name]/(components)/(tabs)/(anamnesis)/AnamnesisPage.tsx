@@ -1,6 +1,5 @@
 import BackButton from '@/components/form/buttons/BackButton'
 import { useClientContext } from '@/contexts/client/ClientContext'
-import { AnamnesisTypeEnum } from '@/enum/AnamnesisTypeEnum'
 import { Anamnesis } from '@/models/Anamnesis'
 import { useState } from 'react'
 import NewAnamnesis from './(new)/NewAnamnesis'
@@ -12,28 +11,6 @@ export default function AnamnesisPage() {
   const [openAnamnesis, setOpenAnamnesis] = useState(false)
   const [selectedAnamnesis, setSelectedAnamnesis] = useState<Anamnesis>()
   const [newAnamnesis, setNewAnamnesis] = useState(false)
-
-  const anamnesis = [
-    {
-      id: '1',
-      type: AnamnesisTypeEnum.FACIAL,
-      createdAt: new Date(),
-      anamnesisFields: [
-        {
-          id: '1',
-          question: 'Está em tratamento médico?',
-          answer: 'Não',
-          justification: '',
-        },
-        {
-          id: '2',
-          question: 'Usa algum medicamento?',
-          answer: 'Sim',
-          justification: 'Dipirona',
-        },
-      ],
-    },
-  ]
 
   const handleOpenDetail = (anamnesis: Anamnesis) => {
     setSelectedAnamnesis(anamnesis)
@@ -62,7 +39,7 @@ export default function AnamnesisPage() {
           <div>
             {!openAnamnesis ? (
               <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-20">
-                {anamnesis.map((anamnesis) => (
+                {client?.anamnesis.map((anamnesis) => (
                   <button
                     onClick={() => handleOpenDetail(anamnesis)}
                     key={anamnesis.id}
@@ -76,7 +53,10 @@ export default function AnamnesisPage() {
                 <div className="flex justify-between w-full">
                   <BackButton onClick={handleCloseDetail} />
                 </div>
-                <AnamnesisPageDetail anamnesis={selectedAnamnesis} />
+                <AnamnesisPageDetail
+                  anamnesis={selectedAnamnesis}
+                  closeDetails={handleCloseDetail}
+                />
               </div>
             )}
           </div>

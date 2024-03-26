@@ -1,8 +1,11 @@
-import { AnamnesisField } from './AnamnesisField'
+import { Client } from './Client'
 
 export type Anamnesis = {
   id: string
-  type: string
+  protocolType: string
+  client: Client
   createdAt: Date
-  anamnesisFields: AnamnesisField[]
+  signedIn?: Date
+  expriresIn?: Date
+  data: string
 }

@@ -18,9 +18,10 @@ export default function RadioButtonCustomChoices({
     <div className="flex gap-2 w-full">
       {choices.map((choice) => (
         <button
+          type="button"
           key={choice}
           onClick={() => handleCheckOption(choice)}
-          className={`flex justify-center gap-1 w-full px-5 py-2  border-2   rounded ${
+          className={`flex justify-center gap-1 w-full md:px-3 px-5 py-2  border-2   rounded ${
             selectedChoice === choice
               ? 'border-info bg-info text-white'
               : 'text-gray-600 border-gray-200 bg-gray-200 hover:border-gray-300 hover:bg-gray-300'

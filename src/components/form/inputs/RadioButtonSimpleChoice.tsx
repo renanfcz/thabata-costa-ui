@@ -25,6 +25,7 @@ export default function RadioButtonSimpleChoice({
   return (
     <div className="flex gap-2 w-full">
       <button
+        type="button"
         onClick={handleYesChecked}
         className={`flex justify-center gap-1 w-full px-5 py-2  border-2   rounded ${
           yesChecked
@@ -35,6 +36,7 @@ export default function RadioButtonSimpleChoice({
         Sim
       </button>
       <button
+        type="button"
         onClick={handleNoChecked}
         className={`flex justify-center gap-1 w-full px-5 py-2  border-2   rounded ${
           noChecked

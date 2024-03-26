@@ -54,6 +54,15 @@ export const GET_CLIENTS = gql`
           }
         }
       }
+      anamnesis {
+        id
+        protocolType
+        createdAt
+        signedIn
+        signature
+        expriresIn
+        data
+      }
     }
   }
 `
@@ -111,6 +120,15 @@ export const GET_CLIENT_BY_NAME = gql`
             }
           }
         }
+      }
+      anamnesis {
+        id
+        protocolType
+        createdAt
+        signedIn
+        signature
+        expriresIn
+        data
       }
     }
   }
@@ -176,6 +194,15 @@ export const GET_CLIENT_BY_ID = gql`
           }
           sessionsNum
         }
+      }
+      anamnesis {
+        id
+        protocolType
+        createdAt
+        signedIn
+        signature
+        expriresIn
+        data
       }
     }
   }

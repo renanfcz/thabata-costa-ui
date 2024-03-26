@@ -1,7 +1,7 @@
 'use client'
 import BackButton from '@/components/form/buttons/BackButton'
 import RadioButton from '@/components/form/inputs/RadioButton'
-import { AnamnesisTypeEnum } from '@/enum/AnamnesisTypeEnum'
+import { AnamnesisTypeEnum } from '@/enum/anamnesis/AnamnesisTypeEnum'
 import { useState } from 'react'
 import CorporalAnamnesisForm from './(form)/CorporalAnamnesisForm'
 import FacialAnamnesisForm from './(form)/FacialAnamnesisForm'
@@ -45,7 +45,7 @@ export default function NewAnamnesis({ backButton }: NewAnamnesisProps) {
         </RadioButton>
       </div>
       <div className="pt-5">
-        {facialButtonClicked && <FacialAnamnesisForm />}
+        {facialButtonClicked && <FacialAnamnesisForm closeForm={backButton} />}
         {corporalButtonClicked && <CorporalAnamnesisForm />}
       </div>
     </div>
